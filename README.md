@@ -1,4 +1,4 @@
-# React <Frame /> component
+# React &lt;Frame /> component
 
 This component allows you to encapsulate your entire React application or per component in an iFrame.
 
