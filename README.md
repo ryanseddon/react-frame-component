@@ -17,7 +17,7 @@ This is a UMD module so you can include however you like.
 
 If you're not sure what that is you can include this as a `<script>` tag in your site and it will be available as a `Frame` global.
 
-Go check out the demos.
+Go check out the [demo] [demo-url].
 
 ```html
 var Header = React.createClass({
@@ -57,4 +57,6 @@ This content is released under the MIT license http://ryanseddon.mit-license.org
 
 [depstat-url]: https://david-dm.org/ryanseddon/react-frame-component
 [depstat-image]: https://david-dm.org/ryanseddon/react-frame-component.png
+
+[demo-url]: http://ryanseddon.github.io/react-frame-component/
 
