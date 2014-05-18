@@ -47,12 +47,12 @@ React.renderComponent(
 Copyright 2014, Ryan Seddon
 This content is released under the MIT license http://ryanseddon.mit-license.org
 
-[npm-url]: https://npmjs.org/package/react-frame-componet
-[npm-image]: https://badge.fury.io/js/react-frame-componet.png
+[npm-url]: https://npmjs.org/package/react-frame-component
+[npm-image]: https://badge.fury.io/js/react-frame-component.png
 
-[travis-url]: http://travis-ci.org/ryanseddon/react-frame-componet
-[travis-image]: https://secure.travis-ci.org/ryanseddon/react-frame-componet.png?branch=master
+[travis-url]: http://travis-ci.org/ryanseddon/react-frame-component
+[travis-image]: https://secure.travis-ci.org/ryanseddon/react-frame-component.png?branch=master
 
-[depstat-url]: https://david-dm.org/ryanseddon/react-frame-componet
-[depstat-image]: https://david-dm.org/ryanseddon/react-frame-componet.png
+[depstat-url]: https://david-dm.org/ryanseddon/react-frame-component
+[depstat-image]: https://david-dm.org/ryanseddon/react-frame-component.png
 
