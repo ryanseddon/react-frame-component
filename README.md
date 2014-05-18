@@ -1,4 +1,6 @@
-# React &lt;Frame /> component [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+# React &lt;Frame /> component
+
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 This component allows you to encapsulate your entire React application or per component in an iFrame.
 
@@ -44,7 +46,7 @@ React.renderComponent(
 
 ## License
 
-Copyright 2014, Ryan Seddon
+Copyright 2014, Ryan Seddon.
 This content is released under the MIT license http://ryanseddon.mit-license.org
 
 [npm-url]: https://npmjs.org/package/react-frame-component
