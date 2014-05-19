@@ -12,6 +12,7 @@ describe("Frame test",function(){
   afterEach(function() {
     if(div) {
       div.parentNode.removeChild(div);
+      div = null;
     }
   });
 

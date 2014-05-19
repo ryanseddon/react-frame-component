@@ -1,5 +1,9 @@
 /** @jsx React.DOM */
 var Frame = React.createClass({
+  propTypes: {
+    style: React.PropTypes.object,
+    head:  React.PropTypes.object
+  },
   render: function() {
     return this.transferPropsTo(<iframe />);
   },
