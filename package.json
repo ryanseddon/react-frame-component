@@ -1,6 +1,6 @@
 {
   "name": "react-frame-component",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,8 @@
     "gulp-karma": "0.0.4",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "es5-shim": "^3.3.0"
+    "es5-shim": "^3.3.0",
+    "gulp-browserify": "^0.5.0"
   },
   "dependencies": {
     "react": "^0.10.0"

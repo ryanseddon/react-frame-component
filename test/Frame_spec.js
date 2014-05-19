@@ -2,11 +2,18 @@
 
 "use strict";
 
-var ReactTestUtils;
+var ReactTestUtils, div;
 
 describe("Frame test",function(){
   beforeEach(function() {
     ReactTestUtils = React.addons.TestUtils;
+  });
+
+  afterEach(function() {
+    if(div) {
+      div.parentNode.removeChild(div);
+      div = null;
+    }
   });
 
   it("should create an empty iFrame", function () {
@@ -22,8 +29,8 @@ describe("Frame test",function(){
   });
 
   it("should create an iFrame with a <link> tag inside", function () {
-    var div = document.body.appendChild(document.createElement('div')),
-        frame = React.renderComponent(<Frame head={
+    div = document.body.appendChild(document.createElement('div'));
+    var frame = React.renderComponent(<Frame head={
           <link href='styles.css' />
         } />, div),
         body = frame.getDOMNode().contentDocument.body;
@@ -33,8 +40,8 @@ describe("Frame test",function(){
   });
 
   it("should create an iFrame with a <script> and insert children", function () {
-    var div = document.body.appendChild(document.createElement('div')),
-        frame = React.renderComponent(<Frame head={
+    div = document.body.appendChild(document.createElement('div'));
+    var frame = React.renderComponent(<Frame head={
           <script src="foo.js"></script>
         }>
           <h1>Hello</h1>
@@ -49,8 +56,8 @@ describe("Frame test",function(){
   });
 
   it("should encapsulate styles and not effect elements outside", function () {
-    var div = document.body.appendChild(document.createElement('div')),
-        component = React.renderComponent(<div>
+    div = document.body.appendChild(document.createElement('div'));
+    var component = React.renderComponent(<div>
           <p>Some text</p>
           <Frame head={
             <style>{'*{color:red}'}</style>
