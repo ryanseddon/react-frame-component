@@ -8,14 +8,11 @@ This component allows you to encapsulate your entire React application or per co
 npm install --save react-frame-component
 ```
 
-
 ## How to use:
 
-This is a UMD module so you can include however you like.
-
-### UMD what now?
-
-If you're not sure what that is you can include this as a `<script>` tag in your site and it will be available as a `Frame` global.
+```js
+var Frame = require('react-frame-component');
+```
 
 Go check out the [demo] [demo-url].
 
@@ -44,6 +41,10 @@ React.renderComponent(
 );
 ```
 
+## More info
+
+I wrote a [blog post] [blog-url] about building this component.
+
 ## License
 
 Copyright 2014, Ryan Seddon.
@@ -59,4 +60,4 @@ This content is released under the MIT license http://ryanseddon.mit-license.org
 [depstat-image]: https://david-dm.org/ryanseddon/react-frame-component.png
 
 [demo-url]: http://ryanseddon.github.io/react-frame-component/
-
+[blog-url]: http://developer.zendesk.com/blog/2014/05/13/rendering-to-iframes-in-react/
