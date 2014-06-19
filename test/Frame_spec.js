@@ -2,7 +2,9 @@
 
 "use strict";
 
-var ReactTestUtils, div;
+var ReactTestUtils, div,
+    React = require('react/addons'),
+    Frame = require('../index.js');
 
 describe("Frame test",function(){
   beforeEach(function() {

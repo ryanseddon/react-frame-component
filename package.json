@@ -24,14 +24,14 @@
   "homepage": "https://github.com/ryanseddon/react-frame-component",
   "devDependencies": {
     "gulp": "^3.6.2",
-    "gulp-react": "^0.3.3",
-    "gulp-rename": "^1.2.0",
     "karma": "^0.12.16",
     "gulp-karma": "0.0.4",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "es5-shim": "^3.3.0",
-    "gulp-browserify": "^0.5.0"
+    "browserify": "^4.1.11",
+    "reactify": "^0.13.1",
+    "vinyl-source-stream": "^0.1.1"
   },
   "dependencies": {
     "react": "^0.10.0"

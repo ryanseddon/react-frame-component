@@ -8,14 +8,11 @@ This component allows you to encapsulate your entire React application or per co
 npm install --save react-frame-component
 ```
 
-
 ## How to use:
 
-This is a UMD module so you can include however you like.
-
-### UMD what now?
-
-If you're not sure what that is you can include this as a `<script>` tag in your site and it will be available as a `Frame` global.
+```js
+var Frame = require('react-frame-component');
+```
 
 Go check out the [demo] [demo-url].
 
