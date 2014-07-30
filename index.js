@@ -3,7 +3,7 @@ var React = require('react');
 var Frame = React.createClass({
   propTypes: {
     style: React.PropTypes.object,
-    head:  React.PropTypes.object
+    head:  React.PropTypes.renderable
   },
   render: function() {
     return this.transferPropsTo(React.DOM.iframe());

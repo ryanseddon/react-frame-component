@@ -57,6 +57,19 @@ describe("Frame test",function(){
     expect(body.querySelectorAll('h1,h2').length).toEqual(2);
   });
 
+  it("should create an iFrame with multiple <link> and <script> tags inside", function () {
+    div = document.body.appendChild(document.createElement('div'));
+    var frame = React.renderComponent(<Frame head={[
+          <link key='styles' href='styles.css' />,
+          <link key='foo' href='foo.css' />,
+          <script key='bar' src='bar.js' />
+        ]} />, div),
+        body = frame.getDOMNode().contentDocument.body;
+
+    expect(body.querySelectorAll('link').length).toEqual(2);
+    expect(body.querySelectorAll('script').length).toEqual(1);
+  });
+
   it("should encapsulate styles and not effect elements outside", function () {
     div = document.body.appendChild(document.createElement('div'));
     var component = React.renderComponent(<div>
