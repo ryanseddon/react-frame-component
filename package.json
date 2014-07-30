@@ -30,6 +30,7 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "es5-shim": "^3.3.0",
     "browserify": "^4.1.11",
+    "react": ">=0.11.1",
     "reactify": "^0.13.1",
     "vinyl-source-stream": "^0.1.1"
   },
