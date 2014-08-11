@@ -1,14 +1,12 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 
 var Frame = React.createClass({
   propTypes: {
     style: React.PropTypes.object,
-    head:  React.PropTypes.object
+    head:  React.PropTypes.renderable
   },
   render: function() {
-    return this.transferPropsTo(<iframe />);
+    return this.transferPropsTo(React.DOM.iframe());
   },
   componentDidMount: function() {
     this.renderFrameContents();
@@ -16,11 +14,9 @@ var Frame = React.createClass({
   renderFrameContents: function() {
     var doc = this.getDOMNode().contentDocument;
     if(doc && doc.readyState === 'complete') {
-      var contents = (
-        <div>
-          {this.props.head}
-          {this.props.children}
-        </div>
+      var contents = React.DOM.div(null,
+        this.props.head,
+        this.props.children
       );
 
       React.renderComponent(contents, doc.body);
