@@ -6,7 +6,7 @@ var Frame = React.createClass({
     head:  React.PropTypes.renderable
   },
   render: function() {
-    return this.transferPropsTo(React.DOM.iframe());
+    return React.DOM.iframe(Object.assign({}, this.props));
   },
   componentDidMount: function() {
     this.renderFrameContents();
