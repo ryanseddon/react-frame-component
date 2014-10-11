@@ -1,4 +1,5 @@
 var React = require('react');
+var merge = require('React/lib/merge');
 
 var Frame = React.createClass({
   propTypes: {
@@ -6,7 +7,7 @@ var Frame = React.createClass({
     head:  React.PropTypes.renderable
   },
   render: function() {
-    return React.DOM.iframe(Object.assign({}, this.props));
+    return React.DOM.iframe(merge(this.props));
   },
   componentDidMount: function() {
     this.renderFrameContents();
