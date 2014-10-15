@@ -1,5 +1,5 @@
 var React = require('react');
-var merge = require('React/lib/merge');
+var merge = require('react/lib/merge');
 
 var Frame = React.createClass({
   propTypes: {
