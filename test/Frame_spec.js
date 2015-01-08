@@ -32,7 +32,7 @@ describe("Frame test",function(){
 
   it("should create an iFrame with a <link> tag inside", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var frame = React.renderComponent(<Frame head={
+    var frame = React.render(<Frame head={
           <link href='styles.css' />
         } />, div),
         body = frame.getDOMNode().contentDocument.body;
@@ -43,7 +43,7 @@ describe("Frame test",function(){
 
   it("should create an iFrame with a <script> and insert children", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var frame = React.renderComponent(<Frame head={
+    var frame = React.render(<Frame head={
           <script src="foo.js"></script>
         }>
           <h1>Hello</h1>
@@ -59,7 +59,7 @@ describe("Frame test",function(){
 
   it("should create an iFrame with multiple <link> and <script> tags inside", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var frame = React.renderComponent(<Frame head={[
+    var frame = React.render(<Frame head={[
           <link key='styles' href='styles.css' />,
           <link key='foo' href='foo.css' />,
           <script key='bar' src='bar.js' />
@@ -72,7 +72,7 @@ describe("Frame test",function(){
 
   it("should encapsulate styles and not effect elements outside", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var component = React.renderComponent(<div>
+    var component = React.render(<div>
           <p>Some text</p>
           <Frame head={
             <style>{'*{color:red}'}</style>
