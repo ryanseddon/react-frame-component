@@ -27,13 +27,13 @@ var Header = React.createClass({
   }
 });
 
-React.renderComponent(<Header>Hello</Header>, document.body);
+React.render(<Header>Hello</Header>, document.body);
 ```
 
-Or you can wrap it at the `renderComponent` call.
+Or you can wrap it at the `render` call.
 
 ```html
-React.renderComponent(
+React.render(
   <Frame>
     <Header>Hello</Header>
   </Frame>,

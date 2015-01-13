@@ -23,18 +23,18 @@
   },
   "homepage": "https://github.com/ryanseddon/react-frame-component",
   "devDependencies": {
+    "browserify": "^4.1.11",
+    "es5-shim": "^3.3.0",
     "gulp": "^3.6.2",
-    "karma": "^0.12.16",
     "gulp-karma": "0.0.4",
+    "karma": "^0.12.16",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "es5-shim": "^3.3.0",
-    "browserify": "^4.1.11",
-    "react": ">=0.11.1",
+    "react": ">=0.12.1",
     "reactify": "^0.13.1",
     "vinyl-source-stream": "^0.1.1"
   },
   "peerDependencies": {
-    "react": ">=0.11.1"
+    "react": ">=0.12.1"
   }
 }
