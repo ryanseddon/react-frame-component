@@ -33,14 +33,14 @@ var App = React.createClass({
   }
 });
 
-React.renderComponent(<Frame style={styles}><App /></Frame>, document.querySelector('#example1'));
+React.render(<Frame style={styles}><App /></Frame>, document.querySelector('#example1'));
 
 var Foobar = React.createClass({
   render: function() {
     return (
       <Frame style={styles} head={
-      <style>{'*{color:red}'}</style>
-    }>
+        <style>{'*{color:red}'}</style>
+      }>
     <h1>Frame example of wrapping component</h1>
     <p>This is also showing encapuslated styles. All text is red inside this component.</p>
     </Frame>
@@ -48,5 +48,5 @@ var Foobar = React.createClass({
   }
 });
 
-React.renderComponent(<Foobar />, document.querySelector('#example2'));
+React.render(<Foobar />, document.querySelector('#example2'));
 
