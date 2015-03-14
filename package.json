@@ -31,10 +31,10 @@
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "react": ">=0.12.1",
-    "reactify": "^0.13.1",
+    "reactify": "^1.1.0",
     "vinyl-source-stream": "^0.1.1"
   },
   "peerDependencies": {
-    "react": ">=0.12.1"
+    "react": ">=0.13.0"
   }
 }
