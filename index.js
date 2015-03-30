@@ -3,12 +3,14 @@ var React = require('react');
 var Frame = React.createClass({
   propTypes: {
     style: React.PropTypes.object,
-    head:  React.PropTypes.node
+    head:  React.PropTypes.node,
+    initialSrc: React.PropTypes.string
   },
   render: function() {
     return React.createElement('iframe', {
       style: this.props.style,
-      head: this.props.head
+      head: this.props.head,
+      src: this.props.initialSrc
     });
   },
   componentDidMount: function() {
