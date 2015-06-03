@@ -30,6 +30,24 @@ describe("Frame test",function(){
     expect(frame.getDOMNode().style.border).toContain('0');
   });
 
+  it("should pass along all props to underlying iFrame", function () {
+    var frame = ReactTestUtils.renderIntoDocument(
+      <Frame className="test-class-1 test-class-2"
+        frameBorder={0}
+        height="100%"
+        width="80%" />
+    );
+    var node = frame.getDOMNode();
+    expect(frame.props.className).toEqual('test-class-1 test-class-2');
+    expect(frame.props.frameBorder).toEqual(0);
+    expect(frame.props.height).toEqual('100%');
+    expect(frame.props.width).toEqual('80%');
+    expect(node.className).toEqual('test-class-1 test-class-2');
+    expect(node.getAttribute('frameBorder')).toEqual('0');
+    expect(node.getAttribute('height')).toEqual('100%');
+    expect(node.getAttribute('width')).toEqual('80%');
+  });
+
   it("should create an iFrame with a <link> tag inside", function () {
     div = document.body.appendChild(document.createElement('div'));
     var frame = React.render(<Frame head={
