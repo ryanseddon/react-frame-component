@@ -6,10 +6,7 @@ var Frame = React.createClass({
     head:  React.PropTypes.node
   },
   render: function() {
-    return React.createElement('iframe', {
-      style: this.props.style,
-      head: this.props.head
-    });
+    return React.createElement('iframe', this.props);
   },
   componentDidMount: function() {
     this.renderFrameContents();
@@ -32,7 +29,7 @@ var Frame = React.createClass({
     this.renderFrameContents();
   },
   componentWillUnmount: function() {
-    React.unmountComponentAtNode(this.getDOMNode().contentDocument.body);
+    React.unmountComponentAtNode(React.findDOMNode(this).contentDocument.body);
   }
 });
 
