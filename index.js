@@ -1,18 +1,27 @@
-var React = require('react');
+import React from 'react';
 
-var Frame = React.createClass({
-  propTypes: {
-    style: React.PropTypes.object,
-    head:  React.PropTypes.node
-  },
-  render: function() {
-    return React.createElement('iframe', this.props);
-  },
-  componentDidMount: function() {
+export default class Frame extends React.Component {
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.renderFrameContents = this.renderFrameContents.bind(this);
+  }
+
+  componentDidMount() {
     this.renderFrameContents();
-  },
-  renderFrameContents: function() {
-    var doc = this.getDOMNode().contentDocument;
+  }
+
+  componentDidUpdate() {
+    this.renderFrameContents();
+  }
+
+  componentWillUnmount() {
+    React.unmountComponentAtNode(React.findDOMNode(this).contentDocument.body);
+  }
+
+  renderFrameContents() {
+    var doc = React.findDOMNode(this).contentDocument;
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
         undefined,
@@ -24,14 +33,17 @@ var Frame = React.createClass({
     } else {
       setTimeout(this.renderFrameContents, 0);
     }
-  },
-  componentDidUpdate: function() {
-    this.renderFrameContents();
-  },
-  componentWillUnmount: function() {
-    React.unmountComponentAtNode(React.findDOMNode(this).contentDocument.body);
   }
-});
 
+  render() {
+    return (
+      <iframe {...this.props} />
+    );
+  }
 
-module.exports = Frame;
+};
+
+Frame.propTypes = {
+  style: React.PropTypes.object,
+  head:  React.PropTypes.node
+};
