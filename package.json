@@ -37,6 +37,7 @@
     "babelify": "^6.1.2",
     "browserify": "^9.0.3",
     "browserify-shim": "^3.8.9",
+    "es5-shim": "^4.1.6",
     "gulp": "^3.6.2",
     "gulp-karma": "0.0.4",
     "karma": "^0.12.16",
