@@ -11,21 +11,21 @@ npm install --save react-frame-component
 ## How to use:
 
 ```js
-var Frame = require('react-frame-component');
+import Frame from 'react-frame-component';
 ```
 
 Go check out the [demo] [demo-url].
 
 ```html
-var Header = React.createClass({
-  render: function() {
+class Header extends React.Component {
+  render() {
     return (
       <Frame>
         <h1>{this.props.children}</h1>
       </Frame>
     );
   }
-});
+};
 
 React.render(<Header>Hello</Header>, document.body);
 ```

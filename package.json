@@ -21,20 +21,35 @@
   "bugs": {
     "url": "https://github.com/ryanseddon/react-frame-component/issues"
   },
+  "browserify": {
+    "alias": [
+      "react:react",
+      "React:react"
+    ],
+    "transform": [
+      "browserify-shim",
+      "babelify"
+    ]
+  },
+  "browserify-shim": {},
   "homepage": "https://github.com/ryanseddon/react-frame-component",
   "devDependencies": {
-    "browserify": "^4.1.11",
-    "es5-shim": "^3.3.0",
+    "babelify": "^6.1.2",
+    "browserify": "^9.0.3",
+    "browserify-shim": "^3.8.9",
+    "es5-shim": "^4.1.6",
     "gulp": "^3.6.2",
     "gulp-karma": "0.0.4",
     "karma": "^0.12.16",
+    "karma-browserify": "^4.2.1",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "react": ">=0.12.1",
-    "reactify": "^1.1.0",
     "vinyl-source-stream": "^0.1.1"
   },
   "peerDependencies": {
     "react": ">=0.13.0"
+  },
+  "dependencies": {
+    "react": "^0.13.3"
   }
 }

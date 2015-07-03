@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var karma = require('gulp-karma');
 var browserify = require('browserify');
-var reactify = require('reactify');
 var source = require('vinyl-source-stream');
 
 var testFiles = [
@@ -15,7 +14,6 @@ gulp.task('build', function() {
   });
 
   return bundler
-    .transform(reactify)
     .bundle()
     .pipe(source('Frame_spec.js'))
     .pipe(gulp.dest('./test/processed/'));
