@@ -36,5 +36,8 @@
   },
   "peerDependencies": {
     "react": ">=0.13.0"
+  },
+  "dependencies": {
+    "object-assign": "^3.0.0"
   }
 }

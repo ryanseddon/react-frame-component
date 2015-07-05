@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 "use strict";
 
 var ReactTestUtils, div,
@@ -22,6 +20,21 @@ describe("Frame test",function(){
     var frame = ReactTestUtils.renderIntoDocument(<Frame />);
     expect(frame.props.children).toBeUndefined();
     expect(frame.getDOMNode().contentWindow).toBeDefined();
+  });
+
+  it("should not pass this.props.children in iframe render", function () {
+    spyOn(React, 'createElement').andCallThrough();
+    var frame = ReactTestUtils.renderIntoDocument(
+      <Frame className='foo'>
+        <div />
+      </Frame>
+    );
+
+    expect(React.createElement).toHaveBeenCalledWith('iframe',{
+      children: undefined,
+      className: 'foo'
+    });
+    expect(frame.props.children).toBeDefined();
   });
 
   it("should create an empty iFrame and apply inline styles", function () {

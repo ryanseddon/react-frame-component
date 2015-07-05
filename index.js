@@ -1,5 +1,5 @@
 var React = require('react');
-var assign = require('react/lib/Object.assign');
+var assign = require('object-assign');
 
 var Frame = React.createClass({
   propTypes: {
@@ -7,7 +7,7 @@ var Frame = React.createClass({
     head:  React.PropTypes.node
   },
   render: function() {
-    // The iframe isn't ready so we drop children from props here
+    // The iframe isn't ready so we drop children from props here. #12, #17
     return React.createElement('iframe', assign({}, this.props, {children: undefined}));
   },
   componentDidMount: function() {
