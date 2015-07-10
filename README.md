@@ -8,11 +8,18 @@ This component allows you to encapsulate your entire React application or per co
 npm install --save react-frame-component
 ```
 
-## How to use:
+## Installation
+
+### npm + webpack/browserify
+
+With a module bundler or webpack, use as you would anything else:
 
 ```js
+// using an ES6 transpiler
 import Frame from 'react-frame-component';
 ```
+
+## How to use:
 
 Go check out the [demo] [demo-url].
 
