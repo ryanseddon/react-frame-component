@@ -1,6 +1,38 @@
+var fs = require('fs');
 module.exports = function(config) {
-  config.set({
+  // Use ENV vars on Travis and sauce.json locally to get credentials
+  if (!process.env.SAUCE_USERNAME) {
+    if (!fs.existsSync('sauce.json')) {
+      console.log('Create a sauce.json with your credentials based on the sauce-sample.json file.');
+      process.exit(1);
+    } else {
+      process.env.SAUCE_USERNAME = require('./sauce').username;
+      process.env.SAUCE_ACCESS_KEY = require('./sauce').accessKey;
+    }
+  }
 
+  var customLaunchers = {
+    sl_chrome_mac: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'OS X 10.9',
+      version: '40.0'
+    },
+    sl_firefox_mac: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      platform: 'OS X 10.9',
+      version: '35.0'
+    },
+    sl_safari: {
+      base: 'SauceLabs',
+      browserName: 'safari',
+      platform: 'OS X 10.9',
+      version: '7.0'
+    }
+  };
+
+  config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
@@ -11,7 +43,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['dots', 'saucelabs'],
 
     // web server port
     port: 9876,
@@ -26,12 +58,18 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    sauceLabs: {
+      testName: 'react-frame-component cross-browser tests',
+      recordScreenshots: false
+    },
+    customLaunchers: customLaunchers,
+    browsers: Object.keys(customLaunchers),
+    singleRun: true,
+    // next settings based on:
+    // http://stackoverflow.com/questions/24093155/karma-sauce-launcher-disconnects-every-test-run-resulting-in-failed-runs-with-ie
+    browserDisconnectTimeout: 10000, // default 2000
+    browserDisconnectTolerance : 1, // default 0
+    browserNoActivityTimeout : 4*60*1000, //default 10000
+    captureTimeout : 4*60*1000 //default 60000
   });
 };

@@ -1,6 +1,8 @@
 # React &lt;Frame /> component
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] 
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/zealoushacker.svg)](https://saucelabs.com/u/zealoushacker)
 
 This component allows you to encapsulate your entire React application or per component in an iFrame.
 
