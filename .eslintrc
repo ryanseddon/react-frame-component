@@ -1,0 +1,45 @@
+{
+  "extends": "eslint-config-airbnb",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "eol-last": 2,
+    "max-len": [2, 80, 4],
+    "no-underscore-dangle": [0],
+    "comma-dangle": [2, "never"],
+    "no-var": 2,
+    "react/display-name": 0,
+    "react/jsx-boolean-value": 2,
+    "react/jsx-quotes": [2, "single"],
+    "react/jsx-no-undef": 2,
+    "react/jsx-sort-props": 0,
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/no-did-mount-set-state": 2,
+    "react/no-did-update-set-state": 2,
+    "react/no-multi-comp": 0,
+    "react/no-unknown-property": 2,
+    "react/prop-types": 2,
+    "react/react-in-jsx-scope": 2,
+    "react/self-closing-comp": 2,
+    "react/wrap-multilines": 2,
+    "space-before-function-paren": [2, {
+      "anonymous": "always",
+      "named": "never"
+    }],
+    "strict": [2, "global"],
+    "react/react-in-jsx-scope": 2,
+
+    //Temporarirly disabled due to a possible bug in babel-eslint (todomvc example)
+    "block-scoped-var": 0,
+    // Temporarily disabled for test/* until babel/babel-eslint#33 is resolved
+    "padded-blocks": 0
+  },
+  "plugins": [
+    "react"
+  ]
+}
