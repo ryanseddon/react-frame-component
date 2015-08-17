@@ -40,9 +40,9 @@ export default class Frame extends React.Component {
   }
 
   render() {
-    const props = {...this.props, children: undefined};
+    const { children, ...other} = this.props;
     return (
-      <iframe {...props} />
+      <iframe {...other} />
     );
   }
 

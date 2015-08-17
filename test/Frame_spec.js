@@ -3,7 +3,7 @@
 import React from 'react/addons';
 const {TestUtils} = React.addons;
 
-import Frame from '../index.js';
+import Frame from '../src/index.js';
 
 var div;
 

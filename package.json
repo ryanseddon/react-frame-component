@@ -1,10 +1,11 @@
 {
   "name": "react-frame-component",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "build": "./node_modules/babel/bin/babel.js --stage=0 src/index.js > lib/index.js"
   },
   "repository": {
     "type": "git",
@@ -28,12 +29,13 @@
     ],
     "transform": [
       "browserify-shim",
-      ["babelify", {"stage": 0}]
+      "babelify"
     ]
   },
   "browserify-shim": {},
   "homepage": "https://github.com/ryanseddon/react-frame-component",
   "devDependencies": {
+    "babel": "^5.8.21",
     "babelify": "^6.1.2",
     "browserify": "^9.0.3",
     "browserify-shim": "^3.8.9",
