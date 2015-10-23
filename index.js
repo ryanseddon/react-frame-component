@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var assign = require('object-assign');
 
 var Frame = React.createClass({
@@ -14,15 +15,16 @@ var Frame = React.createClass({
     this.renderFrameContents();
   },
   renderFrameContents: function() {
-    var doc = this.getDOMNode().contentDocument;
+    var doc  = ReactDOM.findDOMNode(this).contentDocument;
+    var root = document.createElement("div");
+    doc.body.appendChild(root);
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
         undefined,
         this.props.head,
         this.props.children
       );
-
-      React.render(contents, doc.body);
+      ReactDOM.render(contents, doc.body.childNodes[0]);
     } else {
       setTimeout(this.renderFrameContents, 0);
     }
@@ -31,9 +33,8 @@ var Frame = React.createClass({
     this.renderFrameContents();
   },
   componentWillUnmount: function() {
-    React.unmountComponentAtNode(React.findDOMNode(this).contentDocument.body);
+    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this).contentDocument.body);
   }
 });
-
 
 module.exports = Frame;
