@@ -30,7 +30,7 @@
     "karma": "^0.12.16",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "react": ">=0.12.1",
+    "react": ">=0.14.0",
     "reactify": "^1.1.0",
     "vinyl-source-stream": "^0.1.1"
   },
