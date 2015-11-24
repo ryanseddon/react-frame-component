@@ -31,7 +31,10 @@ var Frame = React.createClass({
     this.renderFrameContents();
   },
   componentWillUnmount: function() {
-    React.unmountComponentAtNode(React.findDOMNode(this).contentDocument.body);
+    var doc = React.findDOMNode(this).contentDocument;
+    if (doc) {
+      React.unmountComponentAtNode(doc.body);
+    }
   }
 });
 
