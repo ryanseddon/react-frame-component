@@ -1,14 +1,12 @@
 "use strict";
 
-var ReactTestUtils, div,
-    React = require('react/addons'),
+var div,
+    React = require('react'),
+    ReactDOM = require('react-dom'),
+    ReactTestUtils = require('react-addons-test-utils'),
     Frame = require('../index.js');
 
 describe("Frame test",function(){
-  beforeEach(function() {
-    ReactTestUtils = React.addons.TestUtils;
-  });
-
   afterEach(function() {
     if(div) {
       div.parentNode.removeChild(div);
@@ -19,7 +17,7 @@ describe("Frame test",function(){
   it("should create an empty iFrame", function () {
     var frame = ReactTestUtils.renderIntoDocument(<Frame />);
     expect(frame.props.children).toBeUndefined();
-    expect(frame.getDOMNode().contentWindow).toBeDefined();
+    expect(ReactDOM.findDOMNode(frame).contentWindow).toBeDefined();
   });
 
   it("should not pass this.props.children in iframe render", function () {
@@ -40,7 +38,7 @@ describe("Frame test",function(){
   it("should create an empty iFrame and apply inline styles", function () {
     var frame = ReactTestUtils.renderIntoDocument(<Frame style={{border:0}} />);
     expect(frame.props.style).toEqual({border:0});
-    expect(frame.getDOMNode().style.border).toContain('0');
+    expect(ReactDOM.findDOMNode(frame).style.border).toContain('0');
   });
 
   it("should pass along all props to underlying iFrame", function () {
@@ -50,7 +48,7 @@ describe("Frame test",function(){
         height="100%"
         width="80%" />
     );
-    var node = frame.getDOMNode();
+    var node = ReactDOM.findDOMNode(frame);
     expect(frame.props.className).toEqual('test-class-1 test-class-2');
     expect(frame.props.frameBorder).toEqual(0);
     expect(frame.props.height).toEqual('100%');
@@ -63,10 +61,10 @@ describe("Frame test",function(){
 
   it("should create an iFrame with a <link> tag inside", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var frame = React.render(<Frame head={
+    var frame = ReactDOM.render(<Frame head={
           <link href='styles.css' />
         } />, div),
-        body = frame.getDOMNode().contentDocument.body;
+        body = ReactDOM.findDOMNode(frame).contentDocument.body;
 
     expect(body.querySelector('link')).toBeDefined();
     expect(body.querySelector('link').href).toContain('styles.css');
@@ -74,13 +72,13 @@ describe("Frame test",function(){
 
   it("should create an iFrame with a <script> and insert children", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var frame = React.render(<Frame head={
+    var frame = ReactDOM.render(<Frame head={
           <script src="foo.js"></script>
         }>
           <h1>Hello</h1>
           <h2>World</h2>
         </Frame>, div),
-        body = frame.getDOMNode().contentDocument.body;
+        body = ReactDOM.findDOMNode(frame).contentDocument.body;
 
     expect(body.querySelector('script')).toBeDefined();
     expect(body.querySelector('script').src).toContain('foo.js');
@@ -90,12 +88,12 @@ describe("Frame test",function(){
 
   it("should create an iFrame with multiple <link> and <script> tags inside", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var frame = React.render(<Frame head={[
+    var frame = ReactDOM.render(<Frame head={[
           <link key='styles' href='styles.css' />,
           <link key='foo' href='foo.css' />,
           <script key='bar' src='bar.js' />
         ]} />, div),
-        body = frame.getDOMNode().contentDocument.body;
+        body = ReactDOM.findDOMNode(frame).contentDocument.body;
 
     expect(body.querySelectorAll('link').length).toEqual(2);
     expect(body.querySelectorAll('script').length).toEqual(1);
@@ -103,7 +101,7 @@ describe("Frame test",function(){
 
   it("should encapsulate styles and not effect elements outside", function () {
     div = document.body.appendChild(document.createElement('div'));
-    var component = React.render(<div>
+    var component = ReactDOM.render(<div>
           <p>Some text</p>
           <Frame head={
             <style>{'*{color:red}'}</style>
@@ -111,7 +109,7 @@ describe("Frame test",function(){
             <p>Some text</p>
           </Frame>
         </div>, div),
-        elem = component.getDOMNode(),
+        elem = ReactDOM.findDOMNode(component),
         body = elem.querySelector('iframe').contentDocument.body,
         getColour = function(elem) {
           return window.getComputedStyle(elem, null).getPropertyValue('color');
