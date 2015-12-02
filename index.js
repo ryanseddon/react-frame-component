@@ -15,7 +15,6 @@ var Frame = React.createClass({
   },
   renderFrameContents: function() {
     var doc = null;
-
     if (this.isMounted()) {
       doc = this.getDOMNode().contentDocument;
       if(doc && doc.readyState === 'complete') {
