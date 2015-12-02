@@ -14,17 +14,20 @@ var Frame = React.createClass({
     this.renderFrameContents();
   },
   renderFrameContents: function() {
-    var doc = this.getDOMNode().contentDocument;
-    if(doc && doc.readyState === 'complete') {
-      var contents = React.createElement('div',
-        undefined,
-        this.props.head,
-        this.props.children
-      );
+    var doc = null;
+    if (this.isMounted()) {
+      doc = this.getDOMNode().contentDocument;
+      if(doc && doc.readyState === 'complete') {
+        var contents = React.createElement('div',
+          undefined,
+          this.props.head,
+          this.props.children
+        );
 
-      React.render(contents, doc.body);
-    } else {
-      setTimeout(this.renderFrameContents, 0);
+        React.render(contents, doc.body);
+      } else {
+        setTimeout(this.renderFrameContents, 0);
+      }
     }
   },
   componentDidUpdate: function() {
