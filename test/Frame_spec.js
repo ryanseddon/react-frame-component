@@ -118,4 +118,30 @@ describe("Frame test",function(){
     expect(getColour(elem.querySelector('p'))).toEqual('rgb(0, 0, 0)');
     expect(getColour(body.querySelector('p'))).toEqual('rgb(255, 0, 0)');
   });
+
+  it("should re-render inside the iframe correctly", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var component1 = ReactDOM.render(
+          <Frame>
+            <p>Test 1</p>
+          </Frame>
+        , div),
+        body1 = ReactDOM.findDOMNode(component1).contentDocument.body,
+        p1 = body1.querySelector('p');
+
+    expect(p1.textContent).toEqual('Test 1');
+    p1.setAttribute('data-test-value', 'set on dom')
+
+    var component2 = ReactDOM.render(
+          <Frame>
+            <p>Test 2</p>
+          </Frame>
+        , div),
+        body2 = ReactDOM.findDOMNode(component2).contentDocument.body,
+        p2 = body2.querySelector('p');
+
+    expect(p2.textContent).toEqual('Test 2');
+    expect(p2.getAttribute('data-test-value')).toEqual('set on dom');
+  });
 });
