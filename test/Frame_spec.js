@@ -129,6 +129,7 @@ describe("Frame test",function(){
         , div),
         body1 = ReactDOM.findDOMNode(component1).contentDocument.body,
         p1 = body1.querySelector('p');
+
     expect(p1.textContent).toEqual('Test 1');
     p1.setAttribute('data-test-value', 'set on dom')
 
@@ -139,6 +140,7 @@ describe("Frame test",function(){
         , div),
         body2 = ReactDOM.findDOMNode(component2).contentDocument.body,
         p2 = body2.querySelector('p');
+
     expect(p2.textContent).toEqual('Test 2');
     expect(p2.getAttribute('data-test-value')).toEqual('set on dom');
   });
