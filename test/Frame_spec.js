@@ -30,7 +30,8 @@ describe("Frame test",function(){
 
     expect(React.createElement).toHaveBeenCalledWith('iframe',{
       children: undefined,
-      className: 'foo'
+      className: 'foo',
+      initialContent : '<html><head></head><body><div></div></body></html>'
     });
     expect(frame.props.children).toBeDefined();
   });
@@ -187,5 +188,17 @@ describe("Frame test",function(){
 
     expect(frame).not.toBeNull();
     expect(frame.contentDocument.body.innerHTML).toEqual('<div><div data-reactid=".f"><div data-reactid=".f.1">purple</div></div></div>');
+  });
+
+  it("should allow setting initialContent", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var initialContent = '<html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
+    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactid=".f"></div></div></body></html>';
+    var frame = ReactDOM.render(
+      <Frame initialContent={initialContent} />
+    , div);
+    var doc = ReactDOM.findDOMNode(frame).contentDocument;
+    expect(doc.documentElement.outerHTML).toEqual(renderedContent);
   });
 });
