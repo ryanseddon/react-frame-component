@@ -144,4 +144,48 @@ describe("Frame test",function(){
     expect(p2.textContent).toEqual('Test 2');
     expect(p2.getAttribute('data-test-value')).toEqual('set on dom');
   });
+
+  it("should pass context to components in the frame", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var Parent = React.createClass({
+      childContextTypes: { color: React.PropTypes.string },
+      getChildContext: function() {
+        return {color: 'purple'};
+      },
+      render: function() {
+        return (
+          <div>
+            {this.props.children}
+          </div>
+        )
+      }
+    });
+
+    var Child = React.createClass({
+      contextTypes: {
+        color: React.PropTypes.string
+      },
+      render: function() {
+        return (
+          <div>
+            {this.context.color}
+          </div>
+        )
+      }
+    });
+
+    var component = ReactDOM.render(
+      <Parent>
+        <Frame refs='frame'>
+          <Child/>
+        </Frame>
+      </Parent>
+    , div)
+
+    var frame = div.querySelector('iframe')
+
+    expect(div.innerHTML).toEqual('<div data-reactid=".e"><iframe data-reactid=".e.0"></iframe></div>')
+    expect(frame.contentDocument.body.innerHTML).toEqual('<div><div data-reactid=".f"><div data-reactid=".f.1">purple</div></div></div>')
+  });
 });
