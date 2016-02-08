@@ -181,11 +181,11 @@ describe("Frame test",function(){
           <Child/>
         </Frame>
       </Parent>
-    , div)
+    , div);
 
-    var frame = div.querySelector('iframe')
+    var frame = div.querySelector('iframe');
 
-    expect(div.innerHTML).toEqual('<div data-reactid=".e"><iframe data-reactid=".e.0"></iframe></div>')
-    expect(frame.contentDocument.body.innerHTML).toEqual('<div><div data-reactid=".f"><div data-reactid=".f.1">purple</div></div></div>')
+    expect(frame).not.toBeNull();
+    expect(frame.contentDocument.body.innerHTML).toEqual('<div><div data-reactid=".f"><div data-reactid=".f.1">purple</div></div></div>');
   });
 });
