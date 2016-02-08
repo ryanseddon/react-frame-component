@@ -158,7 +158,7 @@ describe("Frame test",function(){
           <div>
             {this.props.children}
           </div>
-        )
+        );
       }
     });
 
@@ -171,7 +171,7 @@ describe("Frame test",function(){
           <div>
             {this.context.color}
           </div>
-        )
+        );
       }
     });
 
