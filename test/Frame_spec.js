@@ -194,7 +194,7 @@ describe("Frame test",function(){
     div = document.body.appendChild(document.createElement('div'));
 
     var initialContent = '<html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
-    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactid=".f"></div></div></body></html>';
+    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactid=".h"></div></div></body></html>';
     var frame = ReactDOM.render(
       <Frame initialContent={initialContent} />
     , div);
