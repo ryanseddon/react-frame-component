@@ -52,7 +52,9 @@ var Frame = React.createClass({
       }
 
       swallowInvalidHeadWarning();
-      ReactDOM.render(contents, doc.body.firstChild);
+      // unstable_renderSubtreeIntoContainer allows us to pass this component as
+      // the parent, which exposes context to any child components.
+      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.firstChild);
       resetWarnings();
     } else {
       setTimeout(this.renderFrameContents, 0);
