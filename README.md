@@ -41,6 +41,20 @@ React.render(
 );
 ```
 
+#####Props:
+
+######head
+`head:  React.PropTypes.node`
+
+The `head` prop is a dom node that gets inserted before the children of the frame. Note that this is injected into the body of frame (see the blog post for why). This has the benefit of being able to update and works for stylesheets.
+
+######initialContent
+`initialContent:  React.PropTypes.string`
+
+Defaults to `'<html><head></head><body><div></div></body></html>'`
+
+The `initialContent` props is the initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
+
 ## More info
 
 I wrote a [blog post] [blog-url] about building this component.

@@ -24,9 +24,19 @@ if(hasConsole) {
 }
 
 var Frame = React.createClass({
+  // React warns when you render directly into the body since browser extensions
+  // also inject into the body and can mess up React. For this reason
+  // initialContent initialContent is expected to have a div inside of the body
+  // element that we render react into.
   propTypes: {
     style: React.PropTypes.object,
-    head:  React.PropTypes.node
+    head:  React.PropTypes.node,
+    initialContent:  React.PropTypes.string,
+  },
+  getDefaultProps: function() {
+    return {
+      initialContent: '<html><head></head><body><div></div></body></html>'
+    };
   },
   render: function() {
     // The iframe isn't ready so we drop children from props here. #12, #17
@@ -44,17 +54,18 @@ var Frame = React.createClass({
         this.props.children
       );
 
-      // React warns when you render directly into the body since browser
-      // extensions also inject into the body and can mess up React.
-      if (!this._createdDiv) {
-        doc.body.innerHTML = '<div></div>';
-        this._createdDiv = true;
+      if (!this._setInitialContent) {
+        doc.clear();
+        doc.open();
+        doc.write(this.props.initialContent);
+        doc.close();
+        this._setInitialContent = true;
       }
 
       swallowInvalidHeadWarning();
       // unstable_renderSubtreeIntoContainer allows us to pass this component as
       // the parent, which exposes context to any child components.
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.firstChild);
+      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.children[0]);
       resetWarnings();
     } else {
       setTimeout(this.renderFrameContents, 0);
