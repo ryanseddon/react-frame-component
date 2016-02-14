@@ -43,9 +43,14 @@ var Frame = React.createClass({
     return React.createElement('iframe', assign({}, this.props, {children: undefined}));
   },
   componentDidMount: function() {
+    this._isMounted = true;
     this.renderFrameContents();
   },
   renderFrameContents: function() {
+    if (!this._isMounted) {
+      return;
+    }
+
     var doc = ReactDOM.findDOMNode(this).contentDocument;
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
@@ -75,6 +80,8 @@ var Frame = React.createClass({
     this.renderFrameContents();
   },
   componentWillUnmount: function() {
+    this._isMounted = false;
+
     var doc = ReactDOM.findDOMNode(this).contentDocument;
     if (doc) {
       ReactDOM.unmountComponentAtNode(doc.body);
