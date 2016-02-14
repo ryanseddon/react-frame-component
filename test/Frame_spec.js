@@ -31,7 +31,7 @@ describe("Frame test",function(){
     expect(React.createElement).toHaveBeenCalledWith('iframe',{
       children: undefined,
       className: 'foo',
-      initialContent : '<html><head></head><body><div></div></body></html>'
+      initialContent : '<!DOCTYPE html><html><head></head><body><div></div></body></html>'
     });
     expect(frame.props.children).toBeDefined();
   });
@@ -193,7 +193,7 @@ describe("Frame test",function(){
   it("should allow setting initialContent", function () {
     div = document.body.appendChild(document.createElement('div'));
 
-    var initialContent = '<html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
+    var initialContent = '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
     var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactid=".h"></div></div></body></html>';
     var frame = ReactDOM.render(
       <Frame initialContent={initialContent} />
