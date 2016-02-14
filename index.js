@@ -35,7 +35,7 @@ var Frame = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      initialContent: '<html><head></head><body><div></div></body></html>'
+      initialContent: '<!DOCTYPE html><html><head></head><body><div></div></body></html>'
     };
   },
   render: function() {
