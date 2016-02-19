@@ -32,10 +32,12 @@ var Frame = React.createClass({
     style: React.PropTypes.object,
     head:  React.PropTypes.node,
     initialContent:  React.PropTypes.string,
+    contentDidUpdate:  React.PropTypes.func
   },
   getDefaultProps: function() {
     return {
-      initialContent: '<!DOCTYPE html><html><head></head><body><div></div></body></html>'
+      initialContent: '<!DOCTYPE html><html><head></head><body><div></div></body></html>',
+      contentDidUpdate: function() {}
     };
   },
   render: function() {
@@ -70,7 +72,8 @@ var Frame = React.createClass({
       swallowInvalidHeadWarning();
       // unstable_renderSubtreeIntoContainer allows us to pass this component as
       // the parent, which exposes context to any child components.
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.children[0]);
+      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.children[0], this.props.contentDidUpdate);
+
       resetWarnings();
     } else {
       setTimeout(this.renderFrameContents, 0);

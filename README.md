@@ -55,6 +55,15 @@ Defaults to `'<html><head></head><body><div></div></body></html>'`
 
 The `initialContent` props is the initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
 
+######contentDidUpdate
+`contentDidUpdate:  React.PropTypes.func`
+
+Callback called after the iframe contents have been rendered. Typically in a
+react component you would use `componentDidUpdate`. But because we do a separate
+`ReactDOM.render`, the lifecycle methods for content inside the frame are
+triggered after the lifecycle of the parent component. This provides a hook to
+know when the frame has updated.
+
 ## More info
 
 I wrote a [blog post] [blog-url] about building this component.
