@@ -32,6 +32,7 @@ describe("Frame test",function(){
       children: undefined,
       className: 'foo',
       initialContent: '<!DOCTYPE html><html><head></head><body><div></div></body></html>',
+      contentDidMount: jasmine.any(Function),
       contentDidUpdate: jasmine.any(Function)
     });
     expect(frame.props.children).toBeDefined();
@@ -201,5 +202,44 @@ describe("Frame test",function(){
     , div);
     var doc = ReactDOM.findDOMNode(frame).contentDocument;
     expect(doc.documentElement.outerHTML).toEqual(renderedContent);
+  });
+
+  it("should call contentDidMount on initial render", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var didMount = jasmine.createSpy('didMount');
+    var didUpdate = jasmine.createSpy('didUpdate');
+    var frame = ReactDOM.render(
+      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate}/>
+    , div);
+
+    expect(didMount.calls.length).toEqual(1);
+    expect(didUpdate).not.toHaveBeenCalled();
+  });
+
+  it("should call contentDidUpdate on subsequent updates", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var didMount = jasmine.createSpy('didMount');
+    var didUpdate = jasmine.createSpy('didUpdate');
+    var frame = ReactDOM.render(
+      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate}/>
+    , div);
+
+    var flag = false;
+    runs(function() {
+      frame.setState({foo: 'bar'}, function(){
+        flag = true;
+      });
+    });
+
+    waitsFor(function() {
+      return flag;
+    }, 'setState should complete', 200);
+
+    runs(function() {
+      expect(didMount.calls.length).toEqual(1);
+      expect(didUpdate.calls.length).toEqual(1);
+    });
   });
 });
