@@ -55,6 +55,17 @@ Defaults to `'<!DOCTYPE html><html><head></head><body><div></div></body></html>'
 
 The `initialContent` props is the initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
 
+######contentDidMount and contentDidUpdate
+`contentDidMount:  React.PropTypes.func`
+`contentDidUpdate:  React.PropTypes.func`
+
+`contentDidMount` and `contentDidUpdate` are conceptually equivalent to
+`componentDidMount` and `componentDidUpdate`, respecitvely. The reason these are
+needed is because internally we call `ReactDOM.render` which starts a new set of
+lifecycle calls. This set of lifecycle calls are sometimes triggered after the
+lifecycle of the parent component, so these callbacks provide a hook to know
+when the frame contents are mounted and updated.
+
 ## More info
 
 I wrote a [blog post] [blog-url] about building this component.
