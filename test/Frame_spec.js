@@ -204,6 +204,18 @@ describe("Frame test",function(){
     expect(doc.documentElement.outerHTML).toEqual(renderedContent);
   });
 
+  it("should allow setting mountTarget", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var initialContent = '<!DOCTYPE html><html><head></head><body><h1>i was here first</h1><div id="mountHere"></div></body></html>';
+    var renderedContent = '<html><head></head><body><h1>i was here first</h1><div id="mountHere"><div data-reactid=".j"></div></div></body></html>';
+    var frame = ReactDOM.render(
+      <Frame initialContent={initialContent} mountTarget="#mountHere" />
+    , div);
+    var doc = ReactDOM.findDOMNode(frame).contentDocument;
+    expect(doc.documentElement.outerHTML).toEqual(renderedContent);
+  });
+
   it("should call contentDidMount on initial render", function () {
     div = document.body.appendChild(document.createElement('div'));
 
