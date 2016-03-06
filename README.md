@@ -55,6 +55,19 @@ Defaults to `'<!DOCTYPE html><html><head></head><body><div></div></body></html>'
 
 The `initialContent` props is the initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
 
+######mountTarget
+`mountTarget:  React.PropTypes.string`
+
+The `mountTarget` props is a css selector (#target/.target) that specifies where in the `initialContent` of the iframe, children will be mounted.
+
+```html
+<Frame
+  initialContent='<!DOCTYPE html><html><head></head><body><h1>i wont be changed</h1><div id="mountHere"></div></body></html>'
+  mountTarget='#mountHere'
+  >
+</Frame>
+```
+
 ######contentDidMount and contentDidUpdate
 `contentDidMount:  React.PropTypes.func`
 `contentDidUpdate:  React.PropTypes.func`
