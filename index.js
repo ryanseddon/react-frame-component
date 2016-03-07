@@ -82,7 +82,7 @@ var Frame = React.createClass({
       
       if(this.props.mountTarget) {
         mountTarget = doc.querySelector(this.props.mountTarget);
-      }else {
+      } else {
         mountTarget = doc.body.children[0];
       }
 
