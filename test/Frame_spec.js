@@ -171,7 +171,7 @@ describe("Frame test",function(){
       },
       render: function() {
         return (
-          <div>
+          <div className='childDiv'>
             {this.context.color}
           </div>
         );
@@ -189,14 +189,14 @@ describe("Frame test",function(){
     var frame = div.querySelector('iframe');
 
     expect(frame).not.toBeNull();
-    expect(frame.contentDocument.body.innerHTML).toEqual('<div><div data-reactid=".f"><div data-reactid=".f.1">purple</div></div></div>');
+    expect(frame.contentDocument.body.querySelector('.childDiv').innerHTML).toEqual('purple');
   });
 
   it("should allow setting initialContent", function () {
     div = document.body.appendChild(document.createElement('div'));
 
     var initialContent = '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
-    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactid=".h"></div></div></body></html>';
+    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactroot=""></div></div></body></html>';
     var frame = ReactDOM.render(
       <Frame initialContent={initialContent} />
     , div);
@@ -211,7 +211,7 @@ describe("Frame test",function(){
     var initialContent = '<!DOCTYPE html><html><head></head><body><h1>i was here first</h1><div id="mountHere"></div></body></html>';
     var frame = ReactDOM.render(
       <Frame initialContent={initialContent} mountTarget="#mountHere">
-        <h1>And i am joyning you</h1>
+        <h1>And i am joining you</h1>
       </Frame>
     , div);
     var doc = ReactDOM.findDOMNode(frame).contentDocument;
