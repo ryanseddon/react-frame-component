@@ -79,7 +79,7 @@ var Frame = React.createClass({
       ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.children[0], callback);
 
       if (this.props.head) {
-        ReactDOM.unstable_renderSubtreeIntoContainer(this, this.props.head, doc.querySelector('head'), callback);
+        ReactDOM.unstable_renderSubtreeIntoContainer(this, this.props.head, doc.querySelector('head'));
       }
 
       resetWarnings();
