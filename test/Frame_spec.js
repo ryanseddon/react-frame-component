@@ -67,10 +67,10 @@ describe("Frame test",function(){
     var frame = ReactDOM.render(<Frame head={
           <link href='styles.css' />
         } />, div),
-        body = ReactDOM.findDOMNode(frame).contentDocument.body;
+        head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
-    expect(body.querySelector('link')).toBeDefined();
-    expect(body.querySelector('link').href).toContain('styles.css');
+    expect(head.querySelector('link')).toBeDefined();
+    expect(head.querySelector('link').href).toContain('styles.css');
   });
 
   it("should create an iFrame with a <script> and insert children", function () {
@@ -81,10 +81,11 @@ describe("Frame test",function(){
           <h1>Hello</h1>
           <h2>World</h2>
         </Frame>, div),
-        body = ReactDOM.findDOMNode(frame).contentDocument.body;
+        body = ReactDOM.findDOMNode(frame).contentDocument.body,
+        head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
-    expect(body.querySelector('script')).toBeDefined();
-    expect(body.querySelector('script').src).toContain('foo.js');
+    expect(head.querySelector('script')).toBeDefined();
+    expect(head.querySelector('script').src).toContain('foo.js');
     expect(frame.props.children).toBeDefined();
     expect(body.querySelectorAll('h1,h2').length).toEqual(2);
   });
@@ -96,10 +97,10 @@ describe("Frame test",function(){
           <link key='foo' href='foo.css' />,
           <script key='bar' src='bar.js' />
         ]} />, div),
-        body = ReactDOM.findDOMNode(frame).contentDocument.body;
+        head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
-    expect(body.querySelectorAll('link').length).toEqual(2);
-    expect(body.querySelectorAll('script').length).toEqual(1);
+    expect(head.querySelectorAll('link').length).toEqual(2);
+    expect(head.querySelectorAll('script').length).toEqual(1);
   });
 
   it("should encapsulate styles and not effect elements outside", function () {
