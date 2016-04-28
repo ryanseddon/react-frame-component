@@ -66,7 +66,6 @@ var Frame = React.createClass({
 
       var initialRender = !this._setInitialContent;
       if (!this._setInitialContent) {
-        doc.clear();
         doc.open();
         doc.write(this.props.initialContent);
         doc.close();
