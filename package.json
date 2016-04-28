@@ -1,6 +1,6 @@
 {
   "name": "react-frame-component",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "index.js",
   "scripts": {
