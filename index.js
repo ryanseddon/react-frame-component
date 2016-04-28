@@ -32,6 +32,7 @@ var Frame = React.createClass({
     style: React.PropTypes.object,
     head:  React.PropTypes.node,
     initialContent:  React.PropTypes.string,
+    mountTarget:  React.PropTypes.string,
     contentDidMount:  React.PropTypes.func,
     contentDidUpdate:  React.PropTypes.func
   },
@@ -77,7 +78,15 @@ var Frame = React.createClass({
       // unstable_renderSubtreeIntoContainer allows us to pass this component as
       // the parent, which exposes context to any child components.
       var callback = initialRender ? this.props.contentDidMount : this.props.contentDidUpdate;
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, doc.body.children[0], callback);
+      var mountTarget;
+      
+      if(this.props.mountTarget) {
+        mountTarget = doc.querySelector(this.props.mountTarget);
+      } else {
+        mountTarget = doc.body.children[0];
+      }
+
+      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
 
       resetWarnings();
     } else {
