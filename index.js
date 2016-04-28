@@ -60,7 +60,6 @@ var Frame = React.createClass({
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
         undefined,
-        this.props.head,
         this.props.children
       );
 
@@ -87,6 +86,10 @@ var Frame = React.createClass({
 
       ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
 
+      if (this.props.head) {
+        ReactDOM.unstable_renderSubtreeIntoContainer(this, this.props.head, doc.querySelector('head'));
+      }
+
       resetWarnings();
     } else {
       setTimeout(this.renderFrameContents, 0);
@@ -106,4 +109,3 @@ var Frame = React.createClass({
 });
 
 module.exports = Frame;
-
