@@ -44,8 +44,12 @@ var Frame = React.createClass({
     };
   },
   render: function() {
+    const divProps = assign({}, this.props);
+    delete divProps.initialContent;
+    delete divProps.contentDidMount;
+    delete divProps.contentDidUpdate;
     // The iframe isn't ready so we drop children from props here. #12, #17
-    return React.createElement('iframe', assign({}, this.props, {children: undefined}));
+    return React.createElement('iframe', assign({}, divProps, {children: undefined}));
   },
   componentDidMount: function() {
     this._isMounted = true;
