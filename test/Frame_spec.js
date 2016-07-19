@@ -30,10 +30,7 @@ describe("Frame test",function(){
 
     expect(React.createElement).toHaveBeenCalledWith('iframe',{
       children: undefined,
-      className: 'foo',
-      initialContent: '<!DOCTYPE html><html><head></head><body><div></div></body></html>',
-      contentDidMount: jasmine.any(Function),
-      contentDidUpdate: jasmine.any(Function)
+      className: 'foo'
     });
     expect(frame.props.children).toBeDefined();
   });
