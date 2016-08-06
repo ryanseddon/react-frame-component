@@ -45,7 +45,9 @@ var Frame = React.createClass({
   },
   render: function() {
     const props = assign({}, this.props);
+    delete props.head;
     delete props.initialContent;
+    delete props.mountTarget;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     // The iframe isn't ready so we drop children from props here. #12, #17
@@ -82,7 +84,7 @@ var Frame = React.createClass({
       // the parent, which exposes context to any child components.
       var callback = initialRender ? this.props.contentDidMount : this.props.contentDidUpdate;
       var mountTarget;
-      
+
       if(this.props.mountTarget) {
         mountTarget = doc.querySelector(this.props.mountTarget);
       } else {
@@ -110,4 +112,3 @@ var Frame = React.createClass({
 });
 
 module.exports = Frame;
-
