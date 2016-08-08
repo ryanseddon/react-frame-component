@@ -44,7 +44,7 @@ var Frame = React.createClass({
     };
   },
   render: function() {
-    const props = assign({}, this.props);
+    var props = assign({}, this.props);
     delete props.head;
     delete props.initialContent;
     delete props.mountTarget;
