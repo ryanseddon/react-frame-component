@@ -37,6 +37,6 @@
     "vinyl-source-stream": "^0.1.1"
   },
   "dependencies": {
-    "object-assign": "^3.0.0"
+    "object-assign": "^4.1.0"
   }
 }
