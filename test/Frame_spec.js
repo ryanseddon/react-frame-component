@@ -253,4 +253,24 @@ describe("Frame test",function(){
       expect(didUpdate.calls.length).toEqual(1);
     });
   });
+
+  it("should return first child element of the `body` on call to `this.getMountTarget()` if `props.mountTarget` was not passed in", function () {
+    div = document.body.appendChild(document.createElement('div'));
+
+    var frame = ReactDOM.render(<Frame />, div),
+        body = ReactDOM.findDOMNode(frame).contentDocument.body;
+
+    expect(Frame.prototype.getMountTarget.call(frame)).toEqual(body.children[0]);
+  });
+
+  it("should return resolved `props.mountTarget` node on call to `this.getMountTarget()` if `props.mountTarget` was passed in", function () {
+    div = document.body.appendChild(document.createElement('div'));
+    var initialContent = '<!DOCTYPE html><html><head></head><body><div></div><div id="container"></div></body></html>';
+
+    var frame = ReactDOM.render(<Frame initialContent={initialContent} mountTarget='#container' />, div),
+      body = ReactDOM.findDOMNode(frame).contentDocument.body;
+    div = document.body.appendChild(document.createElement('div'));
+
+    expect(Frame.prototype.getMountTarget.call(frame)).toEqual(body.querySelector('#container'));
+  });
 });

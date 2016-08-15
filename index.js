@@ -62,7 +62,7 @@ var Frame = React.createClass({
       return;
     }
 
-    var doc = ReactDOM.findDOMNode(this).contentDocument;
+    var doc = this.getDoc();
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
         undefined,
@@ -83,13 +83,8 @@ var Frame = React.createClass({
       // unstable_renderSubtreeIntoContainer allows us to pass this component as
       // the parent, which exposes context to any child components.
       var callback = initialRender ? this.props.contentDidMount : this.props.contentDidUpdate;
-      var mountTarget;
+      var mountTarget = this.getMountTarget();
 
-      if(this.props.mountTarget) {
-        mountTarget = doc.querySelector(this.props.mountTarget);
-      } else {
-        mountTarget = doc.body.children[0];
-      }
 
       ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
 
@@ -98,15 +93,27 @@ var Frame = React.createClass({
       setTimeout(this.renderFrameContents, 0);
     }
   },
+  getMountTarget: function() {
+    var doc = this.getDoc();
+
+    if(this.props.mountTarget) {
+      return doc.querySelector(this.props.mountTarget);
+    }
+
+    return doc.body.children[0];
+  },
+  getDoc: function() {
+    return ReactDOM.findDOMNode(this).contentDocument;
+  },
   componentDidUpdate: function() {
     this.renderFrameContents();
   },
   componentWillUnmount: function() {
     this._isMounted = false;
 
-    var doc = ReactDOM.findDOMNode(this).contentDocument;
+    var doc = this.getDoc();
     if (doc) {
-      ReactDOM.unmountComponentAtNode(doc.body);
+      ReactDOM.unmountComponentAtNode(this.getMountTarget());
     }
   }
 });
