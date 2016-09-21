@@ -193,7 +193,7 @@ describe("Frame test",function(){
     div = document.body.appendChild(document.createElement('div'));
 
     var initialContent = '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
-    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactroot=""></div></div></body></html>';
+    var renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactroot="" class="frame-content"></div></div></body></html>';
     var frame = ReactDOM.render(
       <Frame initialContent={initialContent} />
     , div);
