@@ -38,7 +38,7 @@ var Frame = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      initialContent: '<!DOCTYPE html><html><head></head><body><div></div></body></html>',
+      initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>',
       contentDidMount: function() {},
       contentDidUpdate: function() {}
     };
@@ -65,7 +65,7 @@ var Frame = React.createClass({
     var doc = this.getDoc();
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
-        undefined,
+        {className: 'frame-content'},
         this.props.head,
         this.props.children
       );
