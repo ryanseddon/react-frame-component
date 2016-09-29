@@ -65,7 +65,7 @@ var Frame = React.createClass({
     var doc = this.getDoc();
     if(doc && doc.readyState === 'complete') {
       var contents = React.createElement('div',
-        {'className': 'frame-content'},
+        {className: 'frame-content'},
         this.props.head,
         this.props.children
       );
