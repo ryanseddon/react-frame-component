@@ -87,6 +87,7 @@ export default class Frame extends React.Component {
       const contents = (
         <DocumentContext document={doc}>
           <div className="frame-content">
+            {this.props.head}
             {this.props.children}
           </div>
         </DocumentContext>
