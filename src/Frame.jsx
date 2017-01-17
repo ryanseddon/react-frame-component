@@ -84,8 +84,9 @@ export default class Frame extends React.Component {
 
     const doc = this.getDoc();
     if(doc && doc.readyState === 'complete') {
+      const win = document.defaultView || document.parentView;
       const contents = (
-        <DocumentContext document={doc}>
+        <DocumentContext document={doc} window={win}>
           <div className="frame-content">
             {this.props.head}
             {this.props.children}
