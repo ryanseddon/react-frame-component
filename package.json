@@ -23,6 +23,9 @@
     "browser"
   ],
   "author": "Ryan Seddon",
+  "contributors": [
+    "Chris Trevino <darthtrevino@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ryanseddon/react-frame-component/issues"
