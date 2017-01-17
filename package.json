@@ -6,7 +6,6 @@
   "scripts": {
     "test": "npm-run-all --parallel lint karma:once --sequential babel",
     "develop": "npm-run-all --parallel karma:dev",
-    "mocha": "mocha",
     "karma:once": "karma start --single-run",
     "karma:dev": "karma start --browsers Chrome,Electron",
     "babel": "babel src -d lib",
@@ -48,7 +47,6 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
-    "jsdom": "^9.9.1",
     "karma": "^1.4.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-electron": "^5.1.1",
