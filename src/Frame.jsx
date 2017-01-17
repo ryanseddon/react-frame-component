@@ -1,26 +1,24 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import DocumentContext from './DocumentContext';
 
 const hasConsole = typeof window !== 'undefined' && window.console;
-const noop = function() {}
+const noop = () => {};
 let swallowInvalidHeadWarning = noop;
 let resetWarnings = noop;
 
 if (hasConsole) {
-  const originalError = console.error;
+  const originalError = console.error; // eslint-disable-line no-console
   // Rendering a <head> into a body is technically invalid although it
   // works. We swallow React's validateDOMNesting warning if that is the
   // message to avoid confusion
-  swallowInvalidHeadWarning = function() {
-    console.error = function(msg) {
+  swallowInvalidHeadWarning = () => {
+    console.error = (msg) => {  // eslint-disable-line no-console
       if (/<head>/.test(msg)) return;
       originalError.call(console, msg);
     };
   };
-  resetWarnings = function() {
-    console.error = originalError;
-  };
+  resetWarnings = () => (console.error = originalError);  // eslint-disable-line no-console
 }
 
 export default class Frame extends React.Component {
@@ -29,12 +27,25 @@ export default class Frame extends React.Component {
   // initialContent initialContent is expected to have a div inside of the body
   // element that we render react into.
   static propTypes = {
-    style: React.PropTypes.object,
-    head:  React.PropTypes.node,
-    initialContent:  React.PropTypes.string,
-    mountTarget:  React.PropTypes.string,
-    contentDidMount:  React.PropTypes.func,
-    contentDidUpdate:  React.PropTypes.func
+    style: PropTypes.object, // eslint-disable-line
+    head: PropTypes.node,
+    initialContent: PropTypes.string,
+    mountTarget: PropTypes.string,
+    contentDidMount: PropTypes.func,
+    contentDidUpdate: PropTypes.func,
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.arrayOf(PropTypes.element),
+    ]),
+  };
+
+  static defaultProps = {
+    style: {},
+    head: null,
+    children: null,
+    mountTarget: undefined,
+    contentDidMount: () => {},
+    contentDidUpdate: () => {},
   };
 
   static displayname = 'Frame';
@@ -66,7 +77,7 @@ export default class Frame extends React.Component {
   }
 
   getDoc() {
-    return ReactDOM.findDOMNode(this).contentDocument;
+    return ReactDOM.findDOMNode(this).contentDocument; // eslint-disable-line
   }
 
   getMountTarget() {
@@ -83,8 +94,8 @@ export default class Frame extends React.Component {
     }
 
     const doc = this.getDoc();
-    if(doc && doc.readyState === 'complete') {
-      const win = document.defaultView || document.parentView;
+    if (doc && doc.readyState === 'complete') {
+      const win = doc.defaultView || doc.parentView;
       const contents = (
         <DocumentContext document={doc} window={win}>
           <div className="frame-content">
@@ -117,14 +128,13 @@ export default class Frame extends React.Component {
   }
 
   render() {
-    const props = { ... this.props };
+    const props = { ...this.props };
     delete props.head;
     delete props.initialContent;
     delete props.mountTarget;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
-
     // The iframe isn't ready so we drop children from props here. #12, #17
-    return (<iframe {...props} children={undefined} />);
+    return (<iframe {...props} />);
   }
 }

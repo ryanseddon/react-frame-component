@@ -1,0 +1,4 @@
+test-results.xml
+wallaby.conf.js
+karma.conf.js
+.travis.yml
