@@ -29,6 +29,6 @@ module.exports = function configure(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Electron'],
+    browsers: ['PhantomJS2'],
   });
 };
