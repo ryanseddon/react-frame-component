@@ -15,8 +15,10 @@ export default class DocumentContext extends React.Component {
   static displayName = 'DocumentContext';
 
   getChildContext() {
-    const { document, window } = this.props;
-    return { document, window };
+    return {
+      document: this.props.document,
+      window: this.props.window,
+    };
   }
 
   render() {
