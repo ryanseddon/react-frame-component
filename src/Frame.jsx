@@ -135,6 +135,6 @@ export default class Frame extends React.Component {
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     // The iframe isn't ready so we drop children from props here. #12, #17
-    return (<iframe {...props} />);
+    return (<iframe {...props} children={undefined} />); // eslint-disable-line
   }
 }
