@@ -128,13 +128,15 @@ export default class Frame extends React.Component {
   }
 
   render() {
-    const props = { ...this.props };
+    const props = {
+      ...this.props,
+      children: undefined, // The iframe isn't ready so we drop children from props here. #12, #17
+    };
     delete props.head;
     delete props.initialContent;
     delete props.mountTarget;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
-    // The iframe isn't ready so we drop children from props here. #12, #17
-    return (<iframe {...props} children={undefined} />); // eslint-disable-line
+    return (<iframe {...props} />);
   }
 }
