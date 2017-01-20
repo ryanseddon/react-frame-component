@@ -4,12 +4,15 @@
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "lib/index.js",
   "scripts": {
-    "test": "npm-run-all --parallel lint karma:once --sequential babel",
+    "clean": "rimraf lib",
+    "test": "npm-run-all --parallel lint karma:once --sequential build",
     "develop": "npm-run-all --parallel karma:dev",
     "karma:once": "karma start --single-run",
     "karma:dev": "karma start --browsers Chrome,Electron",
     "babel": "babel src -d lib",
-    "lint": "eslint '{src,test}/**/*.js*'"
+    "build": "npm-run-all clean babel",
+    "lint": "eslint '{src,test}/**/*.js*'",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -64,6 +67,7 @@
     "react": "^15.0.1",
     "react-addons-test-utils": "^15.0.1",
     "react-dom": "^15.0.1",
+    "rimraf": "^2.5.4",
     "sinon": "2.0.0-pre",
     "wallaby-webpack": "^0.0.30",
     "webpack": "^1.14.0"

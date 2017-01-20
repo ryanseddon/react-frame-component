@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import DocumentContext from './DocumentContext';
 
@@ -21,10 +21,10 @@ if (hasConsole) {
   resetWarnings = () => (console.error = originalError);  // eslint-disable-line no-console
 }
 
-export default class Frame extends React.Component {
+export default class Frame extends Component {
   // React warns when you render directly into the body since browser extensions
   // also inject into the body and can mess up React. For this reason
-  // initialContent initialContent is expected to have a div inside of the body
+  // initialContent is expected to have a div inside of the body
   // element that we render react into.
   static propTypes = {
     style: PropTypes.object, // eslint-disable-line
@@ -48,7 +48,7 @@ export default class Frame extends React.Component {
     contentDidUpdate: () => {},
   };
 
-  static displayname = 'Frame';
+  static displayName = 'Frame';
 
   static defaultProps = {
     initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>',
@@ -104,9 +104,9 @@ export default class Frame extends React.Component {
           </div>
         </DocumentContext>
       );
-
       const initialRender = !this._setInitialContent;
-      if (!this._setInitialContent) {
+
+      if (initialRender) {
         doc.open();
         doc.write(this.props.initialContent);
         doc.close();
