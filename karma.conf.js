@@ -1,26 +1,27 @@
 const webpack = {
   devtool: 'inline-source-map',
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     noParse: [
-      /node_modules\/sinon/,
+      /node_modules\/sinon/
     ],
     loaders: [
       { test: /\.js(x|)$/, loader: 'babel-loader', exclude: /node_modules/ },
-    ],
-  },
+      { test: /\.json$/, loader: 'json-loader' }
+    ]
+  }
 };
 
 module.exports = function configure(config) {
   config.set({
     basePath: '',
     files: [
-      { pattern: 'test/**/*.spec.js*', watched: true },
+      { pattern: 'test/**/*.spec.js*', watched: true }
     ],
     preprocessors: {
-      'test/**/*.spec.js*': ['webpack', 'sourcemap'],
+      'test/**/*.spec.js*': ['webpack', 'sourcemap']
     },
     webpack,
     frameworks: ['mocha'],
@@ -29,6 +30,6 @@ module.exports = function configure(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['PhantomJS2'],
+    browsers: ['PhantomJS2']
   });
 };

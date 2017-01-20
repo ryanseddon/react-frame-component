@@ -35,24 +35,21 @@ export default class Frame extends Component {
     contentDidUpdate: PropTypes.func,
     children: PropTypes.oneOfType([
       PropTypes.element,
-      PropTypes.arrayOf(PropTypes.element),
-    ]),
+      PropTypes.arrayOf(PropTypes.element)
+    ])
   };
 
   static defaultProps = {
     style: {},
     head: null,
-    children: null,
+    children: undefined,
     mountTarget: undefined,
     contentDidMount: () => {},
     contentDidUpdate: () => {},
+    initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
   };
 
   static displayName = 'Frame';
-
-  static defaultProps = {
-    initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>',
-  };
 
   constructor(props, context) {
     super(props, context);
@@ -96,6 +93,7 @@ export default class Frame extends Component {
     const doc = this.getDoc();
     if (doc && doc.readyState === 'complete') {
       const win = doc.defaultView || doc.parentView;
+      const initialRender = !this._setInitialContent;
       const contents = (
         <DocumentContext document={doc} window={win}>
           <div className="frame-content">
@@ -104,7 +102,6 @@ export default class Frame extends Component {
           </div>
         </DocumentContext>
       );
-      const initialRender = !this._setInitialContent;
 
       if (initialRender) {
         doc.open();
@@ -130,7 +127,7 @@ export default class Frame extends Component {
   render() {
     const props = {
       ...this.props,
-      children: undefined, // The iframe isn't ready so we drop children from props here. #12, #17
+      children: undefined // The iframe isn't ready so we drop children from props here. #12, #17
     };
     delete props.head;
     delete props.initialContent;

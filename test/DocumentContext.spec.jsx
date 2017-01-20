@@ -13,7 +13,7 @@ describe('The DocumentContext Component', () => {
     };
     Child.contextTypes = {
       window: PropTypes.object.isRequired,
-      document: PropTypes.object.isRequired,
+      document: PropTypes.object.isRequired
     };
     const rendered = ReactTestUtils.renderIntoDocument(
       <DocumentContext document={{ x: 1 }} window={{ y: 2 }}>

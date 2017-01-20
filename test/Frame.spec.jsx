@@ -76,7 +76,7 @@ describe('The Frame Component', () => {
         <h1>Hello</h1>
         <h2>World</h2>
       </Frame>,
-      div,
+      div
     );
     const body = ReactDOM.findDOMNode(frame).contentDocument.body;
 
@@ -93,7 +93,7 @@ describe('The Frame Component', () => {
         head={[
           <link key="styles" href="styles.css" />,
           <link key="foo" href="foo.css" />,
-          <script key="bar" src="bar.js" />,
+          <script key="bar" src="bar.js" />
         ]}
       />, div);
     const body = ReactDOM.findDOMNode(frame).contentDocument.body;
@@ -152,11 +152,11 @@ describe('The Frame Component', () => {
 
     class Parent extends React.Component {
       static childContextTypes = {
-        color: PropTypes.string,
+        color: PropTypes.string
       };
 
       static propTypes = {
-        children: PropTypes.element.isRequired,
+        children: PropTypes.element.isRequired
       };
 
       getChildContext() {
@@ -178,7 +178,7 @@ describe('The Frame Component', () => {
       </div>
     );
     Child.contextTypes = {
-      color: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired
     };
 
     ReactDOM.render(

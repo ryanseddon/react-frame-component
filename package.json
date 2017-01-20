@@ -11,7 +11,7 @@
     "karma:dev": "karma start --browsers Chrome,Electron",
     "babel": "babel src -d lib",
     "build": "npm-run-all clean babel",
-    "lint": "eslint '{src,test}/**/*.js*'",
+    "lint": "eslint '*.js' '{src,test}/**/*.js*'",
     "prepublish": "npm run build"
   },
   "repository": {
