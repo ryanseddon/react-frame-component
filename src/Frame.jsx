@@ -49,8 +49,6 @@ export default class Frame extends Component {
     initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
   };
 
-  static displayName = 'Frame';
-
   constructor(props, context) {
     super(props, context);
     this._isMounted = false;

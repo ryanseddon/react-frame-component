@@ -12,8 +12,6 @@ export default class DocumentContext extends Component {
     window: PropTypes.object.isRequired
   };
 
-  static displayName = 'DocumentContext';
-
   getChildContext() {
     return {
       document: this.props.document,
