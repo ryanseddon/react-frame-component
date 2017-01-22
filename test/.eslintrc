@@ -1,0 +1,10 @@
+{
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "react/no-render-return-value": "off",
+    "react/no-find-dom-node": "off",
+    "no-unused-expressions": "off"
+  }
+}

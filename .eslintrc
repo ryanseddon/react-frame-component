@@ -1,0 +1,20 @@
+{
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "react/forbid-prop-types": "off",
+    "no-underscore-dangle": "off",
+    "comma-dangle": ["error", "never"]
+  }
+}

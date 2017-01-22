@@ -2,9 +2,17 @@
   "name": "react-frame-component",
   "version": "0.6.6",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "gulp test"
+    "clean": "rimraf lib",
+    "test": "npm-run-all --parallel lint karma:once --sequential build",
+    "develop": "npm-run-all --parallel karma:dev",
+    "karma:once": "karma start --single-run",
+    "karma:dev": "karma start --browsers Chrome,Electron",
+    "babel": "babel src -d lib",
+    "build": "npm-run-all clean babel",
+    "lint": "eslint '*.js' '{src,test}/**/*.js*'",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -17,26 +25,56 @@
     "browser"
   ],
   "author": "Ryan Seddon",
+  "contributors": [
+    "Chris Trevino <darthtrevino@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ryanseddon/react-frame-component/issues"
   },
   "homepage": "https://github.com/ryanseddon/react-frame-component",
   "devDependencies": {
-    "browserify": "^4.1.11",
-    "es5-shim": "^3.3.0",
-    "gulp": "^3.6.2",
-    "gulp-karma": "0.0.4",
-    "karma": "^0.12.16",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "chai": "^3.5.0",
+    "electron": "^1.4.14",
+    "eslint": "^3.13.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0",
+    "karma": "^1.4.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-electron": "^5.1.1",
+    "karma-mocha": "^1.3.0",
+    "karma-osx-reporter": "^0.2.1",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-phantomjs2-launcher": "^0.5.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.1",
+    "mocha": "^3.2.0",
+    "mocha-junit-reporter": "^1.13.0",
+    "mocha-multi": "^0.10.0",
+    "mocha-osx-reporter": "^0.1.2",
+    "npm-run-all": "^4.0.1",
     "react": "^15.0.1",
     "react-addons-test-utils": "^15.0.1",
     "react-dom": "^15.0.1",
-    "reactify": "^1.1.0",
-    "vinyl-source-stream": "^0.1.1"
+    "rimraf": "^2.5.4",
+    "sinon": "2.0.0-pre",
+    "wallaby-webpack": "^0.0.30",
+    "webpack": "^1.14.0"
   },
-  "dependencies": {
-    "object-assign": "^4.1.0"
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1"
   }
 }
