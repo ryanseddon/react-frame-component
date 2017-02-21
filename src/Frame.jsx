@@ -84,6 +84,10 @@ export default class Frame extends Component {
   }
 
   renderFrameContents() {
+    if (!this._isMounted) {
+      return;
+    }
+
     const doc = this.getDoc();
     if (doc && doc.readyState === 'complete') {
       const win = doc.defaultView || doc.parentView;
