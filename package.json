@@ -60,7 +60,7 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-phantomjs2-launcher": "^0.5.0",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.1",
+    "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
     "mocha-junit-reporter": "^1.13.0",
     "mocha-multi": "^0.10.0",
@@ -72,8 +72,8 @@
     "rimraf": "^2.5.4",
     "sinon": "2.0.0-pre",
     "wallaby-webpack": "^0.0.30",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.1"
+    "webpack": "1.x",
+    "webpack-dev-server": "^1.16.3"
   },
   "dependencies": {},
   "peerDependencies": {
