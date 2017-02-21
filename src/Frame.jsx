@@ -72,7 +72,7 @@ export default class Frame extends Component {
   }
 
   getDoc() {
-    return ReactDOM.findDOMNode(this).contentDocument; // eslint-disable-line
+    return ReactDOM.findDOMNode(this).contentWindow.document; // eslint-disable-line
   }
 
   getMountTarget() {
@@ -84,10 +84,6 @@ export default class Frame extends Component {
   }
 
   renderFrameContents() {
-    if (!this._isMounted) {
-      return;
-    }
-
     const doc = this.getDoc();
     if (doc && doc.readyState === 'complete') {
       const win = doc.defaultView || doc.parentView;
@@ -118,7 +114,7 @@ export default class Frame extends Component {
       ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
       resetWarnings();
     } else {
-      setTimeout(this.renderFrameContents, 0);
+      setTimeout(() => this.renderFrameContents(), 0);
     }
   }
 
