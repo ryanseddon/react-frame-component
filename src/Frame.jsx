@@ -118,7 +118,7 @@ export default class Frame extends Component {
       ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
       resetWarnings();
     } else {
-      setTimeout(this.renderFrameContents, 0);
+      setTimeout(this.renderFrameContents.bind(this), 0);
     }
   }
 
