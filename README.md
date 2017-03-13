@@ -79,6 +79,23 @@ lifecycle calls. This set of lifecycle calls are sometimes triggered after the
 lifecycle of the parent component, so these callbacks provide a hook to know
 when the frame contents are mounted and updated.
 
+######Accessing the iframe's window and document
+The iframe's `window` and `document` may be accessed via the React context values `window` and `document` respectively.
+
+```
+const MyComponent = (props, context) => {
+  const {
+    document: iframeDocument,
+    window: iframeWindow
+  } = context;
+  return (<...rendered jsx.../>);
+};
+MyComponent.contextTypes = {
+  window: PropTypes.any,
+  document: PropTypes.any
+};
+```
+
 ## More info
 
 I wrote a [blog post] [blog-url] about building this component.
