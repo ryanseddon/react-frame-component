@@ -90,6 +90,10 @@ export default class Frame extends Component {
 
     const doc = this.getDoc();
     if (doc && doc.readyState === 'complete') {
+      if (doc.querySelector('div') === null) {
+        this._setInitialContent = false;
+      }
+
       const win = doc.defaultView || doc.parentView;
       const initialRender = !this._setInitialContent;
       const contents = (
