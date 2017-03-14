@@ -269,7 +269,7 @@ describe('The Frame Component', () => {
     expect(Frame.prototype.getMountTarget.call(frame)).to.equal(body.querySelector('#container'));
   });
 
-  it('Should not error when parent components are reused', () => {
+  it('should not error when parent components are reused', () => {
     div = document.body.appendChild(document.createElement('div'));
     const component = ReactDOM.render(
       <ul className="container">
@@ -284,7 +284,7 @@ describe('The Frame Component', () => {
           </Frame>
         </li>
       </ul>,
-      div,
+      div
     );
 
     const iframes1 = ReactDOM.findDOMNode(component).querySelectorAll('iframe');
