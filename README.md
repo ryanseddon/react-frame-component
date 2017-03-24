@@ -14,7 +14,7 @@ npm install --save react-frame-component
 var Frame = require('react-frame-component');
 ```
 
-Go check out the [demo] [demo-url].
+Go check out the [demo][demo-url].
 
 ```html
 var Header = React.createClass({
@@ -98,7 +98,7 @@ MyComponent.contextTypes = {
 
 ## More info
 
-I wrote a [blog post] [blog-url] about building this component.
+I wrote a [blog post][blog-url] about building this component.
 
 ## License
 
