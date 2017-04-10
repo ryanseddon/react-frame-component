@@ -41,21 +41,21 @@ React.render(
 );
 ```
 
-#####Props:
+##### Props:
 
-######head
+###### head
 `head:  React.PropTypes.node`
 
 The `head` prop is a dom node that gets inserted before the children of the frame. Note that this is injected into the body of frame (see the blog post for why). This has the benefit of being able to update and works for stylesheets.
 
-######initialContent
+###### initialContent
 `initialContent:  React.PropTypes.string`
 
 Defaults to `'<!DOCTYPE html><html><head></head><body><div></div></body></html>'`
 
 The `initialContent` props is the initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
 
-######mountTarget
+###### mountTarget
 `mountTarget:  React.PropTypes.string`
 
 The `mountTarget` props is a css selector (#target/.target) that specifies where in the `initialContent` of the iframe, children will be mounted.
@@ -68,7 +68,7 @@ The `mountTarget` props is a css selector (#target/.target) that specifies where
 </Frame>
 ```
 
-######contentDidMount and contentDidUpdate
+###### contentDidMount and contentDidUpdate
 `contentDidMount:  React.PropTypes.func`
 `contentDidUpdate:  React.PropTypes.func`
 
@@ -79,7 +79,7 @@ lifecycle calls. This set of lifecycle calls are sometimes triggered after the
 lifecycle of the parent component, so these callbacks provide a hook to know
 when the frame contents are mounted and updated.
 
-######Accessing the iframe's window and document
+###### Accessing the iframe's window and document
 The iframe's `window` and `document` may be accessed via the React context values `window` and `document` respectively.
 
 ```
@@ -98,7 +98,7 @@ MyComponent.contextTypes = {
 
 ## More info
 
-I wrote a [blog post] [blog-url] about building this component.
+I wrote a [blog post][blog-url] about building this component.
 
 ## License
 
