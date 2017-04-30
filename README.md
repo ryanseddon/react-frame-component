@@ -82,14 +82,16 @@ when the frame contents are mounted and updated.
 ###### Accessing the iframe's window and document
 The iframe's `window` and `document` may be accessed via the React context values `window` and `document` respectively.
 
-```
+```js
 const MyComponent = (props, context) => {
   const {
     document: iframeDocument,
     window: iframeWindow
   } = context;
+  
   return (<...rendered jsx.../>);
 };
+
 MyComponent.contextTypes = {
   window: PropTypes.any,
   document: PropTypes.any
