@@ -14,7 +14,7 @@ npm install --save react-frame-component
 var Frame = require('react-frame-component');
 ```
 
-Go check out the [demo] [demo-url].
+Go check out the [demo][demo-url].
 
 ```html
 var Header = React.createClass({
