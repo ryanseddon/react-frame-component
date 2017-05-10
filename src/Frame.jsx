@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import DocumentContext from './DocumentContext';
 
 const hasConsole = typeof window !== 'undefined' && window.console;
