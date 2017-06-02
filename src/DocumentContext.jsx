@@ -1,4 +1,5 @@
-import React, { Component, Children, PropTypes } from 'react'; // eslint-disable-line no-unused-vars
+import React, { Component, Children } from 'react'; // eslint-disable-line no-unused-vars
+import PropTypes from 'prop-types';
 
 export default class DocumentContext extends Component {
   static propTypes = {
