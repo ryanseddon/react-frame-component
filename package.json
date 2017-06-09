@@ -76,7 +76,7 @@
   "dependencies": {},
   "peerDependencies": {
     "prop-types": "^15.5.9",
-    "react": "^15.5.9",
-    "react-dom": "^15.5.9"
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   }
 }
