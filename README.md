@@ -23,13 +23,13 @@ const Header = ({ children }) => (
   </Frame>
 );
 
-React.render(<Header>Hello</Header>, document.body);
+ReactDOM.render(<Header>Hello</Header>, document.body);
 ```
 
 Or you can wrap it at the `render` call.
 
 ```html
-React.render(
+ReactDOM.render(
   <Frame>
     <Header>Hello</Header>
   </Frame>,
