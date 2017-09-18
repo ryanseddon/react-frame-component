@@ -11,7 +11,7 @@ npm install --save react-frame-component
 ## How to use:
 
 ```js
-import Frame = from 'react-frame-component';
+import Frame from 'react-frame-component';
 ```
 
 Go check out the [demo][demo-url].
