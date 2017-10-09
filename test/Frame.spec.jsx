@@ -199,7 +199,7 @@ describe('The Frame Component', () => {
     div = document.body.appendChild(document.createElement('div'));
 
     const initialContent = '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
-    const renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div data-reactroot="" class="frame-content"></div></div></body></html>';
+    const renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
     const frame = ReactDOM.render(
       <Frame initialContent={initialContent} />
     , div);
@@ -244,6 +244,12 @@ describe('The Frame Component', () => {
     , div);
 
     frame.setState({ foo: 'bar' }, () => {
+      expect(didMount.callCount).to.equal(1);
+      expect(didUpdate.callCount).to.equal(0);
+      done();
+    });
+
+    frame.setState({ foo: 'gah' }, () => {
       expect(didMount.callCount).to.equal(1);
       expect(didUpdate.callCount).to.equal(1);
       done();

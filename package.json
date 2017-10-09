@@ -65,8 +65,8 @@
     "mocha-osx-reporter": "^0.1.2",
     "npm-run-all": "^4.0.1",
     "prop-types": "^15.5.9",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "rimraf": "^2.5.4",
     "sinon": "2.0.0-pre",
     "wallaby-webpack": "^0.0.30",
@@ -76,7 +76,7 @@
   "dependencies": {},
   "peerDependencies": {
     "prop-types": "^15.5.9",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   }
 }
