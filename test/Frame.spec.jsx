@@ -319,3 +319,66 @@ describe('The Frame Component', () => {
     expect(iframes2[1].contentDocument.body.querySelector('p').textContent).to.equal('Text 1');
   });
 });
+
+describe('The Frame Component with Reference', () => {
+  let div;
+  let iframe;
+
+  afterEach(() => {
+    if (div) {
+      div.parentNode.removeChild(div);
+      div = null;
+    }
+  });
+
+  it('should allow an external iframe reference', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    iframe = document.body.appendChild(document.createElement('iframe'));
+
+    const frame = ReactDOM.render(
+      <Frame documentRef={iframe.contentDocument} RenderElement="section" />,
+      div
+    );
+    const body = iframe.contentDocument.body;
+    div = document.body.appendChild(document.createElement('div'));
+
+    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(body.querySelector('.frame-root'));
+  });
+
+  it('should re-render inside the iframe correctly', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    iframe = document.body.appendChild(document.createElement('iframe'));
+
+    ReactDOM.render(
+      <Frame documentRef={iframe.contentDocument} RenderElement="section">
+        <p>Test 1</p>
+      </Frame>,
+      div,
+    );
+    const body1 = iframe.contentDocument.body;
+    const p1 = body1.querySelector('p');
+
+    expect(p1.textContent).to.equal('Test 1');
+  });
+
+  it('should allow content rewrite to be skipped', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    iframe = document.body.appendChild(document.createElement('iframe'));
+
+    const body = iframe.contentDocument.body;
+    const innerSection = body.appendChild(iframe.contentDocument.createElement('section'));
+    innerSection.id = 'alt-root';
+    const frame = ReactDOM.render(
+      <Frame
+        documentRef={iframe.contentDocument}
+        RenderElement="section"
+        skipInitialRender
+        mountTarget="#alt-root"
+      />,
+      div
+    );
+    div = document.body.appendChild(document.createElement('div'));
+
+    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(body.querySelector('#alt-root'));
+  });
+});

@@ -19,7 +19,9 @@ if (hasConsole) {
       originalError.call(console, msg);
     };
   };
-  resetWarnings = () => (console.error = originalError);  // eslint-disable-line no-console
+  resetWarnings = () => (  // eslint-disable-line no-return-assign
+    console.error = originalError // eslint-disable-line no-console
+  );
 }
 
 export default class Frame extends Component {
@@ -31,6 +33,9 @@ export default class Frame extends Component {
     style: PropTypes.object, // eslint-disable-line
     head: PropTypes.node,
     initialContent: PropTypes.string,
+    skipInitialRender: PropTypes.bool,
+    documentRef: PropTypes.object,
+    RenderElement: PropTypes.node,
     mountTarget: PropTypes.string,
     contentDidMount: PropTypes.func,
     contentDidUpdate: PropTypes.func,
@@ -45,6 +50,9 @@ export default class Frame extends Component {
     head: null,
     children: undefined,
     mountTarget: undefined,
+    skipInitialRender: false,
+    documentRef: null,
+    RenderElement: 'div',
     contentDidMount: () => {},
     contentDidUpdate: () => {},
     initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
@@ -73,7 +81,7 @@ export default class Frame extends Component {
   }
 
   getDoc() {
-    return ReactDOM.findDOMNode(this).contentDocument; // eslint-disable-line
+    return this.props.documentRef || ReactDOM.findDOMNode(this).contentDocument; // eslint-disable-line
   }
 
   getMountTarget() {
@@ -96,7 +104,7 @@ export default class Frame extends Component {
       }
 
       const win = doc.defaultView || doc.parentView;
-      const initialRender = !this._setInitialContent;
+      const initialRender = !this._setInitialContent && !this.props.skipInitialRender;
       const contents = (
         <DocumentContext document={doc} window={win}>
           <div className="frame-content">
@@ -128,15 +136,26 @@ export default class Frame extends Component {
   }
 
   render() {
+    // If the render element is set, simply return that
+    if (this.props.documentRef && this.props.RenderElement) {
+      const { RenderElement } = this.props;
+      return <RenderElement />;
+    }
+
     const props = {
       ...this.props,
       children: undefined // The iframe isn't ready so we drop children from props here. #12, #17
     };
+
     delete props.head;
     delete props.initialContent;
     delete props.mountTarget;
+    delete props.skipInitialRender;
+    delete props.documentRef;
+    delete props.RenderElement;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
+
     return (<iframe {...props} />);
   }
 }
