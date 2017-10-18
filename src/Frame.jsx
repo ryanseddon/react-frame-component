@@ -37,7 +37,8 @@ export default class Frame extends Component {
     children: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.arrayOf(PropTypes.element)
-    ])
+    ]),
+    renderInitialContent: PropTypes.func
   };
 
   static defaultProps = {
@@ -47,7 +48,12 @@ export default class Frame extends Component {
     mountTarget: undefined,
     contentDidMount: () => {},
     contentDidUpdate: () => {},
-    initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
+    initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>',
+    renderInitialContent: (initialContent, doc) => {
+      doc.open('text/html', 'replace');
+      doc.write(initialContent);
+      doc.close();
+    }
   };
 
   constructor(props, context) {
@@ -107,9 +113,7 @@ export default class Frame extends Component {
       );
 
       if (initialRender) {
-        doc.open('text/html', 'replace');
-        doc.write(this.props.initialContent);
-        doc.close();
+        this.props.renderInitialContent(this.props.initialContent, doc);
         this._setInitialContent = true;
       }
 
@@ -137,6 +141,7 @@ export default class Frame extends Component {
     delete props.mountTarget;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
+    delete props.renderInitialContent;
     return (<iframe {...props} />);
   }
 }
