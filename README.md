@@ -51,6 +51,18 @@ Defaults to `'<!DOCTYPE html><html><head></head><body><div></div></body></html>'
 
 The `initialContent` props is the initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
 
+###### renderInitialContent
+`renderInitialContent:  PropTypes.func`
+
+The `renderInitialContent` props is the method that is called to inject the `initialContent` into the frame. The method signature is: `renderInitialContent(initialContent, doc)`. Note that declaring this prop will automatically override the default functionality.
+
+```html
+<Frame
+  renderInitialContent={(initialContent, doc) => doc.documentElement.innerHTML = initialContent}
+  >
+</Frame>
+```
+
 ###### mountTarget
 `mountTarget:  PropTypes.string`
 
