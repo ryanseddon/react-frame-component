@@ -35,7 +35,6 @@ export default class Frame extends Component {
     initialContent: PropTypes.string,
     skipInitialRender: PropTypes.bool,
     documentRef: PropTypes.object,
-    RenderElement: PropTypes.node,
     mountTarget: PropTypes.string,
     contentDidMount: PropTypes.func,
     contentDidUpdate: PropTypes.func,
@@ -52,7 +51,6 @@ export default class Frame extends Component {
     mountTarget: undefined,
     skipInitialRender: false,
     documentRef: null,
-    RenderElement: 'div',
     contentDidMount: () => {},
     contentDidUpdate: () => {},
     initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
@@ -137,9 +135,8 @@ export default class Frame extends Component {
 
   render() {
     // If the render element is set, simply return that
-    if (this.props.documentRef && this.props.RenderElement) {
-      const { RenderElement } = this.props;
-      return <RenderElement />;
+    if (this.props.documentRef) {
+      return null;
     }
 
     const props = {
@@ -152,7 +149,6 @@ export default class Frame extends Component {
     delete props.mountTarget;
     delete props.skipInitialRender;
     delete props.documentRef;
-    delete props.RenderElement;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
 

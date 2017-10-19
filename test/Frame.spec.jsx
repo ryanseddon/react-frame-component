@@ -336,7 +336,7 @@ describe('The Frame Component with Reference', () => {
     iframe = document.body.appendChild(document.createElement('iframe'));
 
     const frame = ReactDOM.render(
-      <Frame documentRef={iframe.contentDocument} RenderElement="section" />,
+      <Frame documentRef={iframe.contentDocument} />,
       div
     );
     const body = iframe.contentDocument.body;
@@ -350,7 +350,7 @@ describe('The Frame Component with Reference', () => {
     iframe = document.body.appendChild(document.createElement('iframe'));
 
     ReactDOM.render(
-      <Frame documentRef={iframe.contentDocument} RenderElement="section">
+      <Frame documentRef={iframe.contentDocument}>
         <p>Test 1</p>
       </Frame>,
       div,
@@ -371,7 +371,6 @@ describe('The Frame Component with Reference', () => {
     const frame = ReactDOM.render(
       <Frame
         documentRef={iframe.contentDocument}
-        RenderElement="section"
         skipInitialRender
         mountTarget="#alt-root"
       />,
