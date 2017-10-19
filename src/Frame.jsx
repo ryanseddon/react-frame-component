@@ -134,7 +134,7 @@ export default class Frame extends Component {
   }
 
   render() {
-    // If the render element is set, simply return that
+    // If existing documentRef is set, simply return null
     if (this.props.documentRef) {
       return null;
     }
