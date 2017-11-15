@@ -67,8 +67,9 @@ export default class Frame extends Component {
   componentWillUnmount() {
     this._isMounted = false;
     const doc = this.getDoc();
-    if (doc) {
-      ReactDOM.unmountComponentAtNode(this.getMountTarget());
+    const mountTarget = this.getMountTarget();
+    if (doc && mountTarget) {
+      ReactDOM.unmountComponentAtNode(mountTarget);
     }
   }
 
