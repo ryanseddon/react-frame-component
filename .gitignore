@@ -4,3 +4,4 @@ lib/
 npm-debug.log
 test-results.xml
 *-debug.log*
+dist

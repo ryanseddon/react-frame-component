@@ -13,7 +13,9 @@
     "babel": "babel src -d lib",
     "build": "npm-run-all clean babel",
     "lint": "eslint '*.js' '{src,test}/**/*.js*'",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "predeploy": "webpack",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -50,6 +52,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
+    "gh-pages": "^1.1.0",
     "html-webpack-plugin": "^2.28.0",
     "karma": "^1.4.0",
     "karma-chrome-launcher": "^2.0.0",
