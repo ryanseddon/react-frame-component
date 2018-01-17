@@ -8,9 +8,9 @@ var styles = {
   height: '100%'
 };
 
-const Header = ({ children }) => <h1>{this.props.children}</h1>;
+const Header = ({ children }) => <h1>{children}</h1>;
 
-const Content = ({ children }) => <section>{this.props.children}</section>
+const Content = ({ children }) => <section>{children}</section>
 
 const App = () => (
   <div>
