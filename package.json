@@ -15,7 +15,8 @@
     "lint": "eslint '*.js' '{src,test}/**/*.js*'",
     "prepublish": "npm run build",
     "predeploy": "webpack",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "publish": "npm run deploy"
   },
   "repository": {
     "type": "git",
