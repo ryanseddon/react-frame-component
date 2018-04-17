@@ -16,7 +16,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'React Frame Component Simple Example'
+      title: 'React Frame Component Simple Example',
+      template: './example/index.html'
     })
   ],
   module: {
