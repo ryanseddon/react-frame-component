@@ -77,7 +77,7 @@ export default class Frame extends Component {
 
     const doc = this.getDoc();
 
-    if (doc.querySelector('div') === null) {
+    if (doc.querySelector('.frame-content') === null) {
       this._setInitialContent = false;
     }
 
@@ -105,12 +105,10 @@ export default class Frame extends Component {
 
     const mountTarget = this.getMountTarget();
 
-    return (
-      <div>
-        {ReactDOM.createPortal(this.props.head, this.getDoc().head)}
-        {ReactDOM.createPortal(contents, mountTarget)}
-      </div>
-    );
+    return [
+      ReactDOM.createPortal(this.props.head, this.getDoc().head),
+      ReactDOM.createPortal(contents, mountTarget)
+    ];
   }
 
   render() {
