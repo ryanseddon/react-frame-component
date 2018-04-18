@@ -64,10 +64,10 @@ describe('The Frame Component', () => {
       <Frame head={<link href="styles.css" />} />,
       div,
     );
-    const body = ReactDOM.findDOMNode(frame).contentDocument.body;
+    const head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
-    expect(body.querySelector('link')).to.be.defined;
-    expect(body.querySelector('link').href).to.contain('styles.css');
+    expect(head.querySelector('link')).to.be.defined;
+    expect(head.querySelector('link').href).to.contain('styles.css');
   });
 
   it('should create an iFrame with a <script> and insert children', () => {
@@ -79,10 +79,11 @@ describe('The Frame Component', () => {
       </Frame>,
       div
     );
+    const head = ReactDOM.findDOMNode(frame).contentDocument.head;
     const body = ReactDOM.findDOMNode(frame).contentDocument.body;
 
-    expect(body.querySelector('script')).to.be.defined;
-    expect(body.querySelector('script').src).to.contain('foo.js');
+    expect(head.querySelector('script')).to.be.defined;
+    expect(head.querySelector('script').src).to.contain('foo.js');
     expect(frame.props.children).to.be.defined;
     expect(body.querySelectorAll('h1,h2').length).to.equal(2);
   });
@@ -97,10 +98,10 @@ describe('The Frame Component', () => {
           <script key="bar" src="bar.js" />
         ]}
       />, div);
-    const body = ReactDOM.findDOMNode(frame).contentDocument.body;
+    const head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
-    expect(body.querySelectorAll('link').length).to.equal(2);
-    expect(body.querySelectorAll('script').length).to.equal(1);
+    expect(head.querySelectorAll('link').length).to.equal(2);
+    expect(head.querySelectorAll('script').length).to.equal(1);
   });
 
   it('should encapsulate styles and not effect elements outside', () => {
@@ -245,7 +246,7 @@ describe('The Frame Component', () => {
 
     frame.setState({ foo: 'bar' }, () => {
       expect(didMount.callCount).to.equal(1);
-      expect(didUpdate.callCount).to.equal(0);
+      expect(didUpdate.callCount).to.equal(1);
       done();
     });
 
@@ -280,12 +281,12 @@ describe('The Frame Component', () => {
     div = document.body.appendChild(document.createElement('div'));
     const component = ReactDOM.render(
       <ul className="container">
-        <li key="1">
+        <li>
           <Frame>
             <p>Text 1</p>
           </Frame>
         </li>
-        <li key="2">
+        <li>
           <Frame>
             <p>Text 2</p>
           </Frame>
@@ -300,12 +301,12 @@ describe('The Frame Component', () => {
 
     const component2 = ReactDOM.render(
       <ul className="container">
-        <li key="2">
+        <li>
           <Frame>
             <p>Text 2</p>
           </Frame>
         </li>
-        <li key="1">
+        <li>
           <Frame>
             <p>Text 1</p>
           </Frame>

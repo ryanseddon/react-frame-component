@@ -2,25 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import DocumentContext from './DocumentContext';
-
-const hasConsole = typeof window !== 'undefined' && window.console;
-const noop = () => {};
-let swallowInvalidHeadWarning = noop;
-let resetWarnings = noop;
-
-if (hasConsole) {
-  const originalError = console.error; // eslint-disable-line no-console
-  // Rendering a <head> into a body is technically invalid although it
-  // works. We swallow React's validateDOMNesting warning if that is the
-  // message to avoid confusion
-  swallowInvalidHeadWarning = () => {
-    console.error = (msg) => {  // eslint-disable-line no-console
-      if (/<head>/.test(msg)) return;
-      originalError.call(console, msg);
-    };
-  };
-  resetWarnings = () => (console.error = originalError);  // eslint-disable-line no-console
-}
+import Content from './Content';
 
 export default class Frame extends Component {
   // React warns when you render directly into the body since browser extensions
@@ -57,24 +39,23 @@ export default class Frame extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.renderFrameContents();
-  }
 
-  componentDidUpdate() {
-    this.renderFrameContents();
+    const doc = this.getDoc();
+    if (doc && doc.readyState === 'complete') {
+      this.forceUpdate();
+    } else {
+      this.node.addEventListener('load', this.handleLoad);
+    }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
-    const doc = this.getDoc();
-    const mountTarget = this.getMountTarget();
-    if (doc && mountTarget) {
-      ReactDOM.unmountComponentAtNode(mountTarget);
-    }
+
+    this.node.removeEventListener('load', this.handleLoad);
   }
 
   getDoc() {
-    return ReactDOM.findDOMNode(this).contentDocument; // eslint-disable-line
+    return this.node.contentDocument; // eslint-disable-line
   }
 
   getMountTarget() {
@@ -85,47 +66,49 @@ export default class Frame extends Component {
     return doc.body.children[0];
   }
 
+  handleLoad = () => {
+    this.forceUpdate();
+  };
+
   renderFrameContents() {
     if (!this._isMounted) {
-      return;
+      return null;
     }
 
     const doc = this.getDoc();
-    if (doc && doc.readyState === 'complete') {
-      if (doc.querySelector('div') === null) {
-        this._setInitialContent = false;
-      }
 
-      const win = doc.defaultView || doc.parentView;
-      const initialRender = !this._setInitialContent;
-      const contents = (
+    if (doc.querySelector('.frame-content') === null) {
+      this._setInitialContent = false;
+    }
+
+    const contentDidMount = this.props.contentDidMount;
+    const contentDidUpdate = this.props.contentDidUpdate;
+
+    const win = doc.defaultView || doc.parentView;
+    const initialRender = !this._setInitialContent;
+    const contents = (
+      <Content contentDidMount={contentDidMount} contentDidUpdate={contentDidUpdate}>
         <DocumentContext document={doc} window={win}>
           <div className="frame-content">
-            {this.props.head}
             {this.props.children}
           </div>
         </DocumentContext>
-      );
+      </Content>
+    );
 
-      if (initialRender) {
-        doc.open('text/html', 'replace');
-        doc.write(this.props.initialContent);
-        doc.close();
-        this._setInitialContent = true;
-      }
-
-      swallowInvalidHeadWarning();
-
-      // unstable_renderSubtreeIntoContainer allows us to pass this component as
-      // the parent, which exposes context to any child components.
-      const callback = initialRender ? this.props.contentDidMount : this.props.contentDidUpdate;
-      const mountTarget = this.getMountTarget();
-
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
-      resetWarnings();
-    } else {
-      setTimeout(this.renderFrameContents.bind(this), 0);
+    if (initialRender) {
+      doc.open('text/html', 'replace');
+      doc.write(this.props.initialContent);
+      doc.close();
+      this._setInitialContent = true;
     }
+
+    const mountTarget = this.getMountTarget();
+
+    return [
+      ReactDOM.createPortal(this.props.head, this.getDoc().head),
+      ReactDOM.createPortal(contents, mountTarget)
+    ];
   }
 
   render() {
@@ -138,6 +121,10 @@ export default class Frame extends Component {
     delete props.mountTarget;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
-    return (<iframe {...props} />);
+    return (
+      <iframe {...props} ref={node => (this.node = node)}>
+        {this.renderFrameContents()}
+      </iframe>
+    );
   }
 }
