@@ -1,6 +1,6 @@
 import React from 'react';
 
 export const {
-  Provider: BrowserContextProvider,
-  Consumer: BrowserContextConsumer
+  Provider: FrameContextProvider,
+  Consumer: FrameContextConsumer
 } = React.createContext({ document, window });

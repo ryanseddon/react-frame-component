@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import {
-  BrowserContextProvider,
-  BrowserContextConsumer
+  FrameContextProvider,
+  FrameContextConsumer
 } from '../src/Context';
 
 describe('The DocumentContext Component', () => {
@@ -13,19 +13,19 @@ describe('The DocumentContext Component', () => {
     const window = { y: 2 };
 
     const Child = () => (
-      <BrowserContextConsumer>
+      <FrameContextConsumer>
         {({ document: doc, window: win }) => {
           expect(doc).to.equal(document);
           expect(win).to.equal(window);
           done();
           return <h1>{`x=${doc.x},y=${win.y}`}</h1>;
         }}
-      </BrowserContextConsumer>
+      </FrameContextConsumer>
     );
     ReactTestUtils.renderIntoDocument(
-      <BrowserContextProvider value={{ document, window }}>
+      <FrameContextProvider value={{ document, window }}>
         <Child />
-      </BrowserContextProvider>
+      </FrameContextProvider>
     );
   });
 });

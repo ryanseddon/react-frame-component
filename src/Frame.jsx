@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { BrowserContextProvider } from './Context';
+import { FrameContextProvider } from './Context';
 import Content from './Content';
 
 export default class Frame extends Component {
@@ -88,11 +88,11 @@ export default class Frame extends Component {
     const initialRender = !this._setInitialContent;
     const contents = (
       <Content contentDidMount={contentDidMount} contentDidUpdate={contentDidUpdate}>
-        <BrowserContextProvider value={{ document: doc, window: win }}>
+        <FrameContextProvider value={{ document: doc, window: win }}>
           <div className="frame-content">
             {this.props.children}
           </div>
-        </BrowserContextProvider>
+        </FrameContextProvider>
       </Content>
     );
 
