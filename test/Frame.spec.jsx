@@ -101,7 +101,7 @@ describe('The Frame Component', () => {
     const head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
     expect(head.querySelectorAll('link').length).to.equal(2);
-    expect(head.querySelectorAll('script').length).to.equal(1);
+    expect(head.querySelectorAll('script').length).to.equal(1, 'expected 1 script tag');
   });
 
   it('should encapsulate styles and not effect elements outside', () => {
@@ -231,29 +231,27 @@ describe('The Frame Component', () => {
       <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />
     , div);
 
-    expect(didMount.callCount).to.equal(1);
-    expect(didUpdate.callCount).to.equal(0);
+    expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+    expect(didUpdate.callCount).to.equal(0, 'expected 0 didUpdate');
   });
 
   it('should call contentDidUpdate on subsequent updates', (done) => {
     div = document.body.appendChild(document.createElement('div'));
-
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
     const frame = ReactDOM.render(
       <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />
     , div);
 
+    expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
     frame.setState({ foo: 'bar' }, () => {
-      expect(didMount.callCount).to.equal(1);
-      expect(didUpdate.callCount).to.equal(1);
-      done();
-    });
-
-    frame.setState({ foo: 'gah' }, () => {
-      expect(didMount.callCount).to.equal(1);
-      expect(didUpdate.callCount).to.equal(1);
-      done();
+      expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+      expect(didUpdate.callCount).to.equal(1, 'expected 1 didUpdate');
+      frame.setState({ foo: 'gah' }, () => {
+        expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+        expect(didUpdate.callCount).to.equal(2, 'expected 2 didUpdate');
+        done();
+      });
     });
   });
 

@@ -76,22 +76,24 @@ lifecycle of the parent component, so these callbacks provide a hook to know
 when the frame contents are mounted and updated.
 
 ###### Accessing the iframe's window and document
-The iframe's `window` and `document` may be accessed via the React context values `window` and `document` respectively.
+The iframe's `window` and `document` may be accessed via the FrameContextConsumer.
 
 ```js
-const MyComponent = (props, context) => {
-  const {
-    document: iframeDocument,
-    window: iframeWindow
-  } = context;
+import Frame, { FrameContextConsumer } from 'react-frame-component'
 
-  return (<...rendered jsx.../>);
-};
+const MyComponent = (props, context) => (
+  <Frame>
+    <FrameContextConsumer>
+      {
+        // Callback is invoked with iframe's window and document instances
+        ({document, window}) => {
+          // Render Children
+        }
+      }
+    </FrameContextConsumer>
+  </Frame>
+);
 
-MyComponent.contextTypes = {
-  window: PropTypes.any,
-  document: PropTypes.any
-};
 ```
 
 ## More info
