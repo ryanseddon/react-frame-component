@@ -92,7 +92,7 @@ const MyComponent = (props, context) => (
       }
     </FrameContextConsumer>
   </Frame>
-)
+);
 
 ```
 
