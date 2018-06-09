@@ -1,12 +1,12 @@
 import React from 'react';
 
-let doc = undefined
-let win = undefined
+let doc;
+let win;
 if (typeof document !== 'undefined') {
-  doc = document
+  doc = document;
 }
 if (typeof window !== 'undefined') {
-  win = window
+  win = window;
 }
 
 export const {
