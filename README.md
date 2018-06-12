@@ -16,7 +16,7 @@ import Frame from 'react-frame-component';
 
 Go check out the [demo][demo-url].
 
-```html
+```js
 const Header = ({ children }) => (
   <Frame>
     <h1>{children}</h1>
@@ -28,7 +28,7 @@ ReactDOM.render(<Header>Hello</Header>, document.body);
 
 Or you can wrap it at the `render` call.
 
-```html
+```js
 ReactDOM.render(
   <Frame>
     <Header>Hello</Header>
@@ -37,6 +37,18 @@ ReactDOM.render(
 );
 ```
 
+##### API:
+| Property      | Type          | Default             | Description |
+| ------------- |:-------------:|:------------:       | ----------- |
+| head          | node          | null                | DOM node that gets inserted before the children of the frame. Note this is injected into the body of frame (see the blog post for why). This has the benefit of being able to update and works for stylesheets.
+| initialContent | string       | `<!DOCTYPE html><html><head></head><body><div></div></body></html>`               | The initial html injected into frame. It is only injected once, but allows you to insert any html into the frame (e.g. a head tag, script tags, etc). Note that it does *not* update if you change the prop. Also at least one div is required in the body of the html, which we use to render the react dom into.
+| mountTarget          | string          | `document.body`                | CSS selector (#target/.target) that specifies where in the `initialContent` of the iframe, children will be mounted in. ```html
+<Frame
+  initialContent='<!DOCTYPE html><html><head></head><body><h1>i wont be changed</h1><div id="mountHere"></div></body></html>'
+  mountTarget='#mountHere'
+  >
+</Frame>
+```
 ##### Props:
 
 ###### head
