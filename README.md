@@ -115,4 +115,4 @@ This content is released under the MIT license http://ryanseddon.mit-license.org
 [depstat-image]: https://david-dm.org/ryanseddon/react-frame-component.png
 
 [demo-url]: http://ryanseddon.github.io/react-frame-component/
-[blog-url]: http://developer.zendesk.com/blog/2014/05/13/rendering-to-iframes-in-react/
+[blog-url]: https://medium.com/@ryanseddon/rendering-to-iframes-in-react-d1cb92274f86
