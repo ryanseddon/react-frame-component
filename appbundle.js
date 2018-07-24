@@ -19558,7 +19558,16 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _React$createContext = _react2.default.createContext({ document: document, window: window });
+	var doc = void 0;
+	var win = void 0;
+	if (typeof document !== 'undefined') {
+	  doc = document;
+	}
+	if (typeof window !== 'undefined') {
+	  win = window;
+	}
+	
+	var _React$createContext = _react2.default.createContext({ document: doc, window: win });
 	
 	var FrameContextProvider = _React$createContext.Provider,
 	    FrameContextConsumer = _React$createContext.Consumer;
