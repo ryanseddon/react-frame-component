@@ -19676,10 +19676,6 @@
 	
 	      var doc = this.getDoc();
 	
-	      if (doc.querySelector('.frame-content') === null) {
-	        this._setInitialContent = false;
-	      }
-	
 	      var contentDidMount = this.props.contentDidMount;
 	      var contentDidUpdate = this.props.contentDidUpdate;
 	
