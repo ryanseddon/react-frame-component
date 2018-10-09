@@ -77,10 +77,6 @@ export default class Frame extends Component {
 
     const doc = this.getDoc();
 
-    if (doc.querySelector('.frame-content') === null) {
-      this._setInitialContent = false;
-    }
-
     const contentDidMount = this.props.contentDidMount;
     const contentDidUpdate = this.props.contentDidUpdate;
 
