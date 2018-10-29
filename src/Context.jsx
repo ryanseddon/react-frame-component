@@ -1,4 +1,4 @@
-import React from 'react';
+import { createContext } from 'react';
 
 let doc;
 let win;
@@ -9,7 +9,4 @@ if (typeof window !== 'undefined') {
   win = window;
 }
 
-export const {
-  Provider: FrameContextProvider,
-  Consumer: FrameContextConsumer
-} = React.createContext({ document: doc, window: win });
+export default createContext({ document: doc, window: win });
