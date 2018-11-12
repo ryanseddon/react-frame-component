@@ -89,7 +89,7 @@
     ]
   },
   "peerDependencies": {
-    "prop-types": "^15.5.9",    
+    "prop-types": "^15.5.9",
     "react": ">= 16.3",
     "react-dom": ">= 16.3"
   },
