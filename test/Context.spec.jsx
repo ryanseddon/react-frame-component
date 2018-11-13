@@ -1,13 +1,10 @@
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
-import {
-  FrameContextProvider,
-  FrameContextConsumer
-} from '../src/Context';
+import { FrameContextProvider, FrameContextConsumer } from '../src/Context';
 
 describe('The DocumentContext Component', () => {
-  it('will establish context variables', (done) => {
+  it('will establish context variables', done => {
     const document = { x: 1 };
     const window = { y: 2 };
 

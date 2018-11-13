@@ -27,14 +27,17 @@ describe('The Frame Component', () => {
     const frame = ReactTestUtils.renderIntoDocument(
       <Frame className="foo">
         <div />
-      </Frame>);
+      </Frame>
+    );
 
     expect(React.createElement.calledWith('iframe', null));
     expect(frame.props.children).to.be.defined;
   });
 
   it('should create an empty iFrame and apply inline styles', () => {
-    const frame = ReactTestUtils.renderIntoDocument(<Frame style={{ border: 0 }} />);
+    const frame = ReactTestUtils.renderIntoDocument(
+      <Frame style={{ border: 0 }} />
+    );
     expect(frame.props.style).to.deep.equal({ border: 0 });
     expect(ReactDOM.findDOMNode(frame).style.border).to.contain('0');
   });
@@ -46,7 +49,8 @@ describe('The Frame Component', () => {
         frameBorder={0}
         height="100%"
         width="80%"
-      />);
+      />
+    );
     const node = ReactDOM.findDOMNode(frame);
     expect(frame.props.className).to.equal('test-class-1 test-class-2');
     expect(frame.props.frameBorder).to.equal(0);
@@ -62,7 +66,7 @@ describe('The Frame Component', () => {
     div = document.body.appendChild(document.createElement('div'));
     const frame = ReactDOM.render(
       <Frame head={<link href="styles.css" />} />,
-      div,
+      div
     );
     const head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
@@ -97,11 +101,16 @@ describe('The Frame Component', () => {
           <link key="foo" href="foo.css" />,
           <script key="bar" src="bar.js" />
         ]}
-      />, div);
+      />,
+      div
+    );
     const head = ReactDOM.findDOMNode(frame).contentDocument.head;
 
     expect(head.querySelectorAll('link').length).to.equal(2);
-    expect(head.querySelectorAll('script').length).to.equal(1, 'expected 1 script tag');
+    expect(head.querySelectorAll('script').length).to.equal(
+      1,
+      'expected 1 script tag'
+    );
   });
 
   it('should encapsulate styles and not effect elements outside', () => {
@@ -113,11 +122,12 @@ describe('The Frame Component', () => {
           <p>Some text</p>
         </Frame>
       </div>,
-      div,
+      div
     );
     const elem = ReactDOM.findDOMNode(component);
     const body = elem.querySelector('iframe').contentDocument.body;
-    const getColour = e => window.getComputedStyle(e, null).getPropertyValue('color');
+    const getColour = e =>
+      window.getComputedStyle(e, null).getPropertyValue('color');
     expect(getColour(elem.querySelector('p'))).to.equal('rgb(0, 0, 0)');
     expect(getColour(body.querySelector('p'))).to.equal('rgb(255, 0, 0)');
   });
@@ -128,7 +138,7 @@ describe('The Frame Component', () => {
       <Frame>
         <p>Test 1</p>
       </Frame>,
-      div,
+      div
     );
     const body1 = ReactDOM.findDOMNode(component1).contentDocument.body;
     const p1 = body1.querySelector('p');
@@ -140,7 +150,7 @@ describe('The Frame Component', () => {
       <Frame>
         <p>Test 2</p>
       </Frame>,
-      div,
+      div
     );
     const body2 = ReactDOM.findDOMNode(component2).contentDocument.body;
     const p2 = body2.querySelector('p');
@@ -166,18 +176,12 @@ describe('The Frame Component', () => {
       }
 
       render() {
-        return (
-          <div>
-            {this.props.children}
-          </div>
-        );
+        return <div>{this.props.children}</div>;
       }
     }
 
     const Child = (props, context) => (
-      <div className="childDiv">
-        {context.color}
-      </div>
+      <div className="childDiv">{context.color}</div>
     );
     Child.contextTypes = {
       color: PropTypes.string.isRequired
@@ -188,36 +192,43 @@ describe('The Frame Component', () => {
         <Frame>
           <Child />
         </Frame>
-      </Parent>
-    , div);
+      </Parent>,
+      div
+    );
 
     const frame = div.querySelector('iframe');
     expect(frame).to.not.be.null;
-    expect(frame.contentDocument.body.querySelector('.childDiv').innerHTML).to.equal('purple');
+    expect(
+      frame.contentDocument.body.querySelector('.childDiv').innerHTML
+    ).to.equal('purple');
   });
 
   it('should allow setting initialContent', () => {
     div = document.body.appendChild(document.createElement('div'));
 
-    const initialContent = '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
-    const renderedContent = '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
+    const initialContent =
+      '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
+    const renderedContent =
+      '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
     const frame = ReactDOM.render(
-      <Frame initialContent={initialContent} />
-    , div);
+      <Frame initialContent={initialContent} />,
+      div
+    );
     const doc = ReactDOM.findDOMNode(frame).contentDocument;
     expect(doc.documentElement.outerHTML).to.equal(renderedContent);
   });
 
-
   it('should allow setting mountTarget', () => {
     div = document.body.appendChild(document.createElement('div'));
 
-    const initialContent = '<!DOCTYPE html><html><head></head><body><h1>i was here first</h1><div id=\'mountHere\'></div></body></html>';
+    const initialContent =
+      "<!DOCTYPE html><html><head></head><body><h1>i was here first</h1><div id='mountHere'></div></body></html>";
     const frame = ReactDOM.render(
       <Frame initialContent={initialContent} mountTarget="#mountHere">
         <h1>And i am joining you</h1>
-      </Frame>
-    , div);
+      </Frame>,
+      div
+    );
     const doc = ReactDOM.findDOMNode(frame).contentDocument;
     expect(doc.querySelectorAll('h1').length).to.equal(2);
   });
@@ -228,20 +239,22 @@ describe('The Frame Component', () => {
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
     ReactDOM.render(
-      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />
-    , div);
+      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />,
+      div
+    );
 
     expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
     expect(didUpdate.callCount).to.equal(0, 'expected 0 didUpdate');
   });
 
-  it('should call contentDidUpdate on subsequent updates', (done) => {
+  it('should call contentDidUpdate on subsequent updates', done => {
     div = document.body.appendChild(document.createElement('div'));
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
     const frame = ReactDOM.render(
-      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />
-    , div);
+      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />,
+      div
+    );
 
     expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
     frame.setState({ foo: 'bar' }, () => {
@@ -261,18 +274,26 @@ describe('The Frame Component', () => {
     const frame = ReactDOM.render(<Frame />, div);
     const body = ReactDOM.findDOMNode(frame).contentDocument.body;
 
-    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(body.children[0]);
+    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(
+      body.children[0]
+    );
   });
 
   it('should return resolved `props.mountTarget` node on call to `this.getMountTarget()` if `props.mountTarget` was passed in', () => {
     div = document.body.appendChild(document.createElement('div'));
-    const initialContent = '<!DOCTYPE html><html><head></head><body><div></div><div id=\'container\'></div></body></html>';
+    const initialContent =
+      "<!DOCTYPE html><html><head></head><body><div></div><div id='container'></div></body></html>";
 
-    const frame = ReactDOM.render(<Frame initialContent={initialContent} mountTarget="#container" />, div);
+    const frame = ReactDOM.render(
+      <Frame initialContent={initialContent} mountTarget="#container" />,
+      div
+    );
     const body = ReactDOM.findDOMNode(frame).contentDocument.body;
     div = document.body.appendChild(document.createElement('div'));
 
-    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(body.querySelector('#container'));
+    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(
+      body.querySelector('#container')
+    );
   });
 
   it('should not error when parent components are reused', () => {
@@ -294,8 +315,12 @@ describe('The Frame Component', () => {
     );
 
     const iframes1 = ReactDOM.findDOMNode(component).querySelectorAll('iframe');
-    expect(iframes1[0].contentDocument.body.querySelector('p').textContent).to.equal('Text 1');
-    expect(iframes1[1].contentDocument.body.querySelector('p').textContent).to.equal('Text 2');
+    expect(
+      iframes1[0].contentDocument.body.querySelector('p').textContent
+    ).to.equal('Text 1');
+    expect(
+      iframes1[1].contentDocument.body.querySelector('p').textContent
+    ).to.equal('Text 2');
 
     const component2 = ReactDOM.render(
       <ul className="container">
@@ -310,11 +335,17 @@ describe('The Frame Component', () => {
           </Frame>
         </li>
       </ul>,
-      div,
+      div
     );
 
-    const iframes2 = ReactDOM.findDOMNode(component2).querySelectorAll('iframe');
-    expect(iframes2[0].contentDocument.body.querySelector('p').textContent).to.equal('Text 2');
-    expect(iframes2[1].contentDocument.body.querySelector('p').textContent).to.equal('Text 1');
+    const iframes2 = ReactDOM.findDOMNode(component2).querySelectorAll(
+      'iframe'
+    );
+    expect(
+      iframes2[0].contentDocument.body.querySelector('p').textContent
+    ).to.equal('Text 2');
+    expect(
+      iframes2[1].contentDocument.body.querySelector('p').textContent
+    ).to.equal('Text 1');
   });
 });

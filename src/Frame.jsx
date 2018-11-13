@@ -29,7 +29,8 @@ export default class Frame extends Component {
     mountTarget: undefined,
     contentDidMount: () => {},
     contentDidUpdate: () => {},
-    initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
+    initialContent:
+      '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
   };
 
   constructor(props, context) {
@@ -83,11 +84,12 @@ export default class Frame extends Component {
     const win = doc.defaultView || doc.parentView;
     const initialRender = !this._setInitialContent;
     const contents = (
-      <Content contentDidMount={contentDidMount} contentDidUpdate={contentDidUpdate}>
+      <Content
+        contentDidMount={contentDidMount}
+        contentDidUpdate={contentDidUpdate}
+      >
         <FrameContextProvider value={{ document: doc, window: win }}>
-          <div className="frame-content">
-            {this.props.children}
-          </div>
+          <div className="frame-content">{this.props.children}</div>
         </FrameContextProvider>
       </Content>
     );

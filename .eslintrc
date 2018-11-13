@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier"],
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module",
@@ -14,7 +14,6 @@
   "parser": "babel-eslint",
   "rules": {
     "react/forbid-prop-types": "off",
-    "no-underscore-dangle": "off",
-    "comma-dangle": ["error", "never"]
+    "no-underscore-dangle": "off"
   }
 }
