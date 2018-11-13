@@ -94,7 +94,7 @@ export default class Frame extends Component {
       </Content>
     );
 
-    if (initialRender) {
+    if (initialRender && this.props.initialContent) {
       doc.open('text/html', 'replace');
       doc.write(this.props.initialContent);
       doc.close();
