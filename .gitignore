@@ -1,5 +1,6 @@
 test/processed
 node_modules
+lib/
 npm-debug.log
 test-results.xml
 *-debug.log*
