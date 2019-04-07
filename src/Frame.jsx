@@ -89,7 +89,7 @@ export default class Frame extends Component {
         contentDidUpdate={contentDidUpdate}
       >
         <FrameContextProvider value={{ document: doc, window: win }}>
-          <div className="frame-content">{this.props.children}</div>
+          {this.props.children}
         </FrameContextProvider>
       </Content>
     );
