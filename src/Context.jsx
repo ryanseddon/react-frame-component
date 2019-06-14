@@ -9,7 +9,9 @@ if (typeof window !== 'undefined') {
   win = window;
 }
 
+export const FrameContext = React.createContext({ document: doc, window: win });
+
 export const {
   Provider: FrameContextProvider,
   Consumer: FrameContextConsumer
-} = React.createContext({ document: doc, window: win });
+} = FrameContext;

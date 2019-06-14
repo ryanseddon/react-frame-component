@@ -1,5 +1,5 @@
 import Frame from './Frame';
 
-export { FrameContextConsumer } from './Context';
+export { FrameContext, FrameContextConsumer } from './Context';
 
 export default Frame;
