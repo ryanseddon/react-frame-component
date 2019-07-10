@@ -78,6 +78,10 @@ export default class Frame extends Component {
 
     const doc = this.getDoc();
 
+    if (!doc) {
+      return null;
+    }
+
     const contentDidMount = this.props.contentDidMount;
     const contentDidUpdate = this.props.contentDidUpdate;
 
