@@ -56,7 +56,7 @@ export default class Frame extends Component {
   }
 
   getDoc() {
-    return this.node.contentDocument; // eslint-disable-line
+    return this.node ? this.node.contentDocument : null; // eslint-disable-line
   }
 
   getMountTarget() {
