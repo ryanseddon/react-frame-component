@@ -11,7 +11,7 @@ describe('The Frame Component', () => {
 
   afterEach(() => {
     if (div) {
-      div.parentNode.removeChild(div);
+      div.remove();
       div = null;
     }
   });
@@ -347,5 +347,12 @@ describe('The Frame Component', () => {
     expect(
       iframes2[1].contentDocument.body.querySelector('p').textContent
     ).to.equal('Text 1');
+  });
+
+  it('should not error when the root component is removed', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    ReactDOM.render(<Frame />, div);
+    div.remove();
+    ReactDOM.render(<Frame />, div);
   });
 });
