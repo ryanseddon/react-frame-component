@@ -56,7 +56,7 @@ export default class Frame extends Component {
   }
 
   getDoc() {
-    return this.node.contentDocument; // eslint-disable-line
+    return this.node ? this.node.contentDocument : null; // eslint-disable-line
   }
 
   getMountTarget() {
@@ -77,6 +77,10 @@ export default class Frame extends Component {
     }
 
     const doc = this.getDoc();
+
+    if (!doc) {
+      return null;
+    }
 
     const contentDidMount = this.props.contentDidMount;
     const contentDidUpdate = this.props.contentDidUpdate;
