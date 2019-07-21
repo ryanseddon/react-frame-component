@@ -25381,7 +25381,7 @@
 	  }, {
 	    key: 'getDoc',
 	    value: function getDoc() {
-	      return this.node.contentDocument; // eslint-disable-line
+	      return this.node ? this.node.contentDocument : null; // eslint-disable-line
 	    }
 	  }, {
 	    key: 'getMountTarget',
@@ -25400,6 +25400,10 @@
 	      }
 	
 	      var doc = this.getDoc();
+	
+	      if (!doc) {
+	        return null;
+	      }
 	
 	      var contentDidMount = this.props.contentDidMount;
 	      var contentDidUpdate = this.props.contentDidUpdate;
