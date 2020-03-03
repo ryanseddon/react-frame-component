@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/ryanseddon/react-frame-component",
   "devDependencies": {
+    "@types/react": "^16.9.23",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
@@ -79,9 +80,6 @@
     "wallaby-webpack": "^0.0.30",
     "webpack": "1.x",
     "webpack-dev-server": "^1.16.3"
-  },
-  "dependencies": {
-    "@types/react": "^16.9.23"
   },
   "lint-staged": {
     "**/*.{js,jsx}": [
