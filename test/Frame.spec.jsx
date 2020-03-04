@@ -355,4 +355,15 @@ describe('The Frame Component', () => {
     div.remove();
     ReactDOM.render(<Frame />, div);
   });
+
+  it('should not error when root component is re-appended', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    ReactDOM.render(<Frame />, div);
+    document.body.append(div);
+    ReactDOM.render(<Frame />, div);
+
+    const iframes = ReactDOM.findDOMNode(div).querySelectorAll('iframe');
+
+    expect(iframes[0].contentDocument.body.children.length).to.equal(1);
+  });
 });
