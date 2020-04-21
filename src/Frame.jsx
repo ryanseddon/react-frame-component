@@ -42,6 +42,12 @@ export default class Frame extends Component {
     this._isMounted = true;
 
     const doc = this.getDoc();
+    if (doc) {
+      doc.open('text/html', 'replace');
+      doc.write(this.props.initialContent);
+      doc.close();
+    }
+
     if (doc && doc.readyState === 'complete') {
       this.forceUpdate();
     } else {
@@ -86,7 +92,6 @@ export default class Frame extends Component {
     const contentDidUpdate = this.props.contentDidUpdate;
 
     const win = doc.defaultView || doc.parentView;
-    const initialRender = !this._setInitialContent;
     const contents = (
       <Content
         contentDidMount={contentDidMount}
@@ -97,13 +102,6 @@ export default class Frame extends Component {
         </FrameContextProvider>
       </Content>
     );
-
-    if (initialRender) {
-      doc.open('text/html', 'replace');
-      doc.write(this.props.initialContent);
-      doc.close();
-      this._setInitialContent = true;
-    }
 
     const mountTarget = this.getMountTarget();
 
