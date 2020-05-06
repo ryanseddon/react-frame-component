@@ -86,7 +86,6 @@ export default class Frame extends Component {
     const contentDidUpdate = this.props.contentDidUpdate;
 
     const win = doc.defaultView || doc.parentView;
-    const initialRender = !this._setInitialContent;
     const contents = (
       <Content
         contentDidMount={contentDidMount}
@@ -98,11 +97,10 @@ export default class Frame extends Component {
       </Content>
     );
 
-    if (initialRender) {
+    if (doc.body.children.length < 1) {
       doc.open('text/html', 'replace');
       doc.write(this.props.initialContent);
       doc.close();
-      this._setInitialContent = true;
     }
 
     const mountTarget = this.getMountTarget();
