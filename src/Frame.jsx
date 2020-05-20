@@ -67,6 +67,17 @@ export default class Frame extends Component {
     return doc.body.children[0];
   }
 
+  setNode = node => {
+    this.node = node;
+    const doc = this.getDoc();
+
+    if (doc) {
+      doc.open('text/html', 'replace');
+      doc.write(this.props.initialContent);
+      doc.close();
+    }
+  };
+
   handleLoad = () => {
     this.forceUpdate();
   };
@@ -97,12 +108,6 @@ export default class Frame extends Component {
       </Content>
     );
 
-    if (doc.body.children.length < 1) {
-      doc.open('text/html', 'replace');
-      doc.write(this.props.initialContent);
-      doc.close();
-    }
-
     const mountTarget = this.getMountTarget();
 
     return [
@@ -122,12 +127,7 @@ export default class Frame extends Component {
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     return (
-      <iframe
-        {...props}
-        ref={node => {
-          this.node = node;
-        }}
-      >
+      <iframe {...props} ref={this.setNode}>
         {this.renderFrameContents()}
       </iframe>
     );
