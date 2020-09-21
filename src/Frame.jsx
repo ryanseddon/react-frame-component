@@ -98,7 +98,11 @@ export default class Frame extends Component {
     );
 
     if (doc.body.children.length < 1) {
-      doc.open('text/html', 'replace');
+      if (doc.wrappedJSObject) {
+        doc.wrappedJSObject.open('text/html', 'replace');
+      } else {
+        doc.open('text/html', 'replace');
+      }
       doc.write(this.props.initialContent);
       doc.close();
     }
