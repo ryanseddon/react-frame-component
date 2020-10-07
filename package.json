@@ -1,8 +1,11 @@
 {
   "name": "react-frame-component",
-  "version": "4.1.1",
+  "version": "4.1.3",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "clean": "rimraf lib",
