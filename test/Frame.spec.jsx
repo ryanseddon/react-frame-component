@@ -356,7 +356,7 @@ describe('The Frame Component', () => {
     ReactDOM.render(<Frame />, div);
   });
 
-  it('should not error when root component is re-appended', () => {
+  it.only('should not error when root component is re-appended', () => {
     div = document.body.appendChild(document.createElement('div'));
     ReactDOM.render(<Frame />, div);
     document.body.append(div);

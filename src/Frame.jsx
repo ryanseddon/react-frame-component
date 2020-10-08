@@ -55,6 +55,16 @@ export default class Frame extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const doc = this.getDoc();
+    if (doc && doc.body.children.length < 1) {
+      doc.open('text/html', 'replace');
+      doc.write(this.props.initialContent);
+      doc.close();
+      this.forceUpdate();
+    }
+  }
+
   componentWillUnmount() {
     this._isMounted = false;
 
@@ -104,6 +114,9 @@ export default class Frame extends Component {
     );
 
     const mountTarget = this.getMountTarget();
+    if (mountTarget === undefined) {
+      return null;
+    }
 
     return [
       ReactDOM.createPortal(this.props.head, this.getDoc().head),
