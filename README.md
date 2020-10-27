@@ -69,7 +69,7 @@ The `mountTarget` props is a css selector (#target/.target) that specifies where
 `contentDidUpdate:  PropTypes.func`
 
 `contentDidMount` and `contentDidUpdate` are conceptually equivalent to
-`componentDidMount` and `componentDidUpdate`, respecitvely. The reason these are
+`componentDidMount` and `componentDidUpdate`, respectively. The reason these are
 needed is because internally we call `ReactDOM.render` which starts a new set of
 lifecycle calls. This set of lifecycle calls are sometimes triggered after the
 lifecycle of the parent component, so these callbacks provide a hook to know

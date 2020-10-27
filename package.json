@@ -1,8 +1,11 @@
 {
   "name": "react-frame-component",
-  "version": "4.0.2",
+  "version": "4.1.3",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "clean": "rimraf lib",
@@ -72,8 +75,8 @@
     "npm-run-all": "^4.0.1",
     "prettier": "^1.13.4",
     "prop-types": "^15.5.9",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "rimraf": "^2.5.4",
     "sinon": "2.0.0-pre",
     "wallaby-webpack": "^0.0.30",
