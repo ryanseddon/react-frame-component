@@ -416,14 +416,20 @@ describe('The Frame Component', () => {
     ReactDOM.render(<Frame />, div);
   });
 
-  it('should not error when root component is re-appended', () => {
+  it('should not error when root component is re-appended', done => {
     div = document.body.appendChild(document.createElement('div'));
     ReactDOM.render(<Frame />, div);
-    document.body.append(div);
-    ReactDOM.render(<Frame />, div);
-
-    const iframes = ReactDOM.findDOMNode(div).querySelectorAll('iframe');
+    ReactDOM.render(
+      <Frame
+        contentDidMount={() => {
+          const iframes = ReactDOM.findDOMNode(div).querySelectorAll('iframe');
 
     expect(iframes[0].contentDocument.body.children.length).to.equal(1);
+          expect(iframes[0].contentDocument.body.children.length).to.equal(1);
+          done();
+        }}
+      />,
+      div
+    );
   });
 });
