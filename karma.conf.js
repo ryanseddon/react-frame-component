@@ -29,7 +29,7 @@ module.exports = function configure(config) {
     browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
-        base: 'ChromeCanary',
+        base: 'Chromium',
         flags: [
           '--no-sandbox',
           '--headless',
