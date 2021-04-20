@@ -7,10 +7,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14
-      - uses: browser-actions/setup-chrome@latest
-      - run: chrome --version
+          path: browser-actions-setup-chrome
+      - uses: browser-actions/setup-chrome@603e80b73cad51ece737e4db0f505db4ddc501e2
         with:
           chrome-version: canary
+      - run: chrome --version
       - run: npm install
 
       - name: Run headless test
