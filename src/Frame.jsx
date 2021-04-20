@@ -36,6 +36,7 @@ export default class Frame extends Component {
   constructor(props, context) {
     super(props, context);
     this._isMounted = false;
+    this.state = { iframeLoaded: false };
   }
 
   componentDidMount() {
@@ -67,8 +68,12 @@ export default class Frame extends Component {
     return doc.body.children[0];
   }
 
+  setRef = node => {
+    this.node = node;
+  };
+
   handleLoad = () => {
-    this.forceUpdate();
+    this.setState({ iframeLoaded: true });
   };
 
   renderFrameContents() {
@@ -97,12 +102,6 @@ export default class Frame extends Component {
       </Content>
     );
 
-    if (doc.body.children.length < 1) {
-      doc.open('text/html', 'replace');
-      doc.write(this.props.initialContent);
-      doc.close();
-    }
-
     const mountTarget = this.getMountTarget();
 
     return [
@@ -114,6 +113,7 @@ export default class Frame extends Component {
   render() {
     const props = {
       ...this.props,
+      srcDoc: this.props.initialContent,
       children: undefined // The iframe isn't ready so we drop children from props here. #12, #17
     };
     delete props.head;
@@ -122,13 +122,8 @@ export default class Frame extends Component {
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     return (
-      <iframe
-        {...props}
-        ref={node => {
-          this.node = node;
-        }}
-      >
-        {this.renderFrameContents()}
+      <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
+        {this.state.iframeLoaded && this.renderFrameContents()}
       </iframe>
     );
   }
