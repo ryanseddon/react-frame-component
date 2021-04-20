@@ -4,9 +4,7 @@ const webpack = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
-    noParse: [
-      /node_modules\/sinon/
-    ],
+    noParse: [/node_modules\/sinon/],
     loaders: [
       { test: /\.js(x|)$/, loader: 'babel-loader', exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json-loader' }
@@ -17,9 +15,7 @@ const webpack = {
 module.exports = function configure(config) {
   config.set({
     basePath: '',
-    files: [
-      { pattern: 'test/**/*.spec.js*', watched: true }
-    ],
+    files: [{ pattern: 'test/**/*.spec.js*', watched: true }],
     preprocessors: {
       'test/**/*.spec.js*': ['webpack', 'sourcemap']
     },
@@ -33,7 +29,7 @@ module.exports = function configure(config) {
     browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
-        base: 'Chrome',
+        base: 'ChromeCanary',
         flags: [
           '--no-sandbox',
           '--headless',
