@@ -341,6 +341,35 @@ describe('The Frame Component', () => {
     ReactDOM.render(<Parent />, div);
   });
 
+  it('should not error when null is passed in contentWillUnmount', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    ReactDOM.render(<Frame contentWillUnmount={null} />, div);
+  });
+
+  it('should not error when contentWillUnmount is not passed', done => {
+    div = document.body.appendChild(document.createElement('div'));
+    const didUpdate = sinon.spy();
+    const didMount = sinon.spy();
+    const frame = ReactDOM.render(
+      <Frame
+        contentDidUpdate={didUpdate}
+        contentDidMount={() => {
+          didMount();
+          frame.setState({ foo: 'bar' }, () => {
+            expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+            expect(didUpdate.callCount).to.equal(1, 'expected 1 didUpdate');
+            frame.setState({ foo: 'gah' }, () => {
+              expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+              expect(didUpdate.callCount).to.equal(2, 'expected 2 didUpdate');
+              done();
+            });
+          });
+        }}
+      />,
+      div
+    );
+  });
+
   it('should return first child element of the `body` on call to `this.getMountTarget()` if `props.mountTarget` was not passed in', () => {
     div = document.body.appendChild(document.createElement('div'));
 

@@ -102,4 +102,24 @@ describe('The Content component', () => {
     expect(didMount.callCount).to.equal(1);
     expect(didUpdate.callCount).to.equal(0);
   });
+
+  it('should not error if null is passed in contentWillUnmount', () => {
+    ReactTestUtils.renderIntoDocument(
+      <Content
+        contentDidMount={() => null}
+        contentDidUpdate={() => null}
+        contentWillUnmount={null}
+      >
+        <div className="test-class-1" />
+      </Content>
+    );
+  });
+
+  it('should not error if contentWillUnmount is not passed as a prop', () => {
+    ReactTestUtils.renderIntoDocument(
+      <Content contentDidMount={() => null} contentDidUpdate={() => null}>
+        <div className="test-class-1" />
+      </Content>
+    );
+  });
 });
