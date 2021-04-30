@@ -5,6 +5,7 @@
   "rules": {
     "react/no-render-return-value": "off",
     "react/no-find-dom-node": "off",
-    "no-unused-expressions": "off"
+    "no-unused-expressions": "off",
+    "react/no-multi-comp": "off"
   }
 }
