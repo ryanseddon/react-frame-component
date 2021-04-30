@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -313,6 +313,34 @@ describe('The Frame Component', () => {
     );
   });
 
+  it('should call contentWillUnmount on unmount', done => {
+    div = document.body.appendChild(document.createElement('div'));
+    const willUnmount = sinon.spy();
+
+    function Parent() {
+      const [isClosed, setClosed] = React.useState(false);
+
+      useEffect(() => {
+        setTimeout(() => {
+          setClosed(true);
+        }, 1500);
+      }, []);
+
+      if (!isClosed) {
+        return (
+          <Frame
+            contentWillUnmount={() => {
+              willUnmount();
+              done();
+            }}
+          />
+        );
+      }
+      return null;
+    }
+    ReactDOM.render(<Parent />, div);
+  });
+
   it('should return first child element of the `body` on call to `this.getMountTarget()` if `props.mountTarget` was not passed in', () => {
     div = document.body.appendChild(document.createElement('div'));
 
@@ -424,7 +452,7 @@ describe('The Frame Component', () => {
         contentDidMount={() => {
           const iframes = ReactDOM.findDOMNode(div).querySelectorAll('iframe');
 
-    expect(iframes[0].contentDocument.body.children.length).to.equal(1);
+          expect(iframes[0].contentDocument.body.children.length).to.equal(1);
           expect(iframes[0].contentDocument.body.children.length).to.equal(1);
           done();
         }}
