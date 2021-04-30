@@ -6,7 +6,11 @@ export default class Content extends Component {
     children: PropTypes.element.isRequired,
     contentDidMount: PropTypes.func.isRequired,
     contentDidUpdate: PropTypes.func.isRequired,
-    contentWillUnmount: PropTypes.func.isRequired
+    contentWillUnmount: PropTypes.func
+  };
+
+  static defaultProps = {
+    contentWillUnmount: null
   };
 
   componentDidMount() {
@@ -18,7 +22,9 @@ export default class Content extends Component {
   }
 
   componentWillUnmount() {
-    this.props.contentWillUnmount();
+    if (typeof this.props.contentWillUnmount === 'function') {
+      this.props.contentWillUnmount();
+    }
   }
 
   render() {
