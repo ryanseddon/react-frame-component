@@ -23,14 +23,9 @@ describe('The Content component', () => {
   it('should call contentDidMount on initial render', () => {
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
-    const willUnmount = sinon.spy();
 
     ReactTestUtils.renderIntoDocument(
-      <Content
-        contentDidMount={didMount}
-        contentDidUpdate={didUpdate}
-        contentWillUnmount={willUnmount}
-      >
+      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
         <div className="test-class-1" />
       </Content>
     );
@@ -42,14 +37,9 @@ describe('The Content component', () => {
   it('should call contentDidUpdate on subsequent updates', done => {
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
-    const willUnmount = sinon.spy();
 
     const content = ReactTestUtils.renderIntoDocument(
-      <Content
-        contentDidMount={didMount}
-        contentDidUpdate={didUpdate}
-        contentWillUnmount={willUnmount}
-      >
+      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
         <div className="test-class-1" />
       </Content>
     );
@@ -103,7 +93,7 @@ describe('The Content component', () => {
     expect(didUpdate.callCount).to.equal(0);
   });
 
-  it('should not error if null is passed in contentWillUnmount', () => {
+  it('should error if null is passed in contentWillUnmount', () => {
     ReactTestUtils.renderIntoDocument(
       <Content
         contentDidMount={() => null}

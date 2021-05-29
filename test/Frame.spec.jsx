@@ -341,7 +341,7 @@ describe('The Frame Component', () => {
     ReactDOM.render(<Parent />, div);
   });
 
-  it('should not error when null is passed in contentWillUnmount', () => {
+  it('should error when null is passed in contentWillUnmount', () => {
     div = document.body.appendChild(document.createElement('div'));
     ReactDOM.render(<Frame contentWillUnmount={null} />, div);
   });
