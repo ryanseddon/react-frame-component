@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -317,28 +317,36 @@ describe('The Frame Component', () => {
     div = document.body.appendChild(document.createElement('div'));
     const willUnmount = sinon.spy();
 
-    function Parent() {
-      const [isClosed, setClosed] = React.useState(false);
-
-      useEffect(() => {
-        setTimeout(() => {
-          setClosed(true);
-        }, 1500);
-      }, []);
-
-      if (!isClosed) {
-        return (
-          <Frame
-            contentWillUnmount={() => {
-              willUnmount();
-              done();
-            }}
-          />
-        );
+    class Parent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          isClosed: false
+        };
       }
-      return null;
+
+      render() {
+        if (!this.state.isClosed) {
+          return (
+            <Frame
+              contentWillUnmount={() => {
+                willUnmount();
+              }}
+            >
+              <div className="test-class-1" />
+            </Frame>
+          );
+        }
+        return null;
+      }
     }
-    ReactDOM.render(<Parent />, div);
+
+    const wrapper = ReactDOM.render(<Parent />, div);
+
+    wrapper.setState({ isClosed: true }, () => {
+      expect(willUnmount.callCount).to.equal(1, 'expected 1 willUnmount');
+      done();
+    });
   });
 
   it('should error when null is passed in contentWillUnmount', () => {
