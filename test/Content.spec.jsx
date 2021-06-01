@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import sinon from 'sinon/pkg/sinon';
@@ -59,38 +59,40 @@ describe('The Content component', () => {
     });
   });
 
-  it('should call contentWillUnmount before unmounting', () => {
+  it('should call contentWillUnmount before unmounting', done => {
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
     const willUnmount = sinon.spy();
 
-    function Parent() {
-      const [isClosed, setClosed] = React.useState(false);
+    class Parent extends React.Component {
+      state = {
+        isClosed: false
+      };
 
-      useEffect(() => {
-        setTimeout(() => {
-          setClosed(true);
-        }, 1500);
-      }, []);
-
-      if (!isClosed) {
-        return (
-          <Content
-            contentDidMount={didMount}
-            contentDidUpdate={didUpdate}
-            contentWillUnmount={willUnmount}
-          >
-            <div className="test-class-1" />
-          </Content>
-        );
+      render() {
+        if (!this.state.isClosed) {
+          return (
+            <Content
+              contentDidMount={didMount}
+              contentDidUpdate={didUpdate}
+              contentWillUnmount={willUnmount}
+            >
+              <div className="test-class-1" />
+            </Content>
+          );
+        }
+        return null;
       }
-      return null;
     }
 
-    ReactTestUtils.renderIntoDocument(<Parent />);
+    const wrapper = ReactTestUtils.renderIntoDocument(<Parent />);
 
     expect(didMount.callCount).to.equal(1);
     expect(didUpdate.callCount).to.equal(0);
+    wrapper.setState({ isClosed: true }, () => {
+      expect(willUnmount.callCount).to.equal(1);
+      done();
+    });
   });
 
   it('should error if null is passed in contentWillUnmount', () => {

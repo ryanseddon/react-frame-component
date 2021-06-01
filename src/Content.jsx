@@ -9,10 +9,6 @@ export default class Content extends Component {
     contentWillUnmount: PropTypes.func.isRequired
   };
 
-  static defaultProps = {
-    contentWillUnmount: null
-  };
-
   componentDidMount() {
     this.props.contentDidMount();
   }
