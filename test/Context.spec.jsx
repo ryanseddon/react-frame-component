@@ -4,7 +4,8 @@ import { expect } from 'chai';
 import {
   FrameContextProvider,
   FrameContextConsumer,
-  FrameContext
+  FrameContext,
+  useFrame
 } from '../src/Context';
 
 describe('The DocumentContext Component', () => {
@@ -45,6 +46,29 @@ describe('The DocumentContext Component', () => {
       }
     }
     Child.contextType = FrameContext;
+
+    ReactTestUtils.renderIntoDocument(
+      <FrameContextProvider value={{ document, window }}>
+        <Child />
+      </FrameContextProvider>
+    );
+  });
+
+  it('exports full context instance to allow accessing via custom hook', done => {
+    const document = { foo: 1 };
+    const window = { bar: 2 };
+
+    const Child = () => {
+      const frame = useFrame();
+
+      React.useEffect(() => {
+        expect(frame.document).to.deep.equal(document);
+        expect(frame.window).to.deep.equal(window);
+        done();
+      }, []);
+
+      return null;
+    };
 
     ReactTestUtils.renderIntoDocument(
       <FrameContextProvider value={{ document, window }}>
