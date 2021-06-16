@@ -30699,7 +30699,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.FrameContextConsumer = exports.FrameContext = undefined;
+	exports.useFrame = exports.FrameContextConsumer = exports.FrameContext = undefined;
 	
 	var _Context = __webpack_require__(16);
 	
@@ -30713,6 +30713,12 @@
 	  enumerable: true,
 	  get: function get() {
 	    return _Context.FrameContextConsumer;
+	  }
+	});
+	Object.defineProperty(exports, 'useFrame', {
+	  enumerable: true,
+	  get: function get() {
+	    return _Context.useFrame;
 	  }
 	});
 	
@@ -30733,7 +30739,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.FrameContextConsumer = exports.FrameContextProvider = exports.FrameContext = undefined;
+	exports.FrameContextConsumer = exports.FrameContextProvider = exports.useFrame = exports.FrameContext = undefined;
 	
 	var _react = __webpack_require__(1);
 	
@@ -30751,6 +30757,10 @@
 	}
 	
 	var FrameContext = exports.FrameContext = _react2.default.createContext({ document: doc, window: win });
+	
+	var useFrame = exports.useFrame = function useFrame() {
+	  return _react2.default.useContext(FrameContext);
+	};
 	
 	var FrameContextProvider = FrameContext.Provider,
 	    FrameContextConsumer = FrameContext.Consumer;
