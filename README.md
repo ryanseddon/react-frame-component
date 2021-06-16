@@ -76,7 +76,9 @@ lifecycle of the parent component, so these callbacks provide a hook to know
 when the frame contents are mounted and updated.
 
 ###### Accessing the iframe's window and document
-The iframe's `window` and `document` may be accessed via the FrameContextConsumer.
+The iframe's `window` and `document` may be accessed via the `FrameContextConsumer` or the `useFrame` hook.
+
+The example with `FrameContextConsumer`:
 
 ```js
 import Frame, { FrameContextConsumer } from 'react-frame-component'
@@ -94,6 +96,25 @@ const MyComponent = (props, context) => (
   </Frame>
 );
 
+```
+
+The example with `useFrame` hook:
+
+```js
+import Frame, { useFrame } from 'react-frame-component';
+
+const InnerComponent = () => {
+  // Hook returns iframe's window and document instances from Frame context
+  const { document, window } = useFrame();
+
+  return null;
+};
+
+const OuterComponent = () => (
+  <Frame>
+    <InnerComponent />
+  </Frame>
+);
 ```
 
 ## More info
