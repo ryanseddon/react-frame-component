@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { FrameContextProvider } from './Context';
 import Content from './Content';
 
-export default class Frame extends Component {
+export class Frame extends Component {
   // React warns when you render directly into the body since browser extensions
   // also inject into the body and can mess up React. For this reason
   // initialContent is expected to have a div inside of the body
@@ -38,6 +38,7 @@ export default class Frame extends Component {
   constructor(props, context) {
     super(props, context);
     this._isMounted = false;
+    this.nodeRef = React.createRef();
     this.state = { iframeLoaded: false };
   }
 
@@ -48,18 +49,18 @@ export default class Frame extends Component {
     if (doc && doc.readyState === 'complete') {
       this.forceUpdate();
     } else {
-      this.node.addEventListener('load', this.handleLoad);
+      this.nodeRef.current.addEventListener('load', this.handleLoad);
     }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
 
-    this.node.removeEventListener('load', this.handleLoad);
+    this.nodeRef.current.removeEventListener('load', this.handleLoad);
   }
 
   getDoc() {
-    return this.node ? this.node.contentDocument : null; // eslint-disable-line
+    return this.nodeRef.current ? this.nodeRef.current.contentDocument : null; // eslint-disable-line
   }
 
   getMountTarget() {
@@ -71,7 +72,14 @@ export default class Frame extends Component {
   }
 
   setRef = node => {
-    this.node = node;
+    this.nodeRef.current = node;
+
+    const { forwardedRef } = this.props; // eslint-disable-line react/prop-types
+    if (typeof forwardedRef === 'function') {
+      forwardedRef(node);
+    } else if (forwardedRef) {
+      forwardedRef.current = node;
+    }
   };
 
   handleLoad = () => {
@@ -126,6 +134,7 @@ export default class Frame extends Component {
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     delete props.contentWillUnmount;
+    delete props.forwardedRef;
     return (
       <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
         {this.state.iframeLoaded && this.renderFrameContents()}
@@ -133,3 +142,7 @@ export default class Frame extends Component {
     );
   }
 }
+
+export default React.forwardRef((props, ref) => (
+  <Frame {...props} forwardedRef={ref} />
+));
