@@ -1,5 +1,3 @@
-import Frame from './Frame';
+export { default } from './Frame';
 
 export { FrameContext, FrameContextConsumer, useFrame } from './Context';
-
-export default Frame;

@@ -75,7 +75,32 @@ lifecycle calls. This set of lifecycle calls are sometimes triggered after the
 lifecycle of the parent component, so these callbacks provide a hook to know
 when the frame contents are mounted and updated.
 
-###### Accessing the iframe's window and document
+###### ref
+`ref: PropTypes.oneOfType([ PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) }) ])`
+
+The `ref` prop provides a way to access inner iframe DOM node. To utilitize this prop use, for example, one of the React's built-in methods to create a ref: [`React.createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs) or [`React.useRef()`](https://reactjs.org/docs/hooks-reference.html#useref).
+
+```js
+const MyComponent = (props) => {
+  const iframeRef = React.useRef();
+
+  React.useEffect(() => {
+    // Use iframeRef for:
+    // - focus managing
+    // - triggering imperative animations
+    // - integrating with third-party DOM libraries
+    iframeRef.current.focus()
+  }, [])
+
+  return (
+    <Frame ref={iframeRef}>
+      <InnerComponent />
+    </Frame>
+  );
+}
+```
+
+##### Accessing the iframe's window and document
 The iframe's `window` and `document` may be accessed via the `FrameContextConsumer` or the `useFrame` hook.
 
 The example with `FrameContextConsumer`:
