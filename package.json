@@ -4,7 +4,8 @@
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "lib/index.js",
   "files": [
-    "lib"
+    "lib",
+    "index.ts"
   ],
   "scripts": {
     "precommit": "lint-staged",
