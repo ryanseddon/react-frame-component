@@ -1,10 +1,20 @@
 import React from 'react';
+import ReactDOM, { unmountComponentAtNode } from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import sinon from 'sinon/pkg/sinon';
 import Content from '../src/Content';
 
 describe('The Content component', () => {
+  let div;
+
+  afterEach(() => {
+    if (div) {
+      div.remove();
+      div = null;
+    }
+  });
+
   it('should render children', () => {
     const content = ReactTestUtils.renderIntoDocument(
       <Content
@@ -16,8 +26,8 @@ describe('The Content component', () => {
       </Content>
     );
 
-    const div = ReactTestUtils.findRenderedDOMComponentWithTag(content, 'div');
-    expect(div.className).to.equal('test-class-1');
+    const elem = ReactTestUtils.findRenderedDOMComponentWithTag(content, 'div');
+    expect(elem.className).to.equal('test-class-1');
   });
 
   it('should call contentDidMount on initial render', () => {
@@ -60,39 +70,28 @@ describe('The Content component', () => {
   });
 
   it('should call contentWillUnmount before unmounting', done => {
+    div = document.body.appendChild(document.createElement('div'));
     const didMount = sinon.spy();
     const didUpdate = sinon.spy();
     const willUnmount = sinon.spy();
 
-    class Parent extends React.Component {
-      state = {
-        isClosed: false
-      };
+    const Parent = () => (
+      <Content
+        contentDidMount={didMount}
+        contentDidUpdate={didUpdate}
+        contentWillUnmount={willUnmount}
+      >
+        <div className="test-class-1" />
+      </Content>
+    );
 
-      render() {
-        if (!this.state.isClosed) {
-          return (
-            <Content
-              contentDidMount={didMount}
-              contentDidUpdate={didUpdate}
-              contentWillUnmount={willUnmount}
-            >
-              <div className="test-class-1" />
-            </Content>
-          );
-        }
-        return null;
-      }
-    }
-
-    const wrapper = ReactTestUtils.renderIntoDocument(<Parent />);
+    ReactDOM.render(<Parent />, div);
 
     expect(didMount.callCount).to.equal(1);
     expect(didUpdate.callCount).to.equal(0);
-    wrapper.setState({ isClosed: true }, () => {
-      expect(willUnmount.callCount).to.equal(1);
-      done();
-    });
+    unmountComponentAtNode(div);
+    expect(willUnmount.callCount).to.equal(1);
+    done();
   });
 
   it('should error if null is passed in contentWillUnmount', () => {

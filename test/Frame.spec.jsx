@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
+import ReactDOM, { unmountComponentAtNode } from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import sinon from 'sinon/pkg/sinon';
@@ -317,36 +317,20 @@ describe('The Frame Component', () => {
     div = document.body.appendChild(document.createElement('div'));
     const willUnmount = sinon.spy();
 
-    class Parent extends React.Component {
-      constructor(props) {
-        super(props);
-        this.state = {
-          isClosed: false
-        };
-      }
+    const Thing = () => (
+      <Frame contentWillUnmount={willUnmount}>
+        <div className="test-class-1" />
+      </Frame>
+    );
 
-      render() {
-        if (!this.state.isClosed) {
-          return (
-            <Frame
-              contentWillUnmount={() => {
-                willUnmount();
-              }}
-            >
-              <div className="test-class-1" />
-            </Frame>
-          );
-        }
-        return null;
-      }
-    }
+    ReactDOM.render(<Thing />, div);
 
-    const wrapper = ReactDOM.render(<Parent />, div);
-
-    wrapper.setState({ isClosed: true }, () => {
+    // TODO: act() doesn'tt seem to solve this something weird???
+    setTimeout(() => {
+      unmountComponentAtNode(div);
       expect(willUnmount.callCount).to.equal(1, 'expected 1 willUnmount');
       done();
-    });
+    }, 100);
   });
 
   it('should error when null is passed in contentWillUnmount', () => {
