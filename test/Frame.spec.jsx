@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import sinon from 'sinon/pkg/sinon';
-import Frame from '../src';
+import ForwardedRefFrame, { Frame } from '../src/Frame';
 
 describe('The Frame Component', () => {
   let div;
@@ -424,12 +424,23 @@ describe('The Frame Component', () => {
         contentDidMount={() => {
           const iframes = ReactDOM.findDOMNode(div).querySelectorAll('iframe');
 
-    expect(iframes[0].contentDocument.body.children.length).to.equal(1);
+          expect(iframes[0].contentDocument.body.children.length).to.equal(1);
           expect(iframes[0].contentDocument.body.children.length).to.equal(1);
           done();
         }}
       />,
       div
     );
+  });
+
+  it('should properly assign ref prop', done => {
+    div = document.body.appendChild(document.createElement('div'));
+
+    const ref = sinon.spy(iframe => {
+      expect(iframe instanceof HTMLIFrameElement).to.equal(true);
+      done();
+    });
+
+    ReactDOM.render(<ForwardedRefFrame ref={ref} />, div);
   });
 });
