@@ -30699,9 +30699,17 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.useFrame = exports.FrameContextConsumer = exports.FrameContext = undefined;
 	
-	var _Context = __webpack_require__(16);
+	var _Frame = __webpack_require__(16);
+	
+	Object.defineProperty(exports, 'default', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_Frame).default;
+	  }
+	});
+	
+	var _Context = __webpack_require__(25);
 	
 	Object.defineProperty(exports, 'FrameContext', {
 	  enumerable: true,
@@ -30721,14 +30729,8 @@
 	    return _Context.useFrame;
 	  }
 	});
-	
-	var _Frame = __webpack_require__(17);
-	
-	var _Frame2 = _interopRequireDefault(_Frame);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _Frame2.default;
 
 /***/ },
 /* 16 */
@@ -30739,43 +30741,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.FrameContextConsumer = exports.FrameContextProvider = exports.useFrame = exports.FrameContext = undefined;
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var doc = void 0;
-	var win = void 0;
-	if (typeof document !== 'undefined') {
-	  doc = document;
-	}
-	if (typeof window !== 'undefined') {
-	  win = window;
-	}
-	
-	var FrameContext = exports.FrameContext = _react2.default.createContext({ document: doc, window: win });
-	
-	var useFrame = exports.useFrame = function useFrame() {
-	  return _react2.default.useContext(FrameContext);
-	};
-	
-	var FrameContextProvider = FrameContext.Provider,
-	    FrameContextConsumer = FrameContext.Consumer;
-	exports.FrameContextProvider = FrameContextProvider;
-	exports.FrameContextConsumer = FrameContextConsumer;
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.Frame = undefined;
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
@@ -30789,11 +30755,11 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _propTypes = __webpack_require__(18);
+	var _propTypes = __webpack_require__(17);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _Context = __webpack_require__(16);
+	var _Context = __webpack_require__(25);
 	
 	var _Content = __webpack_require__(26);
 	
@@ -30807,7 +30773,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Frame = function (_Component) {
+	var Frame = exports.Frame = function (_Component) {
 	  _inherits(Frame, _Component);
 	
 	  // React warns when you render directly into the body since browser extensions
@@ -30820,7 +30786,15 @@
 	    var _this = _possibleConstructorReturn(this, (Frame.__proto__ || Object.getPrototypeOf(Frame)).call(this, props, context));
 	
 	    _this.setRef = function (node) {
-	      _this.node = node;
+	      _this.nodeRef.current = node;
+	
+	      var forwardedRef = _this.props.forwardedRef; // eslint-disable-line react/prop-types
+	
+	      if (typeof forwardedRef === 'function') {
+	        forwardedRef(node);
+	      } else if (forwardedRef) {
+	        forwardedRef.current = node;
+	      }
 	    };
 	
 	    _this.handleLoad = function () {
@@ -30828,6 +30802,7 @@
 	    };
 	
 	    _this._isMounted = false;
+	    _this.nodeRef = _react2.default.createRef();
 	    _this.state = { iframeLoaded: false };
 	    return _this;
 	  }
@@ -30841,7 +30816,7 @@
 	      if (doc && doc.readyState === 'complete') {
 	        this.forceUpdate();
 	      } else {
-	        this.node.addEventListener('load', this.handleLoad);
+	        this.nodeRef.current.addEventListener('load', this.handleLoad);
 	      }
 	    }
 	  }, {
@@ -30849,12 +30824,12 @@
 	    value: function componentWillUnmount() {
 	      this._isMounted = false;
 	
-	      this.node.removeEventListener('load', this.handleLoad);
+	      this.nodeRef.current.removeEventListener('load', this.handleLoad);
 	    }
 	  }, {
 	    key: 'getDoc',
 	    value: function getDoc() {
-	      return this.node ? this.node.contentDocument : null; // eslint-disable-line
+	      return this.nodeRef.current ? this.nodeRef.current.contentDocument : null; // eslint-disable-line
 	    }
 	  }, {
 	    key: 'getMountTarget',
@@ -30915,6 +30890,7 @@
 	      delete props.mountTarget;
 	      delete props.contentDidMount;
 	      delete props.contentDidUpdate;
+	      delete props.forwardedRef;
 	      return _react2.default.createElement(
 	        'iframe',
 	        _extends({}, props, { ref: this.setRef, onLoad: this.handleLoad }),
@@ -30944,10 +30920,12 @@
 	  contentDidUpdate: function contentDidUpdate() {},
 	  initialContent: '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
 	};
-	exports.default = Frame;
+	exports.default = _react2.default.forwardRef(function (props, ref) {
+	  return _react2.default.createElement(Frame, _extends({}, props, { forwardedRef: ref }));
+	});
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30974,17 +30952,17 @@
 	  // By explicitly using `prop-types` you are opting into new development behavior.
 	  // http://fb.me/prop-types-in-prod
 	  var throwOnDirectAccess = true;
-	  module.exports = __webpack_require__(19)(isValidElement, throwOnDirectAccess);
+	  module.exports = __webpack_require__(18)(isValidElement, throwOnDirectAccess);
 	} else {
 	  // By explicitly using `prop-types` you are opting into new production behavior.
 	  // http://fb.me/prop-types-in-prod
-	  module.exports = __webpack_require__(25)();
+	  module.exports = __webpack_require__(24)();
 	}
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30998,12 +30976,12 @@
 	
 	'use strict';
 	
-	var emptyFunction = __webpack_require__(20);
-	var invariant = __webpack_require__(21);
-	var warning = __webpack_require__(22);
+	var emptyFunction = __webpack_require__(19);
+	var invariant = __webpack_require__(20);
+	var warning = __webpack_require__(21);
 	
-	var ReactPropTypesSecret = __webpack_require__(23);
-	var checkPropTypes = __webpack_require__(24);
+	var ReactPropTypesSecret = __webpack_require__(22);
+	var checkPropTypes = __webpack_require__(23);
 	
 	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
@@ -31503,7 +31481,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31546,7 +31524,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31607,7 +31585,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31622,7 +31600,7 @@
 	
 	'use strict';
 	
-	var emptyFunction = __webpack_require__(20);
+	var emptyFunction = __webpack_require__(19);
 	
 	/**
 	 * Similar to invariant but only logs a warning if the condition is not met.
@@ -31679,7 +31657,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	/**
@@ -31699,7 +31677,7 @@
 
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31714,9 +31692,9 @@
 	'use strict';
 	
 	if (process.env.NODE_ENV !== 'production') {
-	  var invariant = __webpack_require__(21);
-	  var warning = __webpack_require__(22);
-	  var ReactPropTypesSecret = __webpack_require__(23);
+	  var invariant = __webpack_require__(20);
+	  var warning = __webpack_require__(21);
+	  var ReactPropTypesSecret = __webpack_require__(22);
 	  var loggedTypeFailures = {};
 	}
 	
@@ -31767,7 +31745,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31781,8 +31759,8 @@
 	
 	'use strict';
 	
-	var emptyFunction = __webpack_require__(20);
-	var invariant = __webpack_require__(21);
+	var emptyFunction = __webpack_require__(19);
+	var invariant = __webpack_require__(20);
 	
 	module.exports = function() {
 	  // Important!
@@ -31827,6 +31805,43 @@
 
 
 /***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.FrameContextConsumer = exports.FrameContextProvider = exports.useFrame = exports.FrameContext = undefined;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var doc = void 0;
+	var win = void 0;
+	if (typeof document !== 'undefined') {
+	  doc = document;
+	}
+	if (typeof window !== 'undefined') {
+	  win = window;
+	}
+	
+	var FrameContext = exports.FrameContext = _react2.default.createContext({ document: doc, window: win });
+	
+	var useFrame = exports.useFrame = function useFrame() {
+	  return _react2.default.useContext(FrameContext);
+	};
+	
+	var FrameContextProvider = FrameContext.Provider,
+	    FrameContextConsumer = FrameContext.Consumer;
+	exports.FrameContextProvider = FrameContextProvider;
+	exports.FrameContextConsumer = FrameContextConsumer;
+
+/***/ },
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31842,7 +31857,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _propTypes = __webpack_require__(18);
+	var _propTypes = __webpack_require__(17);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
