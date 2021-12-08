@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "files": [
     "lib",
-    "index.ts"
+    "index.d.ts"
   ],
   "scripts": {
     "precommit": "lint-staged",
