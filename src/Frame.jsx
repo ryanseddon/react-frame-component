@@ -45,6 +45,7 @@ export class Frame extends Component {
 
     const doc = this.getDoc();
     if (doc && doc.readyState === 'complete') {
+      this.handleLoad();
       this.forceUpdate();
     } else {
       this.nodeRef.current.addEventListener('load', this.handleLoad);
