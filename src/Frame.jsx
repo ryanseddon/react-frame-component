@@ -46,8 +46,13 @@ export class Frame extends Component {
     const doc = this.getDoc();
     if (doc && doc.readyState === 'complete') {
       this.forceUpdate();
-    } else {
-      this.nodeRef.current.addEventListener('load', this.handleLoad);
+    }
+
+    if (doc) {
+      this.nodeRef.current.contentWindow.addEventListener(
+        'DOMContentLoaded',
+        this.handleLoad
+      );
     }
   }
 
@@ -131,7 +136,7 @@ export class Frame extends Component {
     delete props.contentDidUpdate;
     delete props.forwardedRef;
     return (
-      <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
+      <iframe {...props} ref={this.setRef}>
         {this.state.iframeLoaded && this.renderFrameContents()}
       </iframe>
     );
