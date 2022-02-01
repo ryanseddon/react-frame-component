@@ -44,9 +44,6 @@ export class Frame extends Component {
     this._isMounted = true;
 
     const doc = this.getDoc();
-    if (doc && doc.readyState === 'complete') {
-      this.forceUpdate();
-    }
 
     if (doc) {
       this.nodeRef.current.contentWindow.addEventListener(
@@ -86,7 +83,10 @@ export class Frame extends Component {
   };
 
   handleLoad = () => {
-    this.setState({ iframeLoaded: true });
+    // Bail update as some browsers will trigger on both DOMContentLoaded & onLoad ala firefox
+    if (!this.state.iframeLoaded) {
+      this.setState({ iframeLoaded: true });
+    }
   };
 
   renderFrameContents() {
@@ -136,7 +136,7 @@ export class Frame extends Component {
     delete props.contentDidUpdate;
     delete props.forwardedRef;
     return (
-      <iframe {...props} ref={this.setRef}>
+      <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
         {this.state.iframeLoaded && this.renderFrameContents()}
       </iframe>
     );
