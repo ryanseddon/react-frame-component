@@ -30838,7 +30838,10 @@
 	    };
 	
 	    _this.handleLoad = function () {
-	      _this.setState({ iframeLoaded: true });
+	      // Bail update as some browsers will trigger on both DOMContentLoaded & onLoad ala firefox
+	      if (!_this.state.iframeLoaded) {
+	        _this.setState({ iframeLoaded: true });
+	      }
 	    };
 	
 	    _this._isMounted = false;
@@ -30853,9 +30856,6 @@
 	      this._isMounted = true;
 	
 	      var doc = this.getDoc();
-	      if (doc && doc.readyState === 'complete') {
-	        this.forceUpdate();
-	      }
 	
 	      if (doc) {
 	        this.nodeRef.current.contentWindow.addEventListener('DOMContentLoaded', this.handleLoad);
@@ -30935,7 +30935,7 @@
 	      delete props.forwardedRef;
 	      return _react2.default.createElement(
 	        'iframe',
-	        _extends({}, props, { ref: this.setRef }),
+	        _extends({}, props, { ref: this.setRef, onLoad: this.handleLoad }),
 	        this.state.iframeLoaded && this.renderFrameContents()
 	      );
 	    }
