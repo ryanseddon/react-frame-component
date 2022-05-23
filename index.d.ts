@@ -9,7 +9,7 @@ declare module 'react-frame-component' {
     contentDidMount?: (() => void) | undefined;
     contentDidUpdate?: (() => void) | undefined;
     children: React.ReactNode;
-    ref?: React.Ref<FrameComponent>;
+    ref?: React.Ref<HTMLIFrameElement>;
   }
 
   export default class FrameComponent extends React.Component<
