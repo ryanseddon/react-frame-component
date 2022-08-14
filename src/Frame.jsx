@@ -11,6 +11,7 @@ export class Frame extends Component {
   // element that we render react into.
   static propTypes = {
     style: PropTypes.object, // eslint-disable-line
+    onLoad: PropTypes.func,
     head: PropTypes.node,
     initialContent: PropTypes.string,
     mountTarget: PropTypes.string,
@@ -24,6 +25,7 @@ export class Frame extends Component {
 
   static defaultProps = {
     style: {},
+    onLoad: undefined,
     head: null,
     children: undefined,
     mountTarget: undefined,
@@ -82,6 +84,9 @@ export class Frame extends Component {
 
   handleLoad = () => {
     this.setState({ iframeLoaded: true });
+    if (this.props.onLoad) {
+      this.props.onLoad();
+    }
   };
 
   renderFrameContents() {
