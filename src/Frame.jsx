@@ -59,6 +59,13 @@ export class Frame extends Component {
     this.nodeRef.current.removeEventListener('load', this.handleLoad);
   }
 
+  onIframeLoad = () => {
+    this.handleLoad();
+    if (this.props.onLoad) {
+      this.props.onLoad();
+    }
+  };
+
   getDoc() {
     return this.nodeRef.current ? this.nodeRef.current.contentDocument : null; // eslint-disable-line
   }
@@ -84,9 +91,6 @@ export class Frame extends Component {
 
   handleLoad = () => {
     this.setState({ iframeLoaded: true });
-    if (this.props.onLoad) {
-      this.props.onLoad();
-    }
   };
 
   renderFrameContents() {
@@ -136,7 +140,7 @@ export class Frame extends Component {
     delete props.contentDidUpdate;
     delete props.forwardedRef;
     return (
-      <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
+      <iframe {...props} ref={this.setRef} onLoad={this.onIframeLoad}>
         {this.state.iframeLoaded && this.renderFrameContents()}
       </iframe>
     );
