@@ -12,9 +12,8 @@ declare module 'react-frame-component' {
     ref?: React.Ref<HTMLIFrameElement>;
   }
 
-  export default class FrameComponent extends React.Component<
-    FrameComponentProps
-  > {}
+  const FrameComponent: React.Component<FrameComponentProps>;
+  export default FrameComponent;
 
   export interface FrameContextProps {
     document?: HTMLDocument;
