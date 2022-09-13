@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { FrameContextProvider } from './Context';
@@ -99,12 +99,15 @@ export class Frame extends Component {
     const contentDidUpdate = this.props.contentDidUpdate;
 
     const win = doc.defaultView || doc.parentView;
+
+    const value = useMemo(() => ({ document: doc, window: win }), [doc, win])
+
     const contents = (
       <Content
         contentDidMount={contentDidMount}
         contentDidUpdate={contentDidUpdate}
       >
-        <FrameContextProvider value={{ document: doc, window: win }}>
+        <FrameContextProvider value={value}>
           <div className="frame-content">{this.props.children}</div>
         </FrameContextProvider>
       </Content>
