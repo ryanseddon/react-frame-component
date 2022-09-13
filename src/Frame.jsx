@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { FrameContextProvider } from './Context';
@@ -38,6 +38,7 @@ export class Frame extends Component {
     this._isMounted = false;
     this.nodeRef = React.createRef();
     this.state = { iframeLoaded: false };
+    this.contextValue = null;
   }
 
   componentDidMount() {
@@ -100,14 +101,20 @@ export class Frame extends Component {
 
     const win = doc.defaultView || doc.parentView;
 
-    const value = useMemo(() => ({ document: doc, window: win }), [doc, win])
+    const contextValue = { document: doc, window: win };
+
+    const prevContextValue = this.contextValue
+
+    if (!prevContextValue || prevContextValue.document !== contextValue.document || prevContextValue.window !== contextValue.window){
+        this.contextValue = contextValue
+    }
 
     const contents = (
       <Content
         contentDidMount={contentDidMount}
         contentDidUpdate={contentDidUpdate}
       >
-        <FrameContextProvider value={value}>
+        <FrameContextProvider value={this.contextValue}>
           <div className="frame-content">{this.props.children}</div>
         </FrameContextProvider>
       </Content>
