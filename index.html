@@ -7,12 +7,11 @@
         * {
             color: blue;
         }
-        iframe {
-          width: 100%;
-        }
         section {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
+            display: flex;
+        }
+        section div {
+            flex: 1;
         }
     </style>
 </head>
@@ -22,7 +21,6 @@
   <section>
       <div id="example1"></div>
       <div id="example2"></div>
-      <div id="example3"></div>
     </section>
 <script type="text/javascript" src="appbundle.js"></script></body>
 </html>
