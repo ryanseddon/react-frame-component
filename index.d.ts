@@ -2,19 +2,18 @@ declare module 'react-frame-component' {
   import * as React from 'react';
 
   export interface FrameComponentProps
-    extends React.IframeHTMLAttributes<HTMLIFrameElement> {
+    extends React.IframeHTMLAttributes<HTMLIFrameElement>,
+      React.RefAttributes<HTMLIFrameElement> {
     head?: React.ReactNode | undefined;
     mountTarget?: string | undefined;
     initialContent?: string | undefined;
     contentDidMount?: (() => void) | undefined;
     contentDidUpdate?: (() => void) | undefined;
     children: React.ReactNode;
-    ref?: React.Ref<HTMLIFrameElement>;
   }
 
-  export default class FrameComponent extends React.Component<
-    FrameComponentProps
-  > {}
+  const FrameComponent: React.ForwardRefExoticComponent<FrameComponentProps>;
+  export default FrameComponent;
 
   export interface FrameContextProps {
     document?: HTMLDocument;
