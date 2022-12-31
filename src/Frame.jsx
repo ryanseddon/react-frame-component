@@ -44,17 +44,22 @@ export class Frame extends Component {
     this._isMounted = true;
 
     const doc = this.getDoc();
-    if (doc && doc.readyState === 'complete') {
-      this.forceUpdate();
-    } else {
-      this.nodeRef.current.addEventListener('load', this.handleLoad);
+
+    if (doc) {
+      this.nodeRef.current.contentWindow.addEventListener(
+        'DOMContentLoaded',
+        this.handleLoad
+      );
     }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
 
-    this.nodeRef.current.removeEventListener('load', this.handleLoad);
+    this.nodeRef.current.removeEventListener(
+      'DOMContentLoaded',
+      this.handleLoad
+    );
   }
 
   getDoc() {
@@ -81,8 +86,18 @@ export class Frame extends Component {
   };
 
   handleLoad = () => {
-    this.setState({ iframeLoaded: true });
+    clearInterval(this.loadCheck);
+    // Bail update as some browsers will trigger on both DOMContentLoaded & onLoad ala firefox
+    if (!this.state.iframeLoaded) {
+      this.setState({ iframeLoaded: true });
+    }
   };
+
+  // In certain situations on a cold cache DOMContentLoaded never gets called
+  // fallback to an interval to check if that's the case
+  loadCheck = setInterval(function loadCheckCallback() {
+    this.handleLoad();
+  }, 500);
 
   renderFrameContents() {
     if (!this._isMounted) {
@@ -130,6 +145,7 @@ export class Frame extends Component {
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     delete props.forwardedRef;
+
     return (
       <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
         {this.state.iframeLoaded && this.renderFrameContents()}

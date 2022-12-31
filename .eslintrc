@@ -14,6 +14,7 @@
   "parser": "babel-eslint",
   "rules": {
     "react/forbid-prop-types": "off",
+    "react/prop-types": [0, { "ignore": ["children"]}],
     "no-underscore-dangle": "off"
   }
 }

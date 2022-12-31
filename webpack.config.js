@@ -24,5 +24,10 @@ module.exports = {
     loaders: [
       { test: /\.js(x|)/, loaders: ['babel-loader'], exclude: /node_modules/ }
     ]
+  },
+  devServer: {
+    headers: {
+      'Cache-Control': 'max-age=10'
+    }
   }
 };

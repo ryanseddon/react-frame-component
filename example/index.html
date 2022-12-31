@@ -7,11 +7,12 @@
         * {
             color: blue;
         }
-        section {
-            display: flex;
+        iframe {
+          width: 100%;
         }
-        section div {
-            flex: 1;
+        section {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
         }
     </style>
 </head>
@@ -21,6 +22,7 @@
   <section>
       <div id="example1"></div>
       <div id="example2"></div>
+      <div id="example3"></div>
     </section>
 </body>
 </html>
