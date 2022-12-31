@@ -46,6 +46,8 @@
 
 	'use strict';
 	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -112,6 +114,11 @@
 	), document.querySelector('#example1'));
 	
 	var Foobar = function Foobar() {
+	  var _React$useState = _react2.default.useState(false),
+	      _React$useState2 = _slicedToArray(_React$useState, 2),
+	      toggle = _React$useState2[0],
+	      updateToggle = _React$useState2[1];
+	
 	  return _react2.default.createElement(
 	    _src2.default,
 	    { style: styles, head: _react2.default.createElement(
@@ -128,11 +135,44 @@
 	      'p',
 	      null,
 	      'This is also showing encapuslated styles. All text is red inside this component.'
+	    ),
+	    toggle && _react2.default.createElement(
+	      'h2',
+	      null,
+	      'Hello'
+	    ),
+	    _react2.default.createElement(
+	      'button',
+	      { onClick: function onClick() {
+	          return updateToggle(!toggle);
+	        } },
+	      'Toggle'
 	    )
 	  );
 	};
 	
 	_reactDom2.default.render(_react2.default.createElement(Foobar, null), document.querySelector('#example2'));
+	
+	var ExternalResources = function ExternalResources() {
+	  var initialContent = '<!DOCTYPE html><html><head>\n\t<link href="//use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet" />\n\t<link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />\n\t<base target=_blank>\n  </head><body style=\'overflow: hidden\'><div></div></body></html>';
+	
+	  return _react2.default.createElement(
+	    _src2.default,
+	    { initialContent: initialContent },
+	    _react2.default.createElement(
+	      'h1',
+	      null,
+	      'External Resources'
+	    ),
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      'This tests loading external resources via initialContent which can create timing issues with onLoad and srcdoc in cached situations'
+	    )
+	  );
+	};
+	
+	_reactDom2.default.render(_react2.default.createElement(ExternalResources, null), document.querySelector('#example3'));
 
 /***/ },
 /* 1 */
@@ -30798,8 +30838,16 @@
 	    };
 	
 	    _this.handleLoad = function () {
-	      _this.setState({ iframeLoaded: true });
+	      clearInterval(_this.loadCheck);
+	      // Bail update as some browsers will trigger on both DOMContentLoaded & onLoad ala firefox
+	      if (!_this.state.iframeLoaded) {
+	        _this.setState({ iframeLoaded: true });
+	      }
 	    };
+	
+	    _this.loadCheck = setInterval(function loadCheckCallback() {
+	      this.handleLoad();
+	    }, 500);
 	
 	    _this._isMounted = false;
 	    _this.nodeRef = _react2.default.createRef();
@@ -30813,10 +30861,9 @@
 	      this._isMounted = true;
 	
 	      var doc = this.getDoc();
-	      if (doc && doc.readyState === 'complete') {
-	        this.forceUpdate();
-	      } else {
-	        this.nodeRef.current.addEventListener('load', this.handleLoad);
+	
+	      if (doc) {
+	        this.nodeRef.current.contentWindow.addEventListener('DOMContentLoaded', this.handleLoad);
 	      }
 	    }
 	  }, {
@@ -30824,7 +30871,7 @@
 	    value: function componentWillUnmount() {
 	      this._isMounted = false;
 	
-	      this.nodeRef.current.removeEventListener('load', this.handleLoad);
+	      this.nodeRef.current.removeEventListener('DOMContentLoaded', this.handleLoad);
 	    }
 	  }, {
 	    key: 'getDoc',
@@ -30840,6 +30887,10 @@
 	      }
 	      return doc.body.children[0];
 	    }
+	
+	    // In certain situations on a cold cache DOMContentLoaded never gets called
+	    // fallback to an interval to check if that's the case
+	
 	  }, {
 	    key: 'renderFrameContents',
 	    value: function renderFrameContents() {
@@ -30891,6 +30942,7 @@
 	      delete props.contentDidMount;
 	      delete props.contentDidUpdate;
 	      delete props.forwardedRef;
+	
 	      return _react2.default.createElement(
 	        'iframe',
 	        _extends({}, props, { ref: this.setRef, onLoad: this.handleLoad }),
