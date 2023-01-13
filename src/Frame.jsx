@@ -95,12 +95,10 @@ export class Frame extends Component {
 
   // In certain situations on a cold cache DOMContentLoaded never gets called
   // fallback to an interval to check if that's the case
-  loadCheck = () => {
-    const self = this;
+  loadCheck = () =>
     setInterval(() => {
-      self.handleLoad();
+      this.handleLoad();
     }, 500);
-  };
 
   renderFrameContents() {
     if (!this._isMounted) {
