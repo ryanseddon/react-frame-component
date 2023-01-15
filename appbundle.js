@@ -30845,9 +30845,11 @@
 	      }
 	    };
 	
-	    _this.loadCheck = setInterval(function loadCheckCallback() {
-	      this.handleLoad();
-	    }, 500);
+	    _this.loadCheck = function () {
+	      return setInterval(function () {
+	        _this.handleLoad();
+	      }, 500);
+	    };
 	
 	    _this._isMounted = false;
 	    _this.nodeRef = _react2.default.createRef();
