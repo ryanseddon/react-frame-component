@@ -16,7 +16,7 @@ declare module 'react-frame-component' {
   export default FrameComponent;
 
   export interface FrameContextProps {
-    document?: HTMLDocument;
+    document?: Document;
     window?: Window;
   }
 
