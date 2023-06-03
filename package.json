@@ -14,7 +14,7 @@
     "serve": "webpack-dev-server --host 0.0.0.0 --hot --inline --history-api-fallback",
     "start": "npm-run-all --parallel karma:dev serve",
     "karma:once": "karma start --single-run",
-    "karma:dev": "karma start --browsers Chrome",
+    "karma:dev": "karma start --browsers Chromium",
     "babel": "babel src -d lib",
     "build": "npm-run-all clean babel",
     "lint": "eslint '*.js' '{src,test}/**/*.js*'",

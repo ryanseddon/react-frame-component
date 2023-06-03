@@ -5,7 +5,8 @@ export default class Content extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
     contentDidMount: PropTypes.func.isRequired,
-    contentDidUpdate: PropTypes.func.isRequired
+    contentDidUpdate: PropTypes.func.isRequired,
+    contentWillUnmount: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -14,6 +15,10 @@ export default class Content extends Component {
 
   componentDidUpdate() {
     this.props.contentDidUpdate();
+  }
+
+  componentWillUnmount() {
+    this.props.contentWillUnmount();
   }
 
   render() {

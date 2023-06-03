@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
+import ReactDOM, { unmountComponentAtNode } from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import sinon from 'sinon/pkg/sinon';
@@ -290,6 +290,55 @@ describe('The Frame Component', () => {
   });
 
   it('should call contentDidUpdate on subsequent updates', done => {
+    div = document.body.appendChild(document.createElement('div'));
+    const didUpdate = sinon.spy();
+    const didMount = sinon.spy();
+    const frame = ReactDOM.render(
+      <Frame
+        contentDidUpdate={didUpdate}
+        contentDidMount={() => {
+          didMount();
+          frame.setState({ foo: 'bar' }, () => {
+            expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+            expect(didUpdate.callCount).to.equal(1, 'expected 1 didUpdate');
+            frame.setState({ foo: 'gah' }, () => {
+              expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
+              expect(didUpdate.callCount).to.equal(2, 'expected 2 didUpdate');
+              done();
+            });
+          });
+        }}
+      />,
+      div
+    );
+  });
+
+  it('should call contentWillUnmount on unmount', done => {
+    div = document.body.appendChild(document.createElement('div'));
+    const willUnmount = sinon.spy();
+
+    const Thing = () => (
+      <Frame contentWillUnmount={willUnmount}>
+        <div className="test-class-1" />
+      </Frame>
+    );
+
+    ReactDOM.render(<Thing />, div);
+
+    // TODO: act() doesn'tt seem to solve this something weird???
+    setTimeout(() => {
+      unmountComponentAtNode(div);
+      expect(willUnmount.callCount).to.equal(1, 'expected 1 willUnmount');
+      done();
+    }, 100);
+  });
+
+  it('should error when null is passed in contentWillUnmount', () => {
+    div = document.body.appendChild(document.createElement('div'));
+    ReactDOM.render(<Frame contentWillUnmount={null} />, div);
+  });
+
+  it('should not error when contentWillUnmount is not passed', done => {
     div = document.body.appendChild(document.createElement('div'));
     const didUpdate = sinon.spy();
     const didMount = sinon.spy();
