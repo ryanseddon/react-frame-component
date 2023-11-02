@@ -143,7 +143,7 @@ describe('The Frame Component', () => {
             const iframe = container.querySelector('iframe');
             const elem = container.querySelector('p');
             const body = iframe.contentDocument.body;
-            const getColour = (e) =>
+            const getColour = e =>
               window.getComputedStyle(e, null).getPropertyValue('color');
             expect(getColour(elem)).toBe('rgb(0, 0, 0)');
             expect(getColour(body.querySelector('p'))).toBe('rgb(255, 0, 0)');
@@ -158,7 +158,7 @@ describe('The Frame Component', () => {
       const iframe = container.querySelector('iframe');
       const elem = container.querySelector('p');
       const body = iframe.contentDocument.body;
-      const getColour = (e) =>
+      const getColour = e =>
         window.getComputedStyle(e, null).getPropertyValue('color');
       expect(getColour(elem)).toBe('rgb(0, 0, 0)');
       expect(getColour(body.querySelector('p'))).toBe('rgb(255, 0, 0)');
@@ -257,6 +257,35 @@ describe('The Frame Component', () => {
         '<script>console.log("foo");</script>'
       );
     });
+  });
+
+  it('should allow setting initialContent via document.write() when required', async () => {
+    const initialContent =
+      '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
+    const renderedContent =
+      '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
+
+    let contentDidMountCalled = false;
+
+    const { container } = render(
+      <Frame
+        dangerouslyUseDocWrite
+        initialContent={initialContent}
+        contentDidMount={() => {
+          contentDidMountCalled = true;
+        }}
+      />
+    );
+
+    const iframe = container.querySelector('iframe');
+
+    await waitFor(() => {
+      expect(contentDidMountCalled).toBe(true);
+    });
+
+    expect(iframe.contentDocument.documentElement.outerHTML).toBe(
+      renderedContent
+    );
   });
 
   it('should allow setting mountTarget', async () => {
