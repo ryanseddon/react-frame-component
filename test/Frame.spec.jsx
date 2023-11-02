@@ -253,6 +253,27 @@ describe('The Frame Component', () => {
     );
   });
 
+  it.only('should allow setting initialContent via document.write() when required', done => {
+    div = document.body.appendChild(document.createElement('div'));
+
+    const initialContent =
+      '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
+    const renderedContent =
+      '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
+    const frame = ReactDOM.render(
+      <Frame
+        dangerouslyUseDocWrite
+        initialContent={initialContent}
+        contentDidMount={() => {
+          const doc = ReactDOM.findDOMNode(frame).contentDocument;
+          expect(doc.documentElement.outerHTML).to.equal(renderedContent);
+          done();
+        }}
+      />,
+      div
+    );
+  });
+
   it('should allow setting mountTarget', done => {
     div = document.body.appendChild(document.createElement('div'));
 
