@@ -128,6 +128,10 @@ export class Frame extends Component {
 
     const mountTarget = this.getMountTarget();
 
+    if (!mountTarget) {
+      return null;
+    }
+
     return [
       ReactDOM.createPortal(this.props.head, this.getDoc().head),
       ReactDOM.createPortal(contents, mountTarget)
