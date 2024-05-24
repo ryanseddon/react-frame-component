@@ -341,6 +341,23 @@ describe('The Frame Component', () => {
     );
   });
 
+  it("should render null when `this.getMountTarget()` can't resolve", done => {
+    const didMount = sinon.spy();
+    const getMountTarget = sinon
+      .stub(Frame.prototype, 'getMountTarget')
+      .returns(null);
+
+    div = document.body.appendChild(document.createElement('div'));
+
+    ReactDOM.render(<Frame contentDidMount={didMount} />, div);
+
+    setTimeout(() => {
+      expect(didMount.callCount).to.equal(0);
+      done();
+      getMountTarget.restore();
+    }, 100);
+  });
+
   it('should not error when parent components are reused', done => {
     div = document.body.appendChild(document.createElement('div'));
 
