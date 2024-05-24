@@ -1,0 +1,5 @@
+{
+  "name": "@ryanseddon/react-frame-component",
+  "version": "5.2.6",
+  "exports": "./src/index.js"
+}
