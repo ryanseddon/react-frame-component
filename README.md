@@ -64,6 +64,13 @@ The `mountTarget` props is a css selector (#target/.target) that specifies where
 </Frame>
 ```
 
+###### dangerouslyUseDocWrite
+`dangerouslyUseDocWrite: PropTypes.bool`
+
+Defaults to `false`
+
+The frame's initial content, as defined by the `initialContent` prop, is populated via the frame's `srcdoc` attribute by default. However, this can cause issues with some libraries such as Recaptcha and Google Maps that depend on the frame's location/origin. In these cases, setting this flag will cause `Frame` to use `document.write()` to populate the initial content. This is **unperformant and unrecommended**, but allows these libraries to be used inside a `Frame` instance.
+
 ###### contentDidMount and contentDidUpdate
 `contentDidMount:  PropTypes.func`
 `contentDidUpdate:  PropTypes.func`
