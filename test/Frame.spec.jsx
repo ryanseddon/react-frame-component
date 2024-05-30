@@ -62,6 +62,16 @@ describe('The Frame Component', () => {
     expect(node.getAttribute('width')).to.equal('80%');
   });
 
+  it('should call onLoad given as props', done => {
+    div = document.body.appendChild(document.createElement('div'));
+
+    const onLoad = () => {
+      done();
+    };
+
+    ReactDOM.render(<Frame id="foo" onLoad={onLoad} />, div);
+  });
+
   it('should create an iFrame with a <link> tag inside', done => {
     div = document.body.appendChild(document.createElement('div'));
     const frame = ReactDOM.render(

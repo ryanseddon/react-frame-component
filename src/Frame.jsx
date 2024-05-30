@@ -11,6 +11,7 @@ export class Frame extends Component {
   // element that we render react into.
   static propTypes = {
     style: PropTypes.object, // eslint-disable-line
+    onLoad: PropTypes.func,
     head: PropTypes.node,
     initialContent: PropTypes.string,
     mountTarget: PropTypes.string,
@@ -24,6 +25,7 @@ export class Frame extends Component {
 
   static defaultProps = {
     style: {},
+    onLoad: undefined,
     head: null,
     children: undefined,
     mountTarget: undefined,
@@ -61,6 +63,13 @@ export class Frame extends Component {
       this.handleLoad
     );
   }
+
+  onIframeLoad = () => {
+    this.handleLoad();
+    if (this.props.onLoad) {
+      this.props.onLoad();
+    }
+  };
 
   getDoc() {
     return this.nodeRef.current ? this.nodeRef.current.contentDocument : null; // eslint-disable-line
@@ -152,7 +161,7 @@ export class Frame extends Component {
     delete props.forwardedRef;
 
     return (
-      <iframe {...props} ref={this.setRef} onLoad={this.handleLoad}>
+      <iframe {...props} ref={this.setRef} onLoad={this.onIframeLoad}>
         {this.state.iframeLoaded && this.renderFrameContents()}
       </iframe>
     );
