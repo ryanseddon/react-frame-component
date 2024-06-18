@@ -16,6 +16,7 @@ export class Frame extends Component {
     mountTarget: PropTypes.string,
     contentDidMount: PropTypes.func,
     contentDidUpdate: PropTypes.func,
+    contentWillUnmount: PropTypes.func,
     children: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.arrayOf(PropTypes.element)
@@ -29,6 +30,7 @@ export class Frame extends Component {
     mountTarget: undefined,
     contentDidMount: () => {},
     contentDidUpdate: () => {},
+    contentWillUnmount: () => {},
     initialContent:
       '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
   };
@@ -113,12 +115,14 @@ export class Frame extends Component {
 
     const contentDidMount = this.props.contentDidMount;
     const contentDidUpdate = this.props.contentDidUpdate;
+    const contentWillUnmount = this.props.contentWillUnmount;
 
     const win = doc.defaultView || doc.parentView;
     const contents = (
       <Content
         contentDidMount={contentDidMount}
         contentDidUpdate={contentDidUpdate}
+        contentWillUnmount={contentWillUnmount}
       >
         <FrameContextProvider value={{ document: doc, window: win }}>
           <div className="frame-content">{this.props.children}</div>
@@ -149,6 +153,7 @@ export class Frame extends Component {
     delete props.mountTarget;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
+    delete props.contentWillUnmount;
     delete props.forwardedRef;
 
     return (
