@@ -16,10 +16,7 @@ export class Frame extends Component {
     mountTarget: PropTypes.string,
     contentDidMount: PropTypes.func,
     contentDidUpdate: PropTypes.func,
-    children: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.arrayOf(PropTypes.element)
-    ])
+    children: PropTypes.node
   };
 
   static defaultProps = {
