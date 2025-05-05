@@ -14,6 +14,7 @@ export class Frame extends Component {
     head: PropTypes.node,
     initialContent: PropTypes.string,
     mountTarget: PropTypes.string,
+    dangerouslyUseDocWrite: PropTypes.bool,
     contentDidMount: PropTypes.func,
     contentDidUpdate: PropTypes.func,
     children: PropTypes.oneOfType([
@@ -27,6 +28,7 @@ export class Frame extends Component {
     head: null,
     children: undefined,
     mountTarget: undefined,
+    dangerouslyUseDocWrite: false,
     contentDidMount: () => {},
     contentDidUpdate: () => {},
     initialContent:
@@ -126,6 +128,12 @@ export class Frame extends Component {
       </Content>
     );
 
+    if (this.props.dangerouslyUseDocWrite && doc.body.children.length < 1) {
+      doc.open('text/html', 'replace');
+      doc.write(this.props.initialContent);
+      doc.close();
+    }
+
     const mountTarget = this.getMountTarget();
 
     if (!mountTarget) {
@@ -141,12 +149,17 @@ export class Frame extends Component {
   render() {
     const props = {
       ...this.props,
-      srcDoc: this.props.initialContent,
       children: undefined // The iframe isn't ready so we drop children from props here. #12, #17
     };
+
+    if (!this.props.dangerouslyUseDocWrite) {
+      props.srcDoc = this.props.initialContent;
+    }
+
     delete props.head;
     delete props.initialContent;
     delete props.mountTarget;
+    delete props.dangerouslyUseDocWrite;
     delete props.contentDidMount;
     delete props.contentDidUpdate;
     delete props.forwardedRef;
