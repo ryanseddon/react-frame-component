@@ -253,7 +253,7 @@ describe('The Frame Component', () => {
     );
   });
 
-  it.only('should allow setting initialContent via document.write() when required', done => {
+  it('should allow setting initialContent via document.write() when required', () => {
     div = document.body.appendChild(document.createElement('div'));
 
     const initialContent =
@@ -267,7 +267,6 @@ describe('The Frame Component', () => {
         contentDidMount={() => {
           const doc = ReactDOM.findDOMNode(frame).contentDocument;
           expect(doc.documentElement.outerHTML).to.equal(renderedContent);
-          done();
         }}
       />,
       div
