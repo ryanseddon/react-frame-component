@@ -82,7 +82,7 @@
     "sinon": "2.0.0-pre",
     "wallaby-webpack": "^3.9.16",
     "webpack": "1.x",
-    "webpack-dev-server": "^1.16.3"
+    "webpack-dev-server": "^5.2.1"
   },
   "dependencies": {},
   "lint-staged": {
