@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
-import { expect } from 'chai';
+import { render, waitFor } from '@testing-library/react';
+import { expect, describe, it, vi } from 'vitest';
 import {
   FrameContextProvider,
   FrameContextConsumer,
@@ -9,37 +9,36 @@ import {
 } from '../src/Context';
 
 describe('The DocumentContext Component', () => {
-  it('will establish context variables', done => {
+  it('will establish context variables', async () => {
     const document = { x: 1 };
     const window = { y: 2 };
 
     const Child = () => (
       <FrameContextConsumer>
         {({ document: doc, window: win }) => {
-          expect(doc).to.equal(document);
-          expect(win).to.equal(window);
-          done();
+          expect(doc).toEqual(document);
+          expect(win).toEqual(window);
           return <h1>{`x=${doc.x},y=${win.y}`}</h1>;
         }}
       </FrameContextConsumer>
     );
-    ReactTestUtils.renderIntoDocument(
+
+    render(
       <FrameContextProvider value={{ document, window }}>
         <Child />
       </FrameContextProvider>
     );
   });
 
-  it('exports full context instance to allow accessing via Class.contextType', done => {
+  it('exports full context instance to allow accessing via Class.contextType', async () => {
     const document = { foo: 1 };
     const window = { bar: 2 };
 
     class Child extends React.Component {
       componentDidMount() {
         const { document: doc, window: win } = this.context;
-        expect(doc).to.deep.equal({ foo: 1 });
-        expect(win).to.deep.equal({ bar: 2 });
-        done();
+        expect(doc).toEqual({ foo: 1 });
+        expect(win).toEqual({ bar: 2 });
       }
       render() {
         return null;
@@ -47,30 +46,32 @@ describe('The DocumentContext Component', () => {
     }
     Child.contextType = FrameContext;
 
-    ReactTestUtils.renderIntoDocument(
+    render(
       <FrameContextProvider value={{ document, window }}>
         <Child />
       </FrameContextProvider>
     );
   });
 
-  it('exports full context instance to allow accessing via custom hook', done => {
+  it('exports full context instance to allow accessing via custom hook', async () => {
     const document = { foo: 1 };
     const window = { bar: 2 };
 
     const Child = () => {
       const frame = useFrame();
 
-      React.useEffect(() => {
-        expect(frame.document).to.deep.equal(document);
-        expect(frame.window).to.deep.equal(window);
-        done();
-      }, []);
-
-      return null;
+      return (
+        <FrameContextConsumer>
+          {({ document: doc, window: win }) => {
+            expect(doc).toEqual(document);
+            expect(win).toEqual(window);
+            return null;
+          }}
+        </FrameContextConsumer>
+      );
     };
 
-    ReactTestUtils.renderIntoDocument(
+    render(
       <FrameContextProvider value={{ document, window }}>
         <Child />
       </FrameContextProvider>

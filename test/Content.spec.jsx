@@ -1,57 +1,66 @@
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
-import { expect } from 'chai';
-import sinon from 'sinon/pkg/sinon';
+import { render, waitFor } from '@testing-library/react';
+import { expect, describe, it, vi } from 'vitest';
 import Content from '../src/Content';
 
 describe('The Content component', () => {
   it('should render children', () => {
-    const content = ReactTestUtils.renderIntoDocument(
+    const { container } = render(
       <Content contentDidMount={() => null} contentDidUpdate={() => null}>
         <div className="test-class-1" />
       </Content>
     );
 
-    const div = ReactTestUtils.findRenderedDOMComponentWithTag(content, 'div');
-    expect(div.className).to.equal('test-class-1');
+    const div = container.querySelector('div');
+    expect(div.className).toBe('test-class-1');
   });
 
   it('should call contentDidMount on initial render', () => {
-    const didMount = sinon.spy();
-    const didUpdate = sinon.spy();
+    const didMount = vi.fn();
+    const didUpdate = vi.fn();
 
-    ReactTestUtils.renderIntoDocument(
+    render(
       <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
         <div className="test-class-1" />
       </Content>
     );
 
-    expect(didMount.callCount).to.equal(1);
-    expect(didUpdate.callCount).to.equal(0);
+    expect(didMount).toHaveBeenCalledTimes(1);
+    expect(didUpdate).toHaveBeenCalledTimes(0);
   });
 
-  it('should call contentDidUpdate on subsequent updates', (done) => {
-    const didMount = sinon.spy();
-    const didUpdate = sinon.spy();
+  it('should call contentDidUpdate on subsequent updates', async () => {
+    const didMount = vi.fn();
+    const didUpdate = vi.fn();
 
-    const content = ReactTestUtils.renderIntoDocument(
+    const { rerender } = render(
       <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
         <div className="test-class-1" />
       </Content>
     );
 
-    expect(didUpdate.callCount).to.equal(0);
+    expect(didUpdate).toHaveBeenCalledTimes(0);
 
-    content.setState({ foo: 'bar' }, () => {
-      expect(didMount.callCount).to.equal(1);
-      expect(didUpdate.callCount).to.equal(1);
+    rerender(
+      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
+        <div className="test-class-2" />
+      </Content>
+    );
 
-      content.setState({ foo: 'gah' }, () => {
-        expect(didMount.callCount).to.equal(1);
-        expect(didUpdate.callCount).to.equal(2);
+    await waitFor(() => {
+      expect(didMount).toHaveBeenCalledTimes(1);
+      expect(didUpdate).toHaveBeenCalledTimes(1);
+    });
 
-        done();
-      });
+    rerender(
+      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
+        <div className="test-class-3" />
+      </Content>
+    );
+
+    await waitFor(() => {
+      expect(didMount).toHaveBeenCalledTimes(1);
+      expect(didUpdate).toHaveBeenCalledTimes(2);
     });
   });
 });

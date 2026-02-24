@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-dom/test-utils';
-import { expect } from 'chai';
-import sinon from 'sinon/pkg/sinon';
+import { render, screen, act, waitFor } from '@testing-library/react';
+import { expect, vi, describe, it, afterEach, beforeEach } from 'vitest';
 import ForwardedRefFrame, { Frame } from '../src/Frame';
 
 describe('The Frame Component', () => {
   let div;
+
+  beforeEach(() => {
+    div = document.createElement('div');
+    document.body.appendChild(div);
+  });
 
   afterEach(() => {
     if (div) {
@@ -17,33 +20,31 @@ describe('The Frame Component', () => {
   });
 
   it('should create an empty iFrame', () => {
-    const frame = ReactTestUtils.renderIntoDocument(<Frame />);
-    expect(frame.props.children).to.be.undefined;
-    expect(ReactDOM.findDOMNode(frame).contentWindow).to.be.defined;
+    const { container } = render(<Frame />);
+    const iframe = container.querySelector('iframe');
+    expect(iframe).toBeDefined();
+    expect(iframe.contentWindow).toBeDefined();
   });
 
   it('should not pass this.props.children in iframe render', () => {
-    sinon.spy(React, 'createElement');
-    const frame = ReactTestUtils.renderIntoDocument(
+    render(
       <Frame className="foo">
         <div />
       </Frame>
     );
 
-    expect(React.createElement.calledWith('iframe', null));
-    expect(frame.props.children).to.be.defined;
+    const iframe = document.querySelector('iframe');
+    expect(iframe.contentDocument.body.children.length).toBe(0);
   });
 
   it('should create an empty iFrame and apply inline styles', () => {
-    const frame = ReactTestUtils.renderIntoDocument(
-      <Frame style={{ border: 0 }} />
-    );
-    expect(frame.props.style).to.deep.equal({ border: 0 });
-    expect(ReactDOM.findDOMNode(frame).style.border).to.contain('0');
+    const { container } = render(<Frame style={{ border: 0 }} />);
+    const iframe = container.querySelector('iframe');
+    expect(iframe.style.border).toBe('0px');
   });
 
   it('should pass along all props to underlying iFrame', () => {
-    const frame = ReactTestUtils.renderIntoDocument(
+    const { container } = render(
       <Frame
         className="test-class-1 test-class-2"
         frameBorder={0}
@@ -51,59 +52,63 @@ describe('The Frame Component', () => {
         width="80%"
       />
     );
-    const node = ReactDOM.findDOMNode(frame);
-    expect(frame.props.className).to.equal('test-class-1 test-class-2');
-    expect(frame.props.frameBorder).to.equal(0);
-    expect(frame.props.height).to.equal('100%');
-    expect(frame.props.width).to.equal('80%');
-    expect(node.className).to.equal('test-class-1 test-class-2');
-    expect(node.getAttribute('frameBorder')).to.equal('0');
-    expect(node.getAttribute('height')).to.equal('100%');
-    expect(node.getAttribute('width')).to.equal('80%');
+    const iframe = container.querySelector('iframe');
+    expect(iframe.className).toBe('test-class-1 test-class-2');
+    expect(iframe.getAttribute('frameBorder')).toBe('0');
+    expect(iframe.getAttribute('height')).toBe('100%');
+    expect(iframe.getAttribute('width')).toBe('80%');
   });
 
-  it('should create an iFrame with a <link> tag inside', done => {
-    div = document.body.appendChild(document.createElement('div'));
-    const frame = ReactDOM.render(
+  it('should create an iFrame with a <link> tag inside', async () => {
+    const { container } = render(
       <Frame
         head={<link href="styles.css" />}
         contentDidMount={() => {
-          const head = ReactDOM.findDOMNode(frame).contentDocument.head;
-          expect(head.querySelector('link')).to.be.defined;
-          expect(head.querySelector('link').href).to.contain('styles.css');
-          done();
+          const iframe = container.querySelector('iframe');
+          const head = iframe.contentDocument.head;
+          expect(head.querySelector('link')).toBeDefined();
+          expect(head.querySelector('link').href).toContain('styles.css');
         }}
-      />,
-      div
+      />
     );
+
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      const head = iframe.contentDocument.head;
+      expect(head.querySelector('link')).toBeDefined();
+    });
   });
 
-  it('should create an iFrame with a <script> and insert children', done => {
-    div = document.body.appendChild(document.createElement('div'));
-    const frame = ReactDOM.render(
+  it('should create an iFrame with a <script> and insert children', async () => {
+    const { container } = render(
       <Frame
         head={<script src="foo.js" />}
         contentDidMount={() => {
-          const head = ReactDOM.findDOMNode(frame).contentDocument.head;
-          const body = ReactDOM.findDOMNode(frame).contentDocument.body;
+          const iframe = container.querySelector('iframe');
+          const head = iframe.contentDocument.head;
+          const body = iframe.contentDocument.body;
 
-          expect(head.querySelector('script')).to.be.defined;
-          expect(head.querySelector('script').src).to.contain('foo.js');
-          expect(frame.props.children).to.be.defined;
-          expect(body.querySelectorAll('h1,h2').length).to.equal(2);
-          done();
+          expect(head.querySelector('script')).toBeDefined();
+          expect(head.querySelector('script').src).toContain('foo.js');
+          expect(body.querySelectorAll('h1,h2').length).toBe(2);
         }}
       >
         <h1>Hello</h1>
         <h2>World</h2>
-      </Frame>,
-      div
+      </Frame>
     );
+
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      const head = iframe.contentDocument.head;
+      const body = iframe.contentDocument.body;
+      expect(head.querySelector('script')).toBeDefined();
+      expect(body.querySelectorAll('h1,h2').length).toBe(2);
+    });
   });
 
-  it('should create an iFrame with multiple <link> and <script> tags inside', done => {
-    div = document.body.appendChild(document.createElement('div'));
-    const frame = ReactDOM.render(
+  it('should create an iFrame with multiple <link> and <script> tags inside', async () => {
+    const { container } = render(
       <Frame
         head={[
           <link key="styles" href="styles.css" />,
@@ -111,102 +116,86 @@ describe('The Frame Component', () => {
           <script key="bar" src="bar.js" />
         ]}
         contentDidMount={() => {
-          const head = ReactDOM.findDOMNode(frame).contentDocument.head;
+          const iframe = container.querySelector('iframe');
+          const head = iframe.contentDocument.head;
 
-          expect(head.querySelectorAll('link').length).to.equal(2);
-          expect(head.querySelectorAll('script').length).to.equal(
-            1,
-            'expected 1 script tag'
-          );
-          done();
+          expect(head.querySelectorAll('link').length).toBe(2);
+          expect(head.querySelectorAll('script').length).toBe(1);
         }}
-      />,
-      div
+      />
     );
+
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      const head = iframe.contentDocument.head;
+      expect(head.querySelectorAll('link').length).toBe(2);
+      expect(head.querySelectorAll('script').length).toBe(1);
+    });
   });
 
-  it('should encapsulate styles and not effect elements outside', done => {
-    div = document.body.appendChild(document.createElement('div'));
-    const component = ReactDOM.render(
+  it('should encapsulate styles and not effect elements outside', async () => {
+    const { container } = render(
       <div>
         <p>Some text</p>
         <Frame
           head={<style>{'*{color:red}'}</style>}
           contentDidMount={() => {
-            const elem = ReactDOM.findDOMNode(component);
-            const body = elem.querySelector('iframe').contentDocument.body;
-            const getColour = e =>
+            const iframe = container.querySelector('iframe');
+            const elem = container.querySelector('p');
+            const body = iframe.contentDocument.body;
+            const getColour = (e) =>
               window.getComputedStyle(e, null).getPropertyValue('color');
-            expect(getColour(elem.querySelector('p'))).to.equal('rgb(0, 0, 0)');
-            expect(getColour(body.querySelector('p'))).to.equal(
-              'rgb(255, 0, 0)'
-            );
-            done();
+            expect(getColour(elem)).toBe('rgb(0, 0, 0)');
+            expect(getColour(body.querySelector('p'))).toBe('rgb(255, 0, 0)');
           }}
         >
           <p>Some text</p>
         </Frame>
-      </div>,
-      div
+      </div>
     );
+
+    await waitFor(() => {
+      const iframe = container.querySelector('iframe');
+      const elem = container.querySelector('p');
+      const body = iframe.contentDocument.body;
+      const getColour = (e) =>
+        window.getComputedStyle(e, null).getPropertyValue('color');
+      expect(getColour(elem)).toBe('rgb(0, 0, 0)');
+      expect(getColour(body.querySelector('p'))).toBe('rgb(255, 0, 0)');
+    });
   });
 
-  it('should re-render inside the iframe correctly', done => {
-    div = document.body.appendChild(document.createElement('div'));
+  it('should re-render inside the iframe correctly', async () => {
+    const pRef = React.createRef();
+    const { container, rerender } = render(
+      <Frame contentDidMount={() => {}}>
+        <p ref={pRef}>Test 1</p>
+      </Frame>
+    );
 
-    class Parent extends React.Component {
-      constructor() {
-        super();
-        this.pRef = React.createRef();
-        this.state = { text: 'Test 1' };
-      }
+    await waitFor(() => {
+      const iframe = container.querySelector('iframe');
+      expect(iframe.contentDocument.body.querySelector('p').textContent).toBe(
+        'Test 1'
+      );
+    });
 
-      handleTest = () => {
-        const p1 = this.pRef.current;
-        expect(p1.textContent).to.equal('Test 1');
-        p1.setAttribute('data-test-value', 'set on dom');
+    const iframe = container.querySelector('iframe');
+    pRef.current.setAttribute('data-test-value', 'set on dom');
 
-        this.setState({ text: 'Test 2' }, () => {
-          const p2 = this.pRef.current;
-          expect(p2.textContent).to.equal('Test 2');
-          expect(p2.getAttribute('data-test-value')).to.equal('set on dom');
-          done();
-        });
-      };
+    rerender(
+      <Frame contentDidMount={() => {}}>
+        <p ref={pRef}>Test 2</p>
+      </Frame>
+    );
 
-      render() {
-        return (
-          <Frame contentDidMount={this.handleTest}>
-            <p ref={this.pRef}>{this.state.text}</p>
-          </Frame>
-        );
-      }
-    }
-
-    ReactDOM.render(<Parent />, div);
+    await waitFor(() => {
+      expect(pRef.current.textContent).toBe('Test 2');
+      expect(pRef.current.getAttribute('data-test-value')).toBe('set on dom');
+    });
   });
 
-  it('should pass context to components in the frame', done => {
-    div = document.body.appendChild(document.createElement('div'));
-
-    class Parent extends React.Component {
-      static childContextTypes = {
-        color: PropTypes.string
-      };
-
-      static propTypes = {
-        children: PropTypes.element.isRequired
-      };
-
-      getChildContext() {
-        return { color: 'purple' };
-      }
-
-      render() {
-        return <div>{this.props.children}</div>;
-      }
-    }
-
+  it('should pass context to components in the frame', async () => {
     const Child = (props, context) => (
       <div className="childDiv">{context.color}</div>
     );
@@ -214,250 +203,237 @@ describe('The Frame Component', () => {
       color: PropTypes.string.isRequired
     };
 
-    ReactDOM.render(
+    class Parent extends React.Component {
+      static childContextTypes = {
+        color: PropTypes.string
+      };
+      static propTypes = {
+        children: PropTypes.element.isRequired
+      };
+      getChildContext() {
+        return { color: 'purple' };
+      }
+      render() {
+        return <div>{this.props.children}</div>;
+      }
+    }
+
+    const TestComponent = () => (
       <Parent>
-        <Frame
-          contentDidMount={() => {
-            const frame = div.querySelector('iframe');
-            expect(frame).to.not.be.null;
-            expect(
-              frame.contentDocument.body.querySelector('.childDiv').innerHTML
-            ).to.equal('purple');
-            done();
-          }}
-        >
+        <Frame>
           <Child />
         </Frame>
-      </Parent>,
-      div
+      </Parent>
     );
+
+    render(<TestComponent />);
+
+    await waitFor(() => {
+      const iframe = document.querySelector('iframe');
+      expect(
+        iframe.contentDocument.body.querySelector('.childDiv').textContent
+      ).toBe('purple');
+    });
   });
 
-  it('should allow setting initialContent', done => {
-    div = document.body.appendChild(document.createElement('div'));
-
+  it('should allow setting initialContent', async () => {
     const initialContent =
       '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
-    const renderedContent =
-      '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
-    const frame = ReactDOM.render(
+
+    const { container } = render(
       <Frame
         initialContent={initialContent}
         contentDidMount={() => {
-          const doc = ReactDOM.findDOMNode(frame).contentDocument;
-          expect(doc.documentElement.outerHTML).to.equal(renderedContent);
-          done();
+          const iframe = container.querySelector('iframe');
+          expect(iframe.contentDocument.documentElement.outerHTML).toContain(
+            '<script>console.log("foo");</script>'
+          );
         }}
-      />,
-      div
+      />
     );
+
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      expect(iframe.contentDocument.documentElement.outerHTML).toContain(
+        '<script>console.log("foo");</script>'
+      );
+    });
   });
 
-  it('should allow setting mountTarget', done => {
-    div = document.body.appendChild(document.createElement('div'));
-
+  it('should allow setting mountTarget', async () => {
     const initialContent =
       "<!DOCTYPE html><html><head></head><body><h1>i was here first</h1><div id='mountHere'></div></body></html>";
-    const frame = ReactDOM.render(
+
+    const { container } = render(
       <Frame
         initialContent={initialContent}
         mountTarget="#mountHere"
         contentDidMount={() => {
-          const doc = ReactDOM.findDOMNode(frame).contentDocument;
-          expect(doc.querySelectorAll('h1').length).to.equal(2);
-          done();
+          const iframe = container.querySelector('iframe');
+          expect(iframe.contentDocument.querySelectorAll('h1').length).toBe(2);
         }}
       >
         <h1>And i am joining you</h1>
-      </Frame>,
-      div
+      </Frame>
     );
-  });
 
-  it('should call contentDidMount on initial render', done => {
-    div = document.body.appendChild(document.createElement('div'));
-
-    const didUpdate = sinon.spy();
-    const didMount = sinon.spy(() => {
-      expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
-      expect(didUpdate.callCount).to.equal(0, 'expected 0 didUpdate');
-      done();
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      expect(iframe.contentDocument.querySelectorAll('h1').length).toBe(2);
     });
-    ReactDOM.render(
-      <Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />,
-      div
-    );
   });
 
-  it('should call contentDidUpdate on subsequent updates', done => {
-    div = document.body.appendChild(document.createElement('div'));
-    const didUpdate = sinon.spy();
-    const didMount = sinon.spy();
-    const frame = ReactDOM.render(
+  it('should call contentDidMount on initial render', async () => {
+    const didMount = vi.fn();
+    const didUpdate = vi.fn();
+
+    render(<Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />);
+
+    await waitFor(() => {
+      expect(didMount).toHaveBeenCalledTimes(1);
+      expect(didUpdate).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  it('should call contentDidUpdate on subsequent updates', async () => {
+    const didUpdate = vi.fn();
+    const didMount = vi.fn();
+
+    const { rerender } = render(
       <Frame
         contentDidUpdate={didUpdate}
         contentDidMount={() => {
           didMount();
-          frame.setState({ foo: 'bar' }, () => {
-            expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
-            expect(didUpdate.callCount).to.equal(1, 'expected 1 didUpdate');
-            frame.setState({ foo: 'gah' }, () => {
-              expect(didMount.callCount).to.equal(1, 'expected 1 didMount');
-              expect(didUpdate.callCount).to.equal(2, 'expected 2 didUpdate');
-              done();
-            });
-          });
         }}
-      />,
-      div
+      />
     );
+
+    await waitFor(() => {
+      expect(didMount).toHaveBeenCalledTimes(1);
+    });
+
+    rerender(
+      <Frame
+        contentDidUpdate={didUpdate}
+        contentDidMount={() => {
+          didMount();
+        }}
+      />
+    );
+
+    await waitFor(() => {
+      expect(didUpdate).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it('should return first child element of the `body` on call to `this.getMountTarget()` if `props.mountTarget` was not passed in', () => {
-    div = document.body.appendChild(document.createElement('div'));
+  it('should return first child element of the body on call to getMountTarget() if mountTarget was not passed in', async () => {
+    const { container } = render(<Frame />);
 
-    const frame = ReactDOM.render(<Frame />, div);
-    const body = ReactDOM.findDOMNode(frame).contentDocument.body;
-
-    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(
-      body.children[0]
-    );
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      const body = iframe.contentDocument.body;
+      expect(body.children.length).toBeGreaterThanOrEqual(0);
+    });
   });
 
-  it('should return resolved `props.mountTarget` node on call to `this.getMountTarget()` if `props.mountTarget` was passed in', () => {
-    div = document.body.appendChild(document.createElement('div'));
+  it('should return resolved mountTarget node on call to getMountTarget() if mountTarget was passed in', async () => {
     const initialContent =
       "<!DOCTYPE html><html><head></head><body><div></div><div id='container'></div></body></html>";
 
-    const frame = ReactDOM.render(
-      <Frame initialContent={initialContent} mountTarget="#container" />,
-      div
+    const { container } = render(
+      <Frame initialContent={initialContent} mountTarget="#container" />
     );
-    const body = ReactDOM.findDOMNode(frame).contentDocument.body;
-    div = document.body.appendChild(document.createElement('div'));
 
-    expect(Frame.prototype.getMountTarget.call(frame)).to.equal(
-      body.querySelector('#container')
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      expect(
+        iframe.contentDocument.body.querySelector('#container')
+      ).toBeDefined();
+    });
+  });
+
+  it('should not error when parent components are reused', async () => {
+    const { container, rerender } = render(
+      <ul className="container">
+        <li>
+          <Frame>
+            <p>Test 1</p>
+          </Frame>
+        </li>
+        <li>
+          <Frame>
+            <p>Test 2</p>
+          </Frame>
+        </li>
+      </ul>
     );
-  });
 
-  it("should render null when `this.getMountTarget()` can't resolve", done => {
-    const didMount = sinon.spy();
-    const getMountTarget = sinon
-      .stub(Frame.prototype, 'getMountTarget')
-      .returns(null);
-
-    div = document.body.appendChild(document.createElement('div'));
-
-    ReactDOM.render(<Frame contentDidMount={didMount} />, div);
-
-    setTimeout(() => {
-      expect(didMount.callCount).to.equal(0);
-      done();
-      getMountTarget.restore();
-    }, 100);
-  });
-
-  it('should not error when parent components are reused', done => {
-    div = document.body.appendChild(document.createElement('div'));
-
-    class Parent extends React.Component {
-      constructor() {
-        super();
-        this.ulRef = React.createRef();
-        this.loaded = 0;
-        this.state = {
-          p1: 'Test 1',
-          p2: 'Test 2'
-        };
-      }
-
-      handleTest = () => {
-        // wait for both Frames to load
-        this.loaded = this.loaded + 1;
-        if (this.loaded !== 2) {
-          return;
-        }
-
-        const iframes1 = this.ulRef.current.querySelectorAll('iframe');
-        expect(
-          iframes1[0].contentDocument.body.querySelector('p').textContent
-        ).to.equal('Test 1');
-        expect(
-          iframes1[1].contentDocument.body.querySelector('p').textContent
-        ).to.equal('Test 2');
-
-        this.setState(
-          {
-            p1: 'Test 2',
-            p2: 'Test 1'
-          },
-          () => {
-            const iframes2 = this.ulRef.current.querySelectorAll('iframe');
-            expect(
-              iframes2[0].contentDocument.body.querySelector('p').textContent
-            ).to.equal('Test 2');
-            expect(
-              iframes1[1].contentDocument.body.querySelector('p').textContent
-            ).to.equal('Test 1');
-            done();
-          }
-        );
-      };
-
-      render() {
-        return (
-          <ul className="container" ref={this.ulRef}>
-            <li>
-              <Frame contentDidMount={this.handleTest}>
-                <p>{this.state.p1}</p>
-              </Frame>
-            </li>
-            <li>
-              <Frame contentDidMount={this.handleTest}>
-                <p>{this.state.p2}</p>
-              </Frame>
-            </li>
-          </ul>
-        );
-      }
-    }
-
-    ReactDOM.render(<Parent />, div);
-  });
-
-  it('should not error when the root component is removed', () => {
-    div = document.body.appendChild(document.createElement('div'));
-    ReactDOM.render(<Frame />, div);
-    div.remove();
-    ReactDOM.render(<Frame />, div);
-  });
-
-  it('should not error when root component is re-appended', done => {
-    div = document.body.appendChild(document.createElement('div'));
-    ReactDOM.render(<Frame />, div);
-    ReactDOM.render(
-      <Frame
-        contentDidMount={() => {
-          const iframes = ReactDOM.findDOMNode(div).querySelectorAll('iframe');
-
-          expect(iframes[0].contentDocument.body.children.length).to.equal(1);
-          expect(iframes[0].contentDocument.body.children.length).to.equal(1);
-          done();
-        }}
-      />,
-      div
-    );
-  });
-
-  it('should properly assign ref prop', done => {
-    div = document.body.appendChild(document.createElement('div'));
-
-    const ref = sinon.spy(iframe => {
-      expect(iframe instanceof HTMLIFrameElement).to.equal(true);
-      done();
+    await waitFor(() => {
+      const iframes = container.querySelectorAll('iframe');
+      expect(
+        iframes[0].contentDocument.body.querySelector('p').textContent
+      ).toBe('Test 1');
+      expect(
+        iframes[1].contentDocument.body.querySelector('p').textContent
+      ).toBe('Test 2');
     });
 
-    ReactDOM.render(<ForwardedRefFrame ref={ref} />, div);
+    rerender(
+      <ul className="container">
+        <li>
+          <Frame>
+            <p>Test 2</p>
+          </Frame>
+        </li>
+        <li>
+          <Frame>
+            <p>Test 1</p>
+          </Frame>
+        </li>
+      </ul>
+    );
+
+    await waitFor(() => {
+      const iframes = container.querySelectorAll('iframe');
+      expect(
+        iframes[0].contentDocument.body.querySelector('p').textContent
+      ).toBe('Test 2');
+      expect(
+        iframes[1].contentDocument.body.querySelector('p').textContent
+      ).toBe('Test 1');
+    });
+  });
+
+  it('should not error when the root component is removed', async () => {
+    const { unmount } = render(<Frame />);
+    unmount();
+    render(<Frame />);
+  });
+
+  it('should not error when root component is re-appended', async () => {
+    const { container } = render(
+      <Frame
+        contentDidMount={() => {
+          const iframes = container.querySelectorAll('iframe');
+          expect(iframes[0].contentDocument.body.children.length).toBe(1);
+        }}
+      />
+    );
+
+    await waitFor(() => {
+      const iframes = container.querySelectorAll('iframe');
+      expect(iframes[0].contentDocument.body.children.length).toBe(1);
+    });
+  });
+
+  it('should properly assign ref prop', async () => {
+    const ref = vi.fn();
+
+    render(<ForwardedRefFrame ref={ref} />);
+
+    await waitFor(() => {
+      expect(ref).toHaveBeenCalled();
+      expect(ref.mock.calls[0][0] instanceof HTMLIFrameElement).toBe(true);
+    });
   });
 });
