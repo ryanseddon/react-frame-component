@@ -5,22 +5,32 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write
-  contents: read
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm install
-      - run: npm run release
-      - name: Publish to npm
-        run: npm run publish:changesets
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          publish: npm run publish:changesets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
