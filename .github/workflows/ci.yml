@@ -22,5 +22,5 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm install
-      - run: npx playwright install chromium firefox
+      - run: npx playwright install --with-deps chromium firefox
       - run: CI=true npm test
