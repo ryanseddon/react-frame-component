@@ -5,68 +5,30 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write
-  contents: read
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm install
-      - name: Check for changes or version bump
-        id: check
-        run: |
-          # Check if there are changeset files or if version changed
-          HAS_CHANGESET=false
-          HAS_VERSION_CHANGE=false
 
-          if [ -f ".changeset/"* ]; then
-            HAS_CHANGESET=true
-          fi
+      - name: Install Dependencies
+        run: npm install
 
-          # Get current version from package.json
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-
-          # Check if version in package.json differs from latest tag
-          git fetch --tags
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -n "$LATEST_TAG" ]; then
-            TAG_VERSION=${LATEST_TAG#v}
-            if [ "$CURRENT_VERSION" != "$TAG_VERSION" ]; then
-              HAS_VERSION_CHANGE=true
-            fi
-          elif [ "$CURRENT_VERSION" != "0.0.0" ]; then
-            HAS_VERSION_CHANGE=true
-          fi
-
-          echo "has-changeset=$HAS_CHANGESET" >> $GITHUB_OUTPUT
-          echo "has-version-change=$HAS_VERSION_CHANGE" >> $GITHUB_OUTPUT
-          echo "Current version: $CURRENT_VERSION, Latest tag: $LATEST_TAG"
-
-          if [ "$HAS_CHANGESET" = "false" ] && [ "$HAS_VERSION_CHANGE" = "false" ]; then
-            echo "No changeset or version change - skipping release"
-          else
-            echo "Changeset or version change detected - proceeding with release"
-          fi
-      - name: Version and publish
-        if: steps.check.outputs.has-changeset == 'true' || steps.check.outputs.has-version-change == 'true'
-        run: |
-          npm run release
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A
-          git commit -m "chore: version bump" || echo "No version change"
-          git push
-          npm run publish:changesets
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          publish: npm run publish:changesets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
