@@ -1,7 +1,7 @@
 on: [push, pull_request]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -11,7 +11,6 @@ jobs:
           cache: 'npm'
       - run: npm install
       - run: npm run lint
-      - run: npm test
 
   test:
     runs-on: ubuntu-latest
@@ -24,3 +23,14 @@ jobs:
       - run: npm install
       - run: npx playwright install --with-deps chromium firefox
       - run: CI=true npm test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build
