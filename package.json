@@ -3,23 +3,29 @@
   "version": "5.2.7",
   "type": "module",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
-  "main": "lib/index.js",
+  "main": "dist/react-frame-component.umd.js",
+  "module": "dist/react-frame-component.esm.js",
+  "types": "index.d.ts",
   "files": [
-    "lib",
+    "dist",
     "index.d.ts"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/react-frame-component.esm.js",
+      "require": "./dist/react-frame-component.umd.js"
+    }
+  },
   "scripts": {
     "precommit": "lint-staged",
-    "clean": "rimraf lib",
+    "clean": "rimraf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "serve": "webpack-dev-server --host 0.0.0.0 --hot --inline --history-api-fallback",
+    "serve": "vite --root example",
     "start": "npm run serve",
-    "build": "npm run clean && npm run babel",
-    "babel": "babel src -d lib",
+    "build": "vite build",
     "lint": "eslint src test",
     "prepublish": "npm run build",
-    "predeploy": "webpack",
     "deploy": "gh-pages -d dist",
     "publish": "npm run deploy"
   },

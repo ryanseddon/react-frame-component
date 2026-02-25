@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Frame from '../src';
 
 const styles = {
@@ -21,11 +21,10 @@ const App = () => (
   </div>
 );
 
-ReactDOM.render(
+createRoot(document.querySelector('#example1')).render(
   <Frame style={styles}>
     <App />
-  </Frame>,
-  document.querySelector('#example1')
+  </Frame>
 );
 
 const Foobar = () => {
@@ -43,11 +42,11 @@ const Foobar = () => {
   );
 };
 
-ReactDOM.render(<Foobar />, document.querySelector('#example2'));
+createRoot(document.querySelector('#example2')).render(<Foobar />);
 
 const ExternalResources = () => {
   const initialContent = `<!DOCTYPE html><html><head>
-	<link href="//use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet" />
+	<link href="///releases/v5.15.1/cssuse.fontawesome.com/all.css" rel="stylesheet" />
 	<link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />
 	<base target=_blank>
   </head><body style='overflow: hidden'><div></div></body></html>`;
@@ -63,4 +62,4 @@ const ExternalResources = () => {
   );
 };
 
-ReactDOM.render(<ExternalResources />, document.querySelector('#example3'));
+createRoot(document.querySelector('#example3')).render(<ExternalResources />);
