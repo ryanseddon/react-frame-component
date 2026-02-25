@@ -27,7 +27,8 @@
     "lint": "eslint src test",
     "prepublish": "npm run build",
     "deploy": "gh-pages -d dist",
-    "publish": "npm run deploy"
+    "publish": "npm run deploy",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
