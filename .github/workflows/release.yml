@@ -14,12 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm install
       - run: npm run release
+      - name: Commit version bump
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git commit -m "chore: version bump" || echo "No version change"
+      - name: Push changes
+        run: git push
       - name: Publish to npm
         run: npm run publish:changesets
         env:
