@@ -23,16 +23,50 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
       - run: npm install
-      - run: npm run release
-      - name: Commit version bump
+      - name: Check for changes or version bump
+        id: check
         run: |
+          # Check if there are changeset files or if version changed
+          HAS_CHANGESET=false
+          HAS_VERSION_CHANGE=false
+
+          if [ -f ".changeset/"* ]; then
+            HAS_CHANGESET=true
+          fi
+
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          # Check if version in package.json differs from latest tag
+          git fetch --tags
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LATEST_TAG" ]; then
+            TAG_VERSION=${LATEST_TAG#v}
+            if [ "$CURRENT_VERSION" != "$TAG_VERSION" ]; then
+              HAS_VERSION_CHANGE=true
+            fi
+          elif [ "$CURRENT_VERSION" != "0.0.0" ]; then
+            HAS_VERSION_CHANGE=true
+          fi
+
+          echo "has-changeset=$HAS_CHANGESET" >> $GITHUB_OUTPUT
+          echo "has-version-change=$HAS_VERSION_CHANGE" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT_VERSION, Latest tag: $LATEST_TAG"
+
+          if [ "$HAS_CHANGESET" = "false" ] && [ "$HAS_VERSION_CHANGE" = "false" ]; then
+            echo "No changeset or version change - skipping release"
+          else
+            echo "Changeset or version change detected - proceeding with release"
+          fi
+      - name: Version and publish
+        if: steps.check.outputs.has-changeset == 'true' || steps.check.outputs.has-version-change == 'true'
+        run: |
+          npm run release
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
           git commit -m "chore: version bump" || echo "No version change"
-      - name: Push changes
-        run: git push
-      - name: Publish to npm
-        run: npm run publish:changesets
+          git push
+          npm run publish:changesets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
