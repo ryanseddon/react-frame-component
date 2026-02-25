@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { expect, describe, it, vi } from 'vitest';
+import { render } from '@testing-library/react';
+import { expect, describe, it } from 'vitest';
 import {
   FrameContextProvider,
   FrameContextConsumer,
@@ -58,7 +58,7 @@ describe('The DocumentContext Component', () => {
     const window = { bar: 2 };
 
     const Child = () => {
-      const frame = useFrame();
+      useFrame();
 
       return (
         <FrameContextConsumer>

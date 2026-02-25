@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { expect, vi, describe, it, afterEach, beforeEach } from 'vitest';
 import ForwardedRefFrame, { Frame } from '../src/Frame';
 
@@ -180,7 +180,6 @@ describe('The Frame Component', () => {
       );
     });
 
-    const iframe = container.querySelector('iframe');
     pRef.current.setAttribute('data-test-value', 'set on dom');
 
     rerender(

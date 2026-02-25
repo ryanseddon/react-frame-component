@@ -10,7 +10,7 @@ export class Frame extends Component {
   // initialContent is expected to have a div inside of the body
   // element that we render react into.
   static propTypes = {
-    style: PropTypes.object, // eslint-disable-line
+    style: PropTypes.object,
     head: PropTypes.node,
     initialContent: PropTypes.string,
     mountTarget: PropTypes.string,
@@ -63,7 +63,7 @@ export class Frame extends Component {
   }
 
   getDoc() {
-    return this.nodeRef.current ? this.nodeRef.current.contentDocument : null; // eslint-disable-line
+    return this.nodeRef.current ? this.nodeRef.current.contentDocument : null;
   }
 
   getMountTarget() {
@@ -74,10 +74,10 @@ export class Frame extends Component {
     return doc.body.children[0];
   }
 
-  setRef = node => {
+  setRef = (node) => {
     this.nodeRef.current = node;
 
-    const { forwardedRef } = this.props; // eslint-disable-line react/prop-types
+    const { forwardedRef } = this.props;
     if (typeof forwardedRef === 'function') {
       forwardedRef(node);
     } else if (forwardedRef) {
