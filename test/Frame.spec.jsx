@@ -269,46 +269,46 @@ describe('The Frame Component', () => {
     });
   });
 
-  it('should call contentDidMount on initial render', async () => {
-    const didMount = vi.fn();
-    const didUpdate = vi.fn();
+  it('should call onMount on initial render', async () => {
+    const onMount = vi.fn();
+    const onUpdate = vi.fn();
 
-    render(<Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />);
+    render(<Frame onMount={onMount} onUpdate={onUpdate} />);
 
     await waitFor(() => {
-      expect(didMount).toHaveBeenCalledTimes(1);
-      expect(didUpdate).toHaveBeenCalledTimes(0);
+      expect(onMount).toHaveBeenCalledTimes(1);
+      expect(onUpdate).toHaveBeenCalledTimes(0);
     });
   });
 
-  it('should call contentDidUpdate on subsequent updates', async () => {
-    const didUpdate = vi.fn();
-    const didMount = vi.fn();
+  it('should call onUpdate on subsequent updates', async () => {
+    const onUpdate = vi.fn();
+    const onMount = vi.fn();
 
     const { rerender } = render(
       <Frame
-        contentDidUpdate={didUpdate}
-        contentDidMount={() => {
-          didMount();
+        onUpdate={onUpdate}
+        onMount={() => {
+          onMount();
         }}
       />
     );
 
     await waitFor(() => {
-      expect(didMount).toHaveBeenCalledTimes(1);
+      expect(onMount).toHaveBeenCalledTimes(1);
     });
 
     rerender(
       <Frame
-        contentDidUpdate={didUpdate}
-        contentDidMount={() => {
-          didMount();
+        onUpdate={onUpdate}
+        onMount={() => {
+          onMount();
         }}
       />
     );
 
     await waitFor(() => {
-      expect(didUpdate).toHaveBeenCalledTimes(1);
+      expect(onUpdate).toHaveBeenCalledTimes(1);
     });
   });
 

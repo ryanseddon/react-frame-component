@@ -18,8 +18,24 @@ export type FrameProps = {
   head?: ReactNode;
   initialContent?: string;
   mountTarget?: string;
+  /**
+   * @deprecated Use `onMount` instead. Will be removed in a future major version.
+   */
   contentDidMount?: () => void;
+  /**
+   * @deprecated Use `onUpdate` instead. Will be removed in a future major version.
+   */
   contentDidUpdate?: () => void;
+  /**
+   * Called when the iframe content is first mounted and ready.
+   * Use this instead of the deprecated `contentDidMount` prop.
+   */
+  onMount?: () => void;
+  /**
+   * Called when the iframe content updates after the initial mount.
+   * Use this instead of the deprecated `contentDidUpdate` prop.
+   */
+  onUpdate?: () => void;
   children?: ReactNode;
   nodeRef?: RefObject<HTMLIFrameElement | null>;
 };
@@ -27,17 +43,18 @@ export type FrameProps = {
 const DEFAULT_INITIAL_CONTENT =
   '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>';
 
-function Frame(props: FrameProps) {
-  const {
-    head = null,
-    children,
-    mountTarget,
-    contentDidMount = () => {},
-    contentDidUpdate = () => {},
-    initialContent = DEFAULT_INITIAL_CONTENT,
-    nodeRef: externalRef
-  } = props;
-
+function Frame({
+  head = null,
+  children,
+  mountTarget,
+  contentDidMount = () => {},
+  contentDidUpdate = () => {},
+  onMount,
+  onUpdate,
+  initialContent = DEFAULT_INITIAL_CONTENT,
+  nodeRef: externalRef,
+  ...iframeProps
+}: FrameProps) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const internalRef = useRef<HTMLIFrameElement | null>(null);
   const nodeRef = externalRef || internalRef;
@@ -110,6 +127,8 @@ function Frame(props: FrameProps) {
       <Content
         contentDidMount={contentDidMount}
         contentDidUpdate={contentDidUpdate}
+        onMount={onMount}
+        onUpdate={onUpdate}
       >
         <FrameContextProvider
           value={{ document: doc, window: doc.defaultView || window }}
@@ -128,17 +147,6 @@ function Frame(props: FrameProps) {
     return [createPortal(head, doc.head), createPortal(contents, mountTarget)];
   };
 
-  const {
-    head: _head,
-    initialContent: _initialContent,
-    mountTarget: _mountTarget,
-    contentDidMount: _contentDidMount,
-    contentDidUpdate: _contentDidUpdate,
-    children: _children,
-    nodeRef: _nodeRef,
-    ...iframeProps
-  } = props;
-
   return (
     <iframe
       {...iframeProps}
@@ -155,9 +163,9 @@ const FrameWithRef = forwardRef<
   HTMLIFrameElement | null,
   Omit<FrameProps, 'children'>
 >((props, ref) => {
-  const frameRef = useRef<HTMLIFrameElement | null>(null);
+  const frameRef = createRef<HTMLIFrameElement | null>();
   useImperativeHandle(ref, () => frameRef.current as HTMLIFrameElement);
-  return <Frame {...props} children={undefined} nodeRef={frameRef as any} />;
+  return <Frame {...props} children={undefined} nodeRef={frameRef} />;
 });
 
 export default FrameWithRef;

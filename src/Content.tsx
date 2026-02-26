@@ -2,14 +2,30 @@ import { Children, ReactNode, useLayoutEffect, useRef } from 'react';
 
 type ContentProps = {
   children?: ReactNode;
+  /**
+   * @deprecated Use `onMount` instead.
+   */
   contentDidMount?: () => void;
+  /**
+   * @deprecated Use `onUpdate` instead.
+   */
   contentDidUpdate?: () => void;
+  /**
+   * Called when the iframe content is first mounted.
+   */
+  onMount?: () => void;
+  /**
+   * Called when the iframe content updates.
+   */
+  onUpdate?: () => void;
 };
 
 export default function Content({
   children,
   contentDidMount,
-  contentDidUpdate
+  contentDidUpdate,
+  onMount,
+  onUpdate
 }: ContentProps) {
   const isMounted = useRef(false);
 
@@ -17,8 +33,10 @@ export default function Content({
     if (!isMounted.current) {
       isMounted.current = true;
       contentDidMount?.();
+      onMount?.();
     } else {
       contentDidUpdate?.();
+      onUpdate?.();
     }
   });
 

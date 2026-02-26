@@ -6,7 +6,7 @@ import Content from '../src/Content';
 describe('The Content component', () => {
   it('should render children', () => {
     const { container } = render(
-      <Content contentDidMount={() => null} contentDidUpdate={() => null}>
+      <Content onMount={() => null} onUpdate={() => null}>
         <div className="test-class-1" />
       </Content>
     );
@@ -15,52 +15,52 @@ describe('The Content component', () => {
     expect(div.className).toBe('test-class-1');
   });
 
-  it('should call contentDidMount on initial render', () => {
-    const didMount = vi.fn();
-    const didUpdate = vi.fn();
+  it('should call onMount on initial render', () => {
+    const onMount = vi.fn();
+    const onUpdate = vi.fn();
 
     render(
-      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
+      <Content onMount={onMount} onUpdate={onUpdate}>
         <div className="test-class-1" />
       </Content>
     );
 
-    expect(didMount).toHaveBeenCalledTimes(1);
-    expect(didUpdate).toHaveBeenCalledTimes(0);
+    expect(onMount).toHaveBeenCalledTimes(1);
+    expect(onUpdate).toHaveBeenCalledTimes(0);
   });
 
-  it('should call contentDidUpdate on subsequent updates', async () => {
-    const didMount = vi.fn();
-    const didUpdate = vi.fn();
+  it('should call onUpdate on subsequent updates', async () => {
+    const onMount = vi.fn();
+    const onUpdate = vi.fn();
 
     const { rerender } = render(
-      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
+      <Content onMount={onMount} onUpdate={onUpdate}>
         <div className="test-class-1" />
       </Content>
     );
 
-    expect(didUpdate).toHaveBeenCalledTimes(0);
+    expect(onUpdate).toHaveBeenCalledTimes(0);
 
     rerender(
-      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
+      <Content onMount={onMount} onUpdate={onUpdate}>
         <div className="test-class-2" />
       </Content>
     );
 
     await waitFor(() => {
-      expect(didMount).toHaveBeenCalledTimes(1);
-      expect(didUpdate).toHaveBeenCalledTimes(1);
+      expect(onMount).toHaveBeenCalledTimes(1);
+      expect(onUpdate).toHaveBeenCalledTimes(1);
     });
 
     rerender(
-      <Content contentDidMount={didMount} contentDidUpdate={didUpdate}>
+      <Content onMount={onMount} onUpdate={onUpdate}>
         <div className="test-class-3" />
       </Content>
     );
 
     await waitFor(() => {
-      expect(didMount).toHaveBeenCalledTimes(1);
-      expect(didUpdate).toHaveBeenCalledTimes(2);
+      expect(onMount).toHaveBeenCalledTimes(1);
+      expect(onUpdate).toHaveBeenCalledTimes(2);
     });
   });
 });

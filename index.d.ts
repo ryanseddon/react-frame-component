@@ -8,8 +8,22 @@ declare module 'react-frame-component' {
     head?: React.ReactNode | undefined;
     mountTarget?: string | undefined;
     initialContent?: string | undefined;
+    /**
+     * @deprecated Use `onMount` instead. Will be removed in a future major version.
+     */
     contentDidMount?: (() => void) | undefined;
+    /**
+     * @deprecated Use `onUpdate` instead. Will be removed in a future major version.
+     */
     contentDidUpdate?: (() => void) | undefined;
+    /**
+     * Called when the iframe content is first mounted and ready.
+     */
+    onMount?: (() => void) | undefined;
+    /**
+     * Called when the iframe content updates after the initial mount.
+     */
+    onUpdate?: (() => void) | undefined;
     children?: React.ReactNode;
   }
 
@@ -20,8 +34,22 @@ declare module 'react-frame-component' {
 
   export interface ContentProps {
     children?: React.ReactNode;
+    /**
+     * @deprecated Use `onMount` instead.
+     */
     contentDidMount?: () => void;
+    /**
+     * @deprecated Use `onUpdate` instead.
+     */
     contentDidUpdate?: () => void;
+    /**
+     * Called when the iframe content is first mounted.
+     */
+    onMount?: () => void;
+    /**
+     * Called when the iframe content updates.
+     */
+    onUpdate?: () => void;
   }
 
   export class Content extends React.Component<ContentProps> {}
