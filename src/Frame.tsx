@@ -29,7 +29,6 @@ const DEFAULT_INITIAL_CONTENT =
 
 function Frame(props: FrameProps) {
   const {
-    style = {},
     head = null,
     children,
     mountTarget,

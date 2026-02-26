@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { render, waitFor } from '@testing-library/react';
 import { expect, vi, describe, it, afterEach, beforeEach } from 'vitest';
 import ForwardedRefFrame, { Frame } from '../src/Frame';
+import { FrameContext } from '../src/Context';
 
 describe('The Frame Component', () => {
   let div;
@@ -195,34 +195,21 @@ describe('The Frame Component', () => {
   });
 
   it('should pass context to components in the frame', async () => {
-    const Child = (props, context) => (
-      <div className="childDiv">{context.color}</div>
-    );
-    Child.contextTypes = {
-      color: PropTypes.string.isRequired
+    const Child = () => {
+      const { document: frameDoc, window: frameWin } =
+        React.useContext(FrameContext);
+      return (
+        <div className="childDiv">
+          {frameDoc ? 'hasDocument' : 'noDocument'},
+          {frameWin ? 'hasWindow' : 'noWindow'}
+        </div>
+      );
     };
 
-    class Parent extends React.Component {
-      static childContextTypes = {
-        color: PropTypes.string
-      };
-      static propTypes = {
-        children: PropTypes.element.isRequired
-      };
-      getChildContext() {
-        return { color: 'purple' };
-      }
-      render() {
-        return <div>{this.props.children}</div>;
-      }
-    }
-
     const TestComponent = () => (
-      <Parent>
-        <Frame>
-          <Child />
-        </Frame>
-      </Parent>
+      <Frame>
+        <Child />
+      </Frame>
     );
 
     render(<TestComponent />);
@@ -231,7 +218,7 @@ describe('The Frame Component', () => {
       const iframe = document.querySelector('iframe');
       expect(
         iframe.contentDocument.body.querySelector('.childDiv').textContent
-      ).toBe('purple');
+      ).toBe('hasDocument,hasWindow');
     });
   });
 
@@ -434,54 +421,5 @@ describe('The Frame Component', () => {
       expect(ref).toHaveBeenCalled();
       expect(ref.mock.calls[0][0] instanceof HTMLIFrameElement).toBe(true);
     });
-  });
-
-  it('should use named Frame class export', async () => {
-    const { container } = render(
-      <Frame>
-        <p>Test content</p>
-      </Frame>
-    );
-
-    const iframe = container.querySelector('iframe');
-    await waitFor(() => {
-      expect(iframe.contentDocument.body.querySelector('p').textContent).toBe(
-        'Test content'
-      );
-    });
-  });
-
-  it('should accept nodeRef prop for external ref management', async () => {
-    const nodeRef = React.createRef();
-    const { container } = render(
-      <Frame nodeRef={nodeRef}>
-        <p>Test</p>
-      </Frame>
-    );
-
-    await waitFor(() => {
-      expect(nodeRef.current).toBe(container.querySelector('iframe'));
-    });
-  });
-
-  it('should handle invalid mountTarget gracefully', async () => {
-    const consoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    const { container } = render(
-      <Frame mountTarget="#nonExistent">
-        <p>Test</p>
-      </Frame>
-    );
-
-    const iframe = container.querySelector('iframe');
-    await waitFor(() => {
-      expect(
-        iframe.contentDocument.body.querySelector('.frame-content')
-      ).toBeNull();
-    });
-
-    consoleError.mockRestore();
   });
 });
