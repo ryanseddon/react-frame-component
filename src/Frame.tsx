@@ -1,9 +1,13 @@
-import React, {
+import {
   Component,
   CSSProperties,
   ForwardRefRenderFunction,
   ReactNode,
-  RefObject
+  RefObject,
+  createRef,
+  forwardRef,
+  useImperativeHandle,
+  useRef
 } from 'react';
 import ReactDOM from 'react-dom';
 import { FrameContextProvider } from './Context';
@@ -43,7 +47,7 @@ class Frame extends Component<FrameProps, FrameState> {
   constructor(props: FrameProps) {
     super(props);
     this._isMounted = false;
-    this.nodeRef = props.nodeRef || React.createRef<HTMLIFrameElement | null>();
+    this.nodeRef = props.nodeRef || createRef<HTMLIFrameElement | null>();
     this.state = { iframeLoaded: false };
   }
 
@@ -169,12 +173,12 @@ class Frame extends Component<FrameProps, FrameState> {
   }
 }
 
-const FrameWithRef = React.forwardRef<
+const FrameWithRef = forwardRef<
   HTMLIFrameElement | null,
   Omit<FrameProps, 'children'>
 >((props, ref) => {
-  const frameRef = React.useRef<HTMLIFrameElement | null>(null);
-  React.useImperativeHandle(ref, () => frameRef.current as HTMLIFrameElement);
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
+  useImperativeHandle(ref, () => frameRef.current as HTMLIFrameElement);
   return <Frame {...props} children={undefined} nodeRef={frameRef as any} />;
 });
 

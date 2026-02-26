@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import { Children, Component, ReactElement } from 'react';
 
 interface ContentProps {
   children: ReactElement;
@@ -16,6 +16,6 @@ export default class Content extends Component<ContentProps> {
   }
 
   render() {
-    return React.Children.only(this.props.children);
+    return Children.only(this.props.children);
   }
 }
