@@ -1,14 +1,15 @@
 import {
-  Component,
   CSSProperties,
-  ForwardRefRenderFunction,
   ReactNode,
   RefObject,
   createRef,
   forwardRef,
-  useImperativeHandle
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
 } from 'react';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 import { FrameContextProvider } from './Context';
 import Content from './Content';
 
@@ -23,162 +24,141 @@ export type FrameProps = {
   nodeRef?: RefObject<HTMLIFrameElement | null>;
 };
 
-type FrameState = {
-  iframeLoaded: boolean;
-};
+const DEFAULT_INITIAL_CONTENT =
+  '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>';
 
-class Frame extends Component<FrameProps, FrameState> {
-  static defaultProps = {
-    style: {} as CSSProperties,
-    head: null as ReactNode,
-    children: undefined as ReactNode,
-    mountTarget: undefined as string | undefined,
-    contentDidMount: () => {},
-    contentDidUpdate: () => {},
-    initialContent:
-      '<!DOCTYPE html><html><head></head><body><div class="frame-root"></div></body></html>'
+function Frame(props: FrameProps) {
+  const {
+    style = {},
+    head = null,
+    children,
+    mountTarget,
+    contentDidMount = () => {},
+    contentDidUpdate = () => {},
+    initialContent = DEFAULT_INITIAL_CONTENT,
+    nodeRef: externalRef
+  } = props;
+
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const internalRef = useRef<HTMLIFrameElement | null>(null);
+  const nodeRef = externalRef || internalRef;
+  const isMounted = useRef(false);
+  const loadCheckInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const getDoc = (): Document | null => {
+    return nodeRef.current ? nodeRef.current.contentDocument : null;
   };
 
-  private _isMounted = false;
-  private nodeRef: RefObject<HTMLIFrameElement | null>;
-  private loadCheckInterval: ReturnType<typeof setInterval> | undefined;
-
-  constructor(props: FrameProps) {
-    super(props);
-    this._isMounted = false;
-    this.nodeRef = props.nodeRef || createRef<HTMLIFrameElement | null>();
-    this.state = { iframeLoaded: false };
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-
-    const doc = this.getDoc();
-
-    if (doc && this.nodeRef.current?.contentWindow) {
-      this.nodeRef.current.contentWindow.addEventListener(
-        'DOMContentLoaded',
-        this.handleLoad
-      );
-    }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-
-    if (this.nodeRef.current?.contentWindow) {
-      this.nodeRef.current.contentWindow.removeEventListener(
-        'DOMContentLoaded',
-        this.handleLoad
-      );
-    }
-
-    if (this.loadCheckInterval) {
-      clearInterval(this.loadCheckInterval);
-    }
-  }
-
-  getDoc(): Document | null {
-    return this.nodeRef.current ? this.nodeRef.current.contentDocument : null;
-  }
-
-  getMountTarget(): Element | null {
-    const doc = this.getDoc();
+  const getMountTarget = (): Element | null => {
+    const doc = getDoc();
     if (!doc) return null;
 
-    if (this.props.mountTarget) {
-      return doc.querySelector(this.props.mountTarget);
+    if (mountTarget) {
+      return doc.querySelector(mountTarget);
     }
     return doc.body.children[0];
-  }
-
-  setRef = (node: HTMLIFrameElement | null) => {
-    this.nodeRef.current = node;
   };
 
-  handleLoad = () => {
-    if (this.loadCheckInterval) {
-      clearInterval(this.loadCheckInterval);
+  const handleLoad = () => {
+    if (loadCheckInterval.current) {
+      clearInterval(loadCheckInterval.current);
     }
-    if (!this.state.iframeLoaded) {
-      this.setState({ iframeLoaded: true });
+    if (!iframeLoaded) {
+      setIframeLoaded(true);
     }
   };
 
-  startLoadCheck = () => {
-    this.loadCheckInterval = setInterval(() => {
-      this.handleLoad();
-    }, 500);
-  };
+  useEffect(() => {
+    isMounted.current = true;
 
-  renderFrameContents(): ReactNode {
-    if (!this._isMounted) {
+    const doc = getDoc();
+
+    if (doc && nodeRef.current?.contentWindow) {
+      nodeRef.current.contentWindow.addEventListener(
+        'DOMContentLoaded',
+        handleLoad
+      );
+    }
+
+    return () => {
+      isMounted.current = false;
+
+      if (nodeRef.current?.contentWindow) {
+        nodeRef.current.contentWindow.removeEventListener(
+          'DOMContentLoaded',
+          handleLoad
+        );
+      }
+
+      if (loadCheckInterval.current) {
+        clearInterval(loadCheckInterval.current);
+      }
+    };
+  }, []);
+
+  const renderFrameContents = (): ReactNode => {
+    if (!isMounted.current) {
       return null;
     }
 
-    const doc = this.getDoc();
+    const doc = getDoc();
 
     if (!doc) {
       return null;
     }
 
-    const mountFunc = () => {};
     const contents = (
       <Content
-        contentDidMount={this.props.contentDidMount ?? mountFunc}
-        contentDidUpdate={this.props.contentDidUpdate ?? mountFunc}
+        contentDidMount={contentDidMount}
+        contentDidUpdate={contentDidUpdate}
       >
         <FrameContextProvider
           value={{ document: doc, window: doc.defaultView || window }}
         >
-          <div className="frame-content">{this.props.children}</div>
+          <div className="frame-content">{children}</div>
         </FrameContextProvider>
       </Content>
     );
 
-    const mountTarget = this.getMountTarget();
+    const mountTarget = getMountTarget();
 
     if (!mountTarget) {
       return null;
     }
 
-    return [
-      ReactDOM.createPortal(this.props.head, this.getDoc()!.head),
-      ReactDOM.createPortal(contents, mountTarget)
-    ];
-  }
+    return [createPortal(head, doc.head), createPortal(contents, mountTarget)];
+  };
 
-  render() {
-    const {
-      head,
-      initialContent,
-      mountTarget,
-      contentDidMount,
-      contentDidUpdate,
-      children,
-      ...iframeProps
-    } = this.props;
+  const {
+    head: _head,
+    initialContent: _initialContent,
+    mountTarget: _mountTarget,
+    contentDidMount: _contentDidMount,
+    contentDidUpdate: _contentDidUpdate,
+    children: _children,
+    nodeRef: _nodeRef,
+    ...iframeProps
+  } = props;
 
-    return (
-      <iframe
-        {...iframeProps}
-        ref={this.setRef}
-        srcDoc={initialContent}
-        onLoad={this.handleLoad}
-      >
-        {this.state.iframeLoaded && this.renderFrameContents()}
-      </iframe>
-    );
-  }
+  return (
+    <iframe
+      {...iframeProps}
+      ref={nodeRef}
+      srcDoc={initialContent}
+      onLoad={handleLoad}
+    >
+      {iframeLoaded && renderFrameContents()}
+    </iframe>
+  );
 }
 
 const FrameWithRef = forwardRef<
   HTMLIFrameElement | null,
   Omit<FrameProps, 'children'>
 >((props, ref) => {
-  const frameRef = createRef<HTMLIFrameElement | null>();
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
   useImperativeHandle(ref, () => frameRef.current as HTMLIFrameElement);
-  return <Frame {...props} children={undefined} nodeRef={frameRef} />;
+  return <Frame {...props} children={undefined} nodeRef={frameRef as any} />;
 });
 
 export default FrameWithRef;

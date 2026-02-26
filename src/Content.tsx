@@ -1,4 +1,4 @@
-import { Children, Component, ReactNode } from 'react';
+import { Children, ReactNode, useLayoutEffect, useRef } from 'react';
 
 type ContentProps = {
   children?: ReactNode;
@@ -6,18 +6,22 @@ type ContentProps = {
   contentDidUpdate?: () => void;
 };
 
-export default class Content extends Component<ContentProps> {
-  componentDidMount() {
-    this.props.contentDidMount?.();
-  }
+export default function Content({
+  children,
+  contentDidMount,
+  contentDidUpdate
+}: ContentProps) {
+  const isMounted = useRef(false);
 
-  componentDidUpdate() {
-    this.props.contentDidUpdate?.();
-  }
+  useLayoutEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      contentDidMount?.();
+    } else {
+      contentDidUpdate?.();
+    }
+  });
 
-  render() {
-    const { children } = this.props;
-    if (!children) return null;
-    return Children.only(children);
-  }
+  if (!children) return null;
+  return Children.only(children);
 }
