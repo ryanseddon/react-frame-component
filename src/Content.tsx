@@ -1,7 +1,7 @@
-import { Children, Component, ReactElement } from 'react';
+import { Children, Component, ReactNode } from 'react';
 
 type ContentProps = {
-  children: ReactElement;
+  children?: ReactNode;
   contentDidMount?: () => void;
   contentDidUpdate?: () => void;
 };
@@ -16,6 +16,8 @@ export default class Content extends Component<ContentProps> {
   }
 
   render() {
-    return Children.only(this.props.children);
+    const { children } = this.props;
+    if (!children) return null;
+    return Children.only(children);
   }
 }

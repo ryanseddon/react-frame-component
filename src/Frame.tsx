@@ -6,8 +6,7 @@ import {
   RefObject,
   createRef,
   forwardRef,
-  useImperativeHandle,
-  useRef
+  useImperativeHandle
 } from 'react';
 import ReactDOM from 'react-dom';
 import { FrameContextProvider } from './Context';
@@ -177,9 +176,9 @@ const FrameWithRef = forwardRef<
   HTMLIFrameElement | null,
   Omit<FrameProps, 'children'>
 >((props, ref) => {
-  const frameRef = useRef<HTMLIFrameElement | null>(null);
+  const frameRef = createRef<HTMLIFrameElement | null>();
   useImperativeHandle(ref, () => frameRef.current as HTMLIFrameElement);
-  return <Frame {...props} children={undefined} nodeRef={frameRef as any} />;
+  return <Frame {...props} children={undefined} nodeRef={frameRef} />;
 });
 
 export default FrameWithRef;

@@ -435,4 +435,53 @@ describe('The Frame Component', () => {
       expect(ref.mock.calls[0][0] instanceof HTMLIFrameElement).toBe(true);
     });
   });
+
+  it('should use named Frame class export', async () => {
+    const { container } = render(
+      <Frame>
+        <p>Test content</p>
+      </Frame>
+    );
+
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      expect(iframe.contentDocument.body.querySelector('p').textContent).toBe(
+        'Test content'
+      );
+    });
+  });
+
+  it('should accept nodeRef prop for external ref management', async () => {
+    const nodeRef = React.createRef();
+    const { container } = render(
+      <Frame nodeRef={nodeRef}>
+        <p>Test</p>
+      </Frame>
+    );
+
+    await waitFor(() => {
+      expect(nodeRef.current).toBe(container.querySelector('iframe'));
+    });
+  });
+
+  it('should handle invalid mountTarget gracefully', async () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    const { container } = render(
+      <Frame mountTarget="#nonExistent">
+        <p>Test</p>
+      </Frame>
+    );
+
+    const iframe = container.querySelector('iframe');
+    await waitFor(() => {
+      expect(
+        iframe.contentDocument.body.querySelector('.frame-content')
+      ).toBeNull();
+    });
+
+    consoleError.mockRestore();
+  });
 });
