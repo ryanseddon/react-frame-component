@@ -1,9 +1,9 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 
-interface FrameContextValue {
+type FrameContextValue = {
   document: Document;
   window: Window;
-}
+};
 
 const defaultDoc =
   typeof document !== 'undefined' ? document : ({} as Document);

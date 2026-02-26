@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 import { FrameContextProvider } from './Context';
 import Content from './Content';
 
-interface FrameProps {
+type FrameProps = {
   style?: CSSProperties;
   head?: ReactNode;
   initialContent?: string;
@@ -22,11 +22,11 @@ interface FrameProps {
   contentDidUpdate?: () => void;
   children?: ReactNode;
   nodeRef?: RefObject<HTMLIFrameElement | null>;
-}
+};
 
-interface FrameState {
+type FrameState = {
   iframeLoaded: boolean;
-}
+};
 
 class Frame extends Component<FrameProps, FrameState> {
   static defaultProps = {

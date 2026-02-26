@@ -1,10 +1,10 @@
 import { Children, Component, ReactElement } from 'react';
 
-interface ContentProps {
+type ContentProps = {
   children: ReactElement;
   contentDidMount?: () => void;
   contentDidUpdate?: () => void;
-}
+};
 
 export default class Content extends Component<ContentProps> {
   componentDidMount() {
