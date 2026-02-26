@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 import { FrameContextProvider } from './Context';
 import Content from './Content';
 
-type FrameProps = {
+export type FrameProps = {
   style?: CSSProperties;
   head?: ReactNode;
   initialContent?: string;

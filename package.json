@@ -5,13 +5,13 @@
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "dist/react-frame-component.umd.js",
   "module": "dist/react-frame-component.esm.js",
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/react-frame-component.esm.js",
       "require": "./dist/react-frame-component.umd.js"
     }
