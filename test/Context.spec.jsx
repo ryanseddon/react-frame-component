@@ -30,21 +30,16 @@ describe('The DocumentContext Component', () => {
     );
   });
 
-  it('exports full context instance to allow accessing via Class.contextType', async () => {
+  it('exports full context instance to allow accessing via useFrame hook', async () => {
     const document = { foo: 1 };
     const window = { bar: 2 };
 
-    class Child extends React.Component {
-      componentDidMount() {
-        const { document: doc, window: win } = this.context;
-        expect(doc).toEqual({ foo: 1 });
-        expect(win).toEqual({ bar: 2 });
-      }
-      render() {
-        return null;
-      }
-    }
-    Child.contextType = FrameContext;
+    const Child = () => {
+      const { document: doc, window: win } = useFrame();
+      expect(doc).toEqual({ foo: 1 });
+      expect(win).toEqual({ bar: 2 });
+      return null;
+    };
 
     render(
       <FrameContextProvider value={{ document, window }}>

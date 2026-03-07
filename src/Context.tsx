@@ -1,18 +1,16 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 
 type FrameContextValue = {
-  document: Document;
-  window: Window;
+  document?: Document;
+  window?: Window;
 };
 
-const defaultDoc =
-  typeof document !== 'undefined' ? document : ({} as Document);
-const defaultWin = typeof window !== 'undefined' ? window : ({} as Window);
+const defaultValue: FrameContextValue = {
+  document: undefined,
+  window: undefined
+};
 
-export const FrameContext = createContext<FrameContextValue>({
-  document: defaultDoc,
-  window: defaultWin
-});
+export const FrameContext = createContext<FrameContextValue>(defaultValue);
 
 export const useFrame = () => useContext(FrameContext);
 

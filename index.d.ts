@@ -3,8 +3,8 @@ declare module 'react-frame-component' {
 
   export interface FrameComponentProps
     extends
-      React.IframeHTMLAttributes<HTMLIFrameElement>,
-      React.RefAttributes<HTMLIFrameElement> {
+      Omit<React.IframeHTMLAttributes<HTMLIFrameElement>, 'children'>,
+      Omit<React.RefAttributes<HTMLIFrameElement>, 'children'> {
     head?: React.ReactNode | undefined;
     mountTarget?: string | undefined;
     initialContent?: string | undefined;
@@ -25,12 +25,15 @@ declare module 'react-frame-component' {
      */
     onUpdate?: (() => void) | undefined;
     children?: React.ReactNode;
+    nodeRef?: React.RefObject<HTMLIFrameElement | null>;
   }
 
-  const FrameComponent: React.ForwardRefExoticComponent<FrameComponentProps>;
+  const FrameComponent: React.ForwardRefExoticComponent<
+    FrameComponentProps & React.RefAttributes<HTMLIFrameElement | null>
+  >;
   export default FrameComponent;
 
-  export class Frame extends React.Component<FrameComponentProps> {}
+  export function Frame(props: FrameComponentProps): React.ReactElement | null;
 
   export interface ContentProps {
     children?: React.ReactNode;
@@ -52,7 +55,7 @@ declare module 'react-frame-component' {
     onUpdate?: () => void;
   }
 
-  export class Content extends React.Component<ContentProps> {}
+  export function Content(props: ContentProps): React.ReactElement | null;
 
   export interface FrameContextProps {
     document?: Document;

@@ -163,8 +163,11 @@ const FrameWithRef = forwardRef<
   HTMLIFrameElement | null,
   Omit<FrameProps, 'children'>
 >((props, ref) => {
-  const frameRef = createRef<HTMLIFrameElement | null>();
-  useImperativeHandle(ref, () => frameRef.current as HTMLIFrameElement);
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
+  useImperativeHandle<HTMLIFrameElement | null, HTMLIFrameElement | null>(
+    ref,
+    () => frameRef.current
+  );
   return <Frame {...props} children={undefined} nodeRef={frameRef} />;
 });
 
