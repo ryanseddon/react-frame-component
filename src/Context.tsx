@@ -1,18 +1,4 @@
-import { createContext, useContext } from 'react';
-
-type FrameContextValue = {
-  document?: Document;
-  window?: Window;
-};
-
-const defaultValue: FrameContextValue = {
-  document: undefined,
-  window: undefined
-};
-
-export const FrameContext = createContext<FrameContextValue>(defaultValue);
-
-export const useFrame = () => useContext(FrameContext);
+import { FrameContext } from './FrameContext';
 
 export const FrameContextConsumer = FrameContext.Consumer;
 

@@ -3,6 +3,7 @@ import React, {
   ReactNode,
   RefObject,
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -60,9 +61,9 @@ function Frame({
   const isMounted = useRef(false);
   const loadCheckInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const getDoc = (): Document | null => {
+  const getDoc = useCallback((): Document | null => {
     return nodeRef.current ? nodeRef.current.contentDocument : null;
-  };
+  }, [nodeRef]);
 
   const getMountTarget = (): Element | null => {
     const doc = getDoc();
@@ -74,42 +75,40 @@ function Frame({
     return doc.body.children[0];
   };
 
-  const handleLoad = () => {
+  const handleLoad = useCallback(() => {
     if (loadCheckInterval.current) {
       clearInterval(loadCheckInterval.current);
     }
     if (!iframeLoaded) {
       setIframeLoaded(true);
     }
-  };
+  }, [iframeLoaded]);
 
   useEffect(() => {
     isMounted.current = true;
 
     const doc = getDoc();
+    const frame = nodeRef.current;
+    const interval = loadCheckInterval.current;
 
-    if (doc && nodeRef.current?.contentWindow) {
-      nodeRef.current.contentWindow.addEventListener(
-        'DOMContentLoaded',
-        handleLoad
-      );
+    if (doc && frame?.contentWindow) {
+      frame.contentWindow.addEventListener('DOMContentLoaded', handleLoad);
     }
 
     return () => {
       isMounted.current = false;
 
-      if (nodeRef.current?.contentWindow) {
-        nodeRef.current.contentWindow.removeEventListener(
-          'DOMContentLoaded',
-          handleLoad
-        );
+      if (frame?.contentWindow) {
+        frame.contentWindow.removeEventListener('DOMContentLoaded', handleLoad);
       }
 
-      if (loadCheckInterval.current) {
-        clearInterval(loadCheckInterval.current);
+      if (interval) {
+        clearInterval(interval);
       }
     };
-  }, []);
+    // nodeRef is stable (either internalRef from useRef or external ref from props)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getDoc, handleLoad]);
 
   const renderFrameContents = (): ReactNode => {
     if (!isMounted.current) {
