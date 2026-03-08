@@ -4,7 +4,6 @@ import { expect, describe, it } from 'vitest';
 import {
   FrameContextProvider,
   FrameContextConsumer,
-  FrameContext,
   useFrame
 } from '../src/Context';
 

@@ -1,8 +1,7 @@
-import {
+import React, {
   CSSProperties,
   ReactNode,
   RefObject,
-  createRef,
   forwardRef,
   useEffect,
   useImperativeHandle,
@@ -159,17 +158,22 @@ function Frame({
   );
 }
 
-const FrameWithRef = forwardRef<
-  HTMLIFrameElement | null,
-  Omit<FrameProps, 'children'>
->((props, ref) => {
-  const frameRef = useRef<HTMLIFrameElement | null>(null);
-  useImperativeHandle<HTMLIFrameElement | null, HTMLIFrameElement | null>(
-    ref,
-    () => frameRef.current
-  );
-  return <Frame {...props} children={undefined} nodeRef={frameRef} />;
-});
+const FrameWithRef = forwardRef<HTMLIFrameElement | null, FrameProps>(
+  ({ children, ...props }, ref) => {
+    const frameRef = useRef<HTMLIFrameElement | null>(null);
+    useImperativeHandle<HTMLIFrameElement | null, HTMLIFrameElement | null>(
+      ref,
+      () => frameRef.current
+    );
+    return (
+      <Frame {...props} nodeRef={frameRef}>
+        {children}
+      </Frame>
+    );
+  }
+);
+
+FrameWithRef.displayName = 'Frame';
 
 export default FrameWithRef;
 export { Frame };
