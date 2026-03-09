@@ -5,13 +5,13 @@
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "dist/react-frame-component.umd.js",
   "module": "dist/react-frame-component.esm.js",
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/react-frame-component.esm.js",
       "require": "./dist/react-frame-component.umd.js"
     }
@@ -24,6 +24,7 @@
     "start": "npm run serve",
     "build": "vite build",
     "build:example": "vite build --config vite.example.config.js",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint src test",
     "prepublish": "npm run build",
     "deploy": "gh-pages -d dist",
@@ -62,6 +63,10 @@
     "@playwright/test": "^1.58.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/browser": "^4.0.18",
     "@vitest/browser-playwright": "^4.0.18",
@@ -74,18 +79,17 @@
     "globals": "^15.0.0",
     "html-webpack-plugin": "^5.6.0",
     "prettier": "^3.2.0",
-    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^5.0.5",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "webpack": "^5.90.0",
     "webpack-dev-server": "^5.0.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.8.1 || ^16.0.0 || ^17.0.0 || ^18.0.0",
-    "react": ">= 16.8 || ^17.0.0 || ^18.0.0 || ^19.0.0",
-    "react-dom": ">= 16.8 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "prettier": {
     "singleQuote": true,

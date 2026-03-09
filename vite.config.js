@@ -8,19 +8,18 @@ export default defineConfig(({ command }) => ({
     command === 'build'
       ? {
           lib: {
-            entry: resolve(__dirname, 'src/index.js'),
+            entry: resolve(__dirname, 'src/index.ts'),
             name: 'ReactFrameComponent',
             formats: ['es', 'umd'],
             fileName: (format) =>
               `react-frame-component.${format === 'es' ? 'esm' : format}.js`
           },
           rollupOptions: {
-            external: ['react', 'react-dom', 'prop-types'],
+            external: ['react', 'react-dom'],
             output: {
               globals: {
                 react: 'React',
-                'react-dom': 'ReactDOM',
-                'prop-types': 'PropTypes'
+                'react-dom': 'ReactDOM'
               },
               exports: 'named'
             }

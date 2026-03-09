@@ -1,4 +1,6 @@
 import js from '@eslint/js';
+import ts from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
@@ -7,7 +9,7 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     ignores: [
       'node_modules/**',
       'dist/**',
@@ -18,6 +20,7 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
+      parser: tsParser,
       globals: {
         ...globals.browser
       },
@@ -29,6 +32,7 @@ export default [
       }
     },
     plugins: {
+      '@typescript-eslint': ts,
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh
@@ -52,7 +56,7 @@ export default [
     }
   },
   {
-    files: ['test/**/*.{js,jsx}'],
+    files: ['test/**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       globals: {
         ...globals.mocha,

@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { render, waitFor } from '@testing-library/react';
 import { expect, vi, describe, it, afterEach, beforeEach } from 'vitest';
 import ForwardedRefFrame, { Frame } from '../src/Frame';
+import { FrameContext } from '../src/FrameContext';
 
 describe('The Frame Component', () => {
   let div;
@@ -195,34 +195,21 @@ describe('The Frame Component', () => {
   });
 
   it('should pass context to components in the frame', async () => {
-    const Child = (props, context) => (
-      <div className="childDiv">{context.color}</div>
-    );
-    Child.contextTypes = {
-      color: PropTypes.string.isRequired
+    const Child = () => {
+      const { document: frameDoc, window: frameWin } =
+        React.useContext(FrameContext);
+      return (
+        <div className="childDiv">
+          {frameDoc ? 'hasDocument' : 'noDocument'},
+          {frameWin ? 'hasWindow' : 'noWindow'}
+        </div>
+      );
     };
 
-    class Parent extends React.Component {
-      static childContextTypes = {
-        color: PropTypes.string
-      };
-      static propTypes = {
-        children: PropTypes.element.isRequired
-      };
-      getChildContext() {
-        return { color: 'purple' };
-      }
-      render() {
-        return <div>{this.props.children}</div>;
-      }
-    }
-
     const TestComponent = () => (
-      <Parent>
-        <Frame>
-          <Child />
-        </Frame>
-      </Parent>
+      <Frame>
+        <Child />
+      </Frame>
     );
 
     render(<TestComponent />);
@@ -231,7 +218,7 @@ describe('The Frame Component', () => {
       const iframe = document.querySelector('iframe');
       expect(
         iframe.contentDocument.body.querySelector('.childDiv').textContent
-      ).toBe('purple');
+      ).toBe('hasDocument,hasWindow');
     });
   });
 
@@ -282,46 +269,46 @@ describe('The Frame Component', () => {
     });
   });
 
-  it('should call contentDidMount on initial render', async () => {
-    const didMount = vi.fn();
-    const didUpdate = vi.fn();
+  it('should call onMount on initial render', async () => {
+    const onMount = vi.fn();
+    const onUpdate = vi.fn();
 
-    render(<Frame contentDidMount={didMount} contentDidUpdate={didUpdate} />);
+    render(<Frame onMount={onMount} onUpdate={onUpdate} />);
 
     await waitFor(() => {
-      expect(didMount).toHaveBeenCalledTimes(1);
-      expect(didUpdate).toHaveBeenCalledTimes(0);
+      expect(onMount).toHaveBeenCalledTimes(1);
+      expect(onUpdate).toHaveBeenCalledTimes(0);
     });
   });
 
-  it('should call contentDidUpdate on subsequent updates', async () => {
-    const didUpdate = vi.fn();
-    const didMount = vi.fn();
+  it('should call onUpdate on subsequent updates', async () => {
+    const onUpdate = vi.fn();
+    const onMount = vi.fn();
 
     const { rerender } = render(
       <Frame
-        contentDidUpdate={didUpdate}
-        contentDidMount={() => {
-          didMount();
+        onUpdate={onUpdate}
+        onMount={() => {
+          onMount();
         }}
       />
     );
 
     await waitFor(() => {
-      expect(didMount).toHaveBeenCalledTimes(1);
+      expect(onMount).toHaveBeenCalledTimes(1);
     });
 
     rerender(
       <Frame
-        contentDidUpdate={didUpdate}
-        contentDidMount={() => {
-          didMount();
+        onUpdate={onUpdate}
+        onMount={() => {
+          onMount();
         }}
       />
     );
 
     await waitFor(() => {
-      expect(didUpdate).toHaveBeenCalledTimes(1);
+      expect(onUpdate).toHaveBeenCalledTimes(1);
     });
   });
 
