@@ -23,6 +23,7 @@
     "serve": "vite --root example",
     "start": "npm run serve",
     "build": "vite build",
+    "build:example": "vite build --config vite.example.config.js",
     "lint": "eslint src test",
     "prepublish": "npm run build",
     "deploy": "gh-pages -d dist",
