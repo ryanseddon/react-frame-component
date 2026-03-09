@@ -1,11 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { expect, describe, it } from 'vitest';
-import {
-  FrameContextProvider,
-  FrameContextConsumer,
-  useFrame
-} from '../src/Context';
+import { FrameContextProvider, FrameContextConsumer } from '../src/Context';
+import { useFrame } from '../src/useFrame';
 
 describe('The DocumentContext Component', () => {
   it('will establish context variables', async () => {

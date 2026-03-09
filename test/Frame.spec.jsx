@@ -2,7 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { expect, vi, describe, it, afterEach, beforeEach } from 'vitest';
 import ForwardedRefFrame, { Frame } from '../src/Frame';
-import { FrameContext } from '../src/Context';
+import { FrameContext } from '../src/FrameContext';
 
 describe('The Frame Component', () => {
   let div;

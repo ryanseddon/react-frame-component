@@ -58,7 +58,6 @@ function Frame({
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const internalRef = useRef<HTMLIFrameElement | null>(null);
   const nodeRef = externalRef || internalRef;
-  const isMounted = useRef(false);
   const loadCheckInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const getDoc = useCallback((): Document | null => {
@@ -85,8 +84,6 @@ function Frame({
   }, [iframeLoaded]);
 
   useEffect(() => {
-    isMounted.current = true;
-
     const doc = getDoc();
     const frame = nodeRef.current;
     const interval = loadCheckInterval.current;
@@ -96,8 +93,6 @@ function Frame({
     }
 
     return () => {
-      isMounted.current = false;
-
       if (frame?.contentWindow) {
         frame.contentWindow.removeEventListener('DOMContentLoaded', handleLoad);
       }
@@ -106,15 +101,11 @@ function Frame({
         clearInterval(interval);
       }
     };
-    // nodeRef is stable (either internalRef from useRef or external ref from props)
+    // nodeRef is a ref and should not be in dependencies per React best practices
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getDoc, handleLoad]);
 
   const renderFrameContents = (): ReactNode => {
-    if (!isMounted.current) {
-      return null;
-    }
-
     const doc = getDoc();
 
     if (!doc) {
