@@ -38,6 +38,7 @@ export class Frame extends Component {
     this._isMounted = false;
     this.nodeRef = React.createRef();
     this.state = { iframeLoaded: false };
+    this.contextValue = null;
   }
 
   componentDidMount() {
@@ -115,12 +116,21 @@ export class Frame extends Component {
     const contentDidUpdate = this.props.contentDidUpdate;
 
     const win = doc.defaultView || doc.parentView;
+
+    const contextValue = { document: doc, window: win };
+
+    const prevContextValue = this.contextValue
+
+    if (!prevContextValue || prevContextValue.document !== contextValue.document || prevContextValue.window !== contextValue.window){
+        this.contextValue = contextValue
+    }
+
     const contents = (
       <Content
         contentDidMount={contentDidMount}
         contentDidUpdate={contentDidUpdate}
       >
-        <FrameContextProvider value={{ document: doc, window: win }}>
+        <FrameContextProvider value={this.contextValue}>
           <div className="frame-content">{this.props.children}</div>
         </FrameContextProvider>
       </Content>
