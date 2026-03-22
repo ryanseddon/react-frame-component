@@ -53,6 +53,10 @@ export class Frame extends Component {
         this.handleLoad
       );
     }
+
+    if (this.props.dangerouslyUseDocWrite) {
+      this.handleLoad();
+    }
   }
 
   componentWillUnmount() {
