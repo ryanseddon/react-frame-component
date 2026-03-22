@@ -9,6 +9,7 @@ declare module 'react-frame-component' {
     initialContent?: string | undefined;
     contentDidMount?: (() => void) | undefined;
     contentDidUpdate?: (() => void) | undefined;
+    dangerouslyUseDocWrite?: boolean | undefined;
     children: React.ReactNode;
   }
 

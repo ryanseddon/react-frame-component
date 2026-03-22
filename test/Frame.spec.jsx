@@ -435,4 +435,47 @@ describe('The Frame Component', () => {
       expect(ref.mock.calls[0][0] instanceof HTMLIFrameElement).toBe(true);
     });
   });
+
+  describe('dangerouslyUseDocWrite', () => {
+    it('does not set srcdoc', async () => {
+      const { container } = render(
+        <Frame
+          dangerouslyUseDocWrite
+          initialContent="<html><body><div></div></body></html>"
+        />
+      );
+
+      const iframe = container.querySelector('iframe');
+      expect(iframe.srcdoc).toBeFalsy();
+    });
+
+    it('should allow setting initialContent via document.write() when required', async () => {
+      const initialContent =
+        '<!DOCTYPE html><html><head><script>console.log("foo");</script></head><body><div></div></body></html>';
+      const renderedContent =
+        '<html><head><script>console.log("foo");</script></head><body><div><div class="frame-content"></div></div></body></html>';
+
+      let contentDidMountCalled = false;
+
+      const { container } = render(
+        <Frame
+          dangerouslyUseDocWrite
+          initialContent={initialContent}
+          contentDidMount={() => {
+            contentDidMountCalled = true;
+          }}
+        />
+      );
+
+      const iframe = container.querySelector('iframe');
+
+      await waitFor(() => {
+        expect(contentDidMountCalled).toBe(true);
+      });
+
+      expect(iframe.contentDocument.documentElement.outerHTML).toBe(
+        renderedContent
+      );
+    });
+  });
 });
