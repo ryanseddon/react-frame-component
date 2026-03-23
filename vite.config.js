@@ -15,10 +15,18 @@ export default defineConfig(({ command }) => ({
               `react-frame-component.${format === 'es' ? 'esm' : format}.js`
           },
           rollupOptions: {
-            external: ['react', 'react-dom', 'prop-types'],
+            external: [
+              'react',
+              'react/jsx-runtime',
+              'react/jsx-dev-runtime',
+              'react-dom',
+              'prop-types'
+            ],
             output: {
               globals: {
                 react: 'React',
+                'react/jsx-runtime': 'react/jsx-runtime',
+                'react/jsx-dev-runtime': 'react/jsx-dev-runtime',
                 'react-dom': 'ReactDOM',
                 'prop-types': 'PropTypes'
               },
