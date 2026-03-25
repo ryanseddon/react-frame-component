@@ -74,9 +74,15 @@ export class Frame extends Component {
 
   getMountTarget() {
     const doc = this.getDoc();
+
+    if (!doc || !doc.body) {
+      return null;
+    }
+
     if (this.props.mountTarget) {
       return doc.querySelector(this.props.mountTarget);
     }
+
     return doc.body.children[0];
   }
 

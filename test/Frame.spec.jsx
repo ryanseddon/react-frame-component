@@ -478,4 +478,49 @@ describe('The Frame Component', () => {
       );
     });
   });
+
+  describe('race condition handling', () => {
+    it('should handle null document in getMountTarget gracefully', async () => {
+      const frameRef = React.createRef();
+      const { container } = render(
+        <Frame
+          ref={frameRef}
+          initialContent="<html><body><div id='target'></div></body></html>"
+          mountTarget="#target"
+        />
+      );
+
+      await waitFor(() => {
+        expect(container.querySelector('iframe')).toBeDefined();
+      });
+
+      const getDocSpy = vi
+        .spyOn(frameRef.current, 'getDoc')
+        .mockReturnValue(null);
+
+      const mountTargetResult = frameRef.current.getMountTarget();
+
+      expect(mountTargetResult).toBeNull();
+      getDocSpy.mockRestore();
+    });
+
+    it('should handle null body in getMountTarget gracefully', async () => {
+      const frameRef = React.createRef();
+      const { container } = render(<Frame ref={frameRef} />);
+
+      await waitFor(() => {
+        expect(container.querySelector('iframe')).toBeDefined();
+      });
+
+      // Mock getDoc to return document without body
+      const getDocSpy = vi
+        .spyOn(frameRef.current, 'getDoc')
+        .mockReturnValue({ body: null });
+
+      const mountTargetResult = frameRef.current.getMountTarget();
+
+      expect(mountTargetResult).toBeNull();
+      getDocSpy.mockRestore();
+    });
+  });
 });
