@@ -1,6 +1,6 @@
 {
   "name": "react-frame-component",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "type": "module",
   "description": "React component to wrap your application or component in an iFrame for encapsulation purposes",
   "main": "dist/react-frame-component.umd.js",
@@ -12,6 +12,7 @@
   ],
   "exports": {
     ".": {
+      "types": "./index.d.ts",
       "import": "./dist/react-frame-component.esm.js",
       "require": "./dist/react-frame-component.umd.js"
     }
