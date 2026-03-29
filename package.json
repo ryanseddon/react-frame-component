@@ -12,6 +12,7 @@
   ],
   "exports": {
     ".": {
+      "types": "./index.d.ts",
       "import": "./dist/react-frame-component.esm.js",
       "require": "./dist/react-frame-component.umd.js"
     }
