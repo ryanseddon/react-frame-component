@@ -1,5 +1,17 @@
 # react-frame-component
 
+## 5.3.2
+
+### Patch Changes
+
+- f191d58: Add types condition to package.json exports to fix TypeScript resolution with TSGo and modern ESM tools
+- 1820bc3: ## Fix race condition in getMountTarget() (issue #250)
+
+  Fixed "Cannot read properties of null" errors when `initialContent` changes rapidly by adding null checks for `doc` and `doc.body` in `getMountTarget()`.
+
+  ### Changes
+  - **src/Frame.jsx**: Added null check in `getMountTarget()` to handle cases when iframe document is temporarily unavailable during rapid rerenders
+
 ## 5.3.1
 
 ### Patch Changes
