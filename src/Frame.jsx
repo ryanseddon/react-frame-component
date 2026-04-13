@@ -17,10 +17,7 @@ export class Frame extends Component {
     dangerouslyUseDocWrite: PropTypes.bool,
     contentDidMount: PropTypes.func,
     contentDidUpdate: PropTypes.func,
-    children: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.arrayOf(PropTypes.element)
-    ])
+    children: PropTypes.node
   };
 
   static defaultProps = {
